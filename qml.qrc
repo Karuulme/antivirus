@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>Image/icons8-close-64.png</file>
+        <file>Image/icons8-hdd-80.png</file>
+        <file>itemHDD.qml</file>
+        <file>Image/icons8-spinner.gif</file>
+        <file>Image/icons8-close-red-64.png</file>
+        <file>Image/1496.gif</file>
+        <file>KText.qml</file>
+        <file>Image/icons8-refresh-96.png</file>
+    </qresource>
+    <qresource prefix="/files"/>
+</RCC>

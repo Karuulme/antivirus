@@ -1,0 +1,160 @@
+import QtQuick 2.12
+import QtQuick.Controls 2.15
+Rectangle {
+    property double dFree: 50
+    property double dTotal: 500
+    property string dName: "Null"
+    id: rectangle
+    width: 340
+    height: 60
+    color:"#f9f9f9"
+    border.width: 1
+    border.color: "#c8c8c8"
+    radius: 5
+    Image {
+        id: image
+        x: 8
+        y: 10
+        width: 40
+        height: 40
+        source: "Image/icons8-hdd-80.png"
+        fillMode: Image.PreserveAspectFit
+    }
+
+    Label {
+        id: label
+        x: 63
+        y: 8
+        height: 16
+        text: qsTr(dName)
+    }
+
+    Label {
+        id: label1
+        x: 63
+        y: 30
+        height: 16
+        text: qsTr("Total:"+dTotal)
+    }
+
+    Rectangle{
+        id: rectangle1
+        width: 70
+        y:1
+        radius: 5
+        height: 58
+        anchors.right: parent.right
+        anchors.rightMargin: 1
+        color: "#00000000"
+        Rectangle{
+            height:45
+            color: "#b9b9b9"
+            anchors.left: parent.left
+            anchors.leftMargin: 0
+            width: 1
+            y:5
+        }
+        Text {
+            id: name
+            text: qsTr("Free")
+            horizontalAlignment: Text.AlignHCenter
+            width: parent.width
+            y:10
+        }
+        Text {
+            id: name2
+            text: dFree
+            horizontalAlignment: Text.AlignHCenter
+            width: parent.width
+            y:25
+        }
+
+
+    }
+    Connections{
+        target:system
+        onScanFileName_changed:{
+            if(scanFileName===dName){
+                busyIndicator1.running=true
+                scan_button.visible=false
+                scan_button_cancel.visible=true
+
+
+            }
+            else{
+                busyIndicator1.running=false
+                scan_button.visible=true
+                scan_button_cancel.visible=false
+
+
+            }
+        }
+    }
+
+
+    Rectangle{
+       id:scan_button
+        width: 80
+        height: 20
+        x:180
+        y:20
+        visible: true
+        border.width: 1
+        color:"#00000000"
+        radius: 5
+        border.color: "#b9b9b9"
+        MouseArea {
+            id: mouseArea
+            anchors.fill: parent
+            onClicked:system.set_scandisk(dName,dTotal,dFree)
+
+        }
+        Label {
+            id: label2
+            text: qsTr("Scan This Disk")
+            anchors.fill: parent
+            font.letterSpacing: 0
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+
+
+        }
+    }
+    Rectangle{
+        id:scan_button_cancel
+        width: 40
+        visible: false
+        height: 20
+        x:214
+        y:20
+        border.width: 1
+        color:"#00000000"
+        radius: 5
+        border.color: "#b9b9b9"
+        MouseArea {
+            id: mouseArea2
+            anchors.fill: parent
+            onClicked:system.set_scandiskClose()
+
+        }
+        Label {
+            id: label22
+            text: qsTr("Cancel")
+            anchors.fill: parent
+            font.letterSpacing: 0
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+        }
+
+    }
+    BusyIndicator {
+        x: 180
+        y:13
+        width: 34
+        height: 34
+        id: busyIndicator1
+        running: false
+
+    }
+
+}
