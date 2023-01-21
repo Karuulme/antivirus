@@ -29,9 +29,9 @@ int main(int argc, char *argv[])
     QObject::connect(&_userdefinition,SIGNAL(setFilePahtReg(QString*)),&filepathtransactions, SLOT(getFilePahtReg(QString*)));
     QObject::connect(&_listenProcess,SIGNAL(setFilePahtReg(QString*)),&filepathtransactions, SLOT(getFilePahtReg(QString*)));
     QObject::connect(&_userdefinition,SIGNAL(setRegList(Kmap<int, RegProgramList>)),&filepathtransactions, SLOT(getRegList(Kmap<int, RegProgramList>)));
-
-    _listenProcess.setStart();
     _userdefinition.userStart();
+    _listenProcess.setStart();
+
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&_engine, &QQmlApplicationEngine::objectCreated,

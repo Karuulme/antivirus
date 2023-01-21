@@ -28,7 +28,6 @@ int  filePathTransactions::setRegCreateBank(HKEY hKey, Kstring path, Kstring key
 
 
 int filePathTransactions::setRegQuestion(QString filePath){
-
     QFile file(filePath);
     RegProgramList reg;
     if (file.open(QIODevice::ReadOnly)) {
@@ -45,10 +44,12 @@ int filePathTransactions::setRegQuestion(QString filePath){
     RegProgramList regRet;
     regRet = upRegListControl(reg.pHash);
     if (regRet.pRunCount !=-1) {
-        setRegCreateBank(HKEY_CURRENT_USER, KBank + regRet.pFile, "pRunCount", KToString(regRet.pRunCount + 1));
+        setRegCreateBank(HKEY_CURRENT_USER, KBank + regRet.pFile, "pRunCount", KToString(regRet.pRunCount));
+        qDebug()<<"VAR::"<<QString::fromStdString(regRet.pHash);
     }
     else
     {
+        qDebug()<<"YOK::"<<QString::fromStdString(reg.pHash);
         RegProgramList regProgram;
         regListIndex++;
         setRegCreateBank(HKEY_CURRENT_USER, KBank + KToString(1000 +regListIndex), "pHash", reg.pHash);
@@ -66,6 +67,7 @@ RegProgramList filePathTransactions::upRegListControl(Kstring regg) {
     for (int i = 0; i < regList.size(); i++)
     {
         if (regList[i].pHash == regg) {
+            regList[i].pRunCount++;
             regProgramList = regList[i];
             return regProgramList;
         }
@@ -74,6 +76,7 @@ RegProgramList filePathTransactions::upRegListControl(Kstring regg) {
 }
 void filePathTransactions::getFilePahtReg(QString *filePath){
     setRegQuestion(*filePath);
+    qDebug()<<"getFilePahtReg::"<<*filePath;
 }
 void filePathTransactions::getRegList(Kmap<int, RegProgramList> reg){
     regList=reg;
