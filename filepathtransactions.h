@@ -14,7 +14,10 @@ public:
     explicit filePathTransactions(QObject *parent = nullptr);
     int  setRegCreateBank(HKEY hKey, std::string path, std::string key, std::string value);
     RegProgramList upRegListControl(Kstring reg);
+    bool boolRegListControl(Kstring regg);
     int setRegQuestion(QString filePath);
+    int regeditNewRecord(RegProgramList regProgram);
+    QString getfileHash(QString filePath);
 
 
 private:
@@ -23,5 +26,6 @@ private:
 public slots:
     void getFilePahtReg(QString *filePath);
     void getRegList(Kmap<int, RegProgramList> reg);
+    void getfileChangesNotification(QString filePath);
 };
 #endif // FILEPATHTRANSACTIONS_H

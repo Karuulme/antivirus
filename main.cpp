@@ -6,6 +6,8 @@
 #include <userdefinition.h>
 #include <listenprocess.h>
 #include <filepathtransactions.h>
+#include <filechanges.h>
+#include <scanresultoperations.h>
 
 int main(int argc, char *argv[])
 {
@@ -19,8 +21,8 @@ int main(int argc, char *argv[])
     listenProcess _listenProcess;
     filePathTransactions  filepathtransactions;
     userDefinition  _userdefinition;
-
-
+    fileChanges  _filechanges;
+    scanResultOperations _scanresultoperations;
 
     QQmlContext *ctx=_engine.rootContext();
     ctx->setContextProperty("windowstaskbar",&_windowstaskbar);
@@ -29,7 +31,10 @@ int main(int argc, char *argv[])
     QObject::connect(&_userdefinition,SIGNAL(setFilePahtReg(QString*)),&filepathtransactions, SLOT(getFilePahtReg(QString*)));
     QObject::connect(&_listenProcess,SIGNAL(setFilePahtReg(QString*)),&filepathtransactions, SLOT(getFilePahtReg(QString*)));
     QObject::connect(&_userdefinition,SIGNAL(setRegList(Kmap<int, RegProgramList>)),&filepathtransactions, SLOT(getRegList(Kmap<int, RegProgramList>)));
-    _userdefinition.userStart();
+    QObject::connect(&_filechanges,SIGNAL(setfileChangesNotification(QString)),&filepathtransactions, SLOT(getfileChangesNotification(QString)));
+    QObject::connect(&_system,SIGNAL(setApplyResults(QMap<int,QString>,QMap<int,int>,int,int)),&_scanresultoperations, SLOT(getApplyResults(QMap<int,QString>,QMap<int,int>,int,int)));
+
+    _userdefinition.setStart();
     _listenProcess.setStart();
 
 

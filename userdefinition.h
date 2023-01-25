@@ -20,7 +20,7 @@ public:
     void scanThread();
     void getProcessList();
     int getRegProgramsList();
-    void userStart();
+    void setStart();
 
     RegProgramList upRegListControl(Kstring reg);
     int regListNum = 0;

@@ -9,6 +9,13 @@
         <file>Image/1496.gif</file>
         <file>KText.qml</file>
         <file>Image/icons8-refresh-96.png</file>
+        <file>scanresultsOptions.qml</file>
+        <file>Image/and.png</file>
+        <file>Image/icons8-left-67.png</file>
+        <file>Image/icons8-right-67.png</file>
+        <file>Image/icons8-filedelete.png</file>
+        <file>Image/icons8-filequarantine.png</file>
+        <file>Image/icons8-double-tick-48.png</file>
     </qresource>
     <qresource prefix="/files"/>
 </RCC>

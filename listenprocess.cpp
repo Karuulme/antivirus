@@ -2,7 +2,7 @@
 
 listenProcess::listenProcess(QObject *parent): QObject{parent}
 {
-    QObject::connect(this,SIGNAL(setdeneme2(QString*)),this,SLOT(slotDeneme2(QString*)));
+    //QObject::connect(this,SIGNAL(setdeneme2(QString*)),this,SLOT(slotDeneme2(QString*)));
     m_lRef = 0;
 }
 listenProcess::~listenProcess() {
@@ -66,7 +66,7 @@ HRESULT listenProcess::Indicate(long lObjectCount, IWbemClassObject** apObjArray
                                 if(GetModuleFileNameExW(hProcessT,NULL,filePath,MAX_PATH)!=0){
                                     temp=QString::fromWCharArray(filePath);
                                     if(!temp.contains("C:\\Program Files\\WindowsApps")){
-                                         emit setFilePahtReg(&temp);
+                                        emit setFilePahtReg(&temp);
                                     }
                                 }
                             }

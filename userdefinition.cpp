@@ -9,7 +9,7 @@ userDefinition::~userDefinition()
 {
     RegCloseKey(regMachine);
 }
-void userDefinition::userStart(){
+void userDefinition::setStart(){
     getRegProgramsList();
     getProcessList();
     /*std::thread  getRegProgramsListThread(&userDefinition::getRegProgramsList, this);
