@@ -5,6 +5,9 @@
 #include <sstream>
 #include <thread>
 #include <QDebug>
+#include <Shlobj.h>
+#include <codecvt>
+#include <string>
 class fileChanges : public QObject
 {
     Q_OBJECT

@@ -15,6 +15,7 @@ SOURCES += \
         listenprocess.cpp \
         main.cpp \
         scanresultoperations.cpp \
+        securefile.cpp \
         system.cpp \
         userdefinition.cpp \
         windowtaskbar.cpp
@@ -38,6 +39,7 @@ HEADERS += \
     klibrary.h \
     listenprocess.h \
     scanresultoperations.h \
+    securefile.h \
     system.h \
     userdefinition.h \
     windowtaskbar.h
@@ -48,12 +50,6 @@ win32: LIBS += -lOleAut32
 
 win32: LIBS += -lwbemuuid
 
-#LIBS += -L"path/to/library" -lcomsuppw
+win32: LIBS += -liphlpapi
 
-#win32: LIBS += -lOlcomsuppw
-
-#win32: LIBS += -lcomsupp
-
-#win32: LIBS += -lOlcomsupp
-
-#win32: LIBS += -lcomsuppw
+win32: LIBS += -lshell32

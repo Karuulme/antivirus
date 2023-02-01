@@ -99,3 +99,4 @@ void filePathTransactions::getfileChangesNotification(QString filePath){ // BİR
       }
 }
 
+

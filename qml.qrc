@@ -16,6 +16,20 @@
         <file>Image/icons8-filedelete.png</file>
         <file>Image/icons8-filequarantine.png</file>
         <file>Image/icons8-double-tick-48.png</file>
+        <file>homeWindows.qml</file>
+        <file>quarantineWindows.qml</file>
+        <file>securefileWindows.qml</file>
+        <file>settingWindows.qml</file>
+        <file>formWindows.qml</file>
+        <file>quarantineListView.qml</file>
+        <file>Image/bottom-chevron.png</file>
+        <file>Image/right-chevron.png</file>
+        <file>secureFileView.qml</file>
+        <file>Image/icons8-delete-document-48.png</file>
+        <file>Image/icons8-open-folder-64.png</file>
+        <file>Image/logoico.ico</file>
+        <file>Image/logopng.png</file>
+        <file>Image/logo2ico.ico</file>
     </qresource>
     <qresource prefix="/files"/>
 </RCC>

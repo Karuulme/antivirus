@@ -26,6 +26,6 @@ private:
 public slots:
     void getFilePahtReg(QString *filePath);
     void getRegList(Kmap<int, RegProgramList> reg);
-    void getfileChangesNotification(QString filePath);
+    void getfileChangesNotification(QString filePath);;
 };
 #endif // FILEPATHTRANSACTIONS_H

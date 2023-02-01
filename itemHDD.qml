@@ -23,7 +23,7 @@ Rectangle {
         }
     }
     id: rectangle
-    width: 340
+    width: 320
     height: 65
     color:"#f9f9f9"
     border.width: 1
@@ -96,7 +96,7 @@ Rectangle {
        id:scan_button
         width: 80
         height: 20
-        x:240
+        x:220
         y:22
         visible: true
         border.width: 1
@@ -125,7 +125,7 @@ Rectangle {
         width: 40
         visible: false
         height: 20
-        x:252
+        x:232
         y:22
         border.width: 1
         color:"#00000000"
@@ -148,7 +148,7 @@ Rectangle {
 
     }
     BusyIndicator {
-        x: 298
+        x: 278
         y:14
         width: 34
         height: 34

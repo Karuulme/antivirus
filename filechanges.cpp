@@ -12,7 +12,13 @@ fileChanges::~fileChanges(){
   //  CloseHandle(hFile_DOWNLOADS);
 }
 int fileChanges::fileChangesThread_DESKTOP(){
-    hFile_DESKTOP = CreateFileA("C:\\Users\\karuulme\\Desktop", GENERIC_READ | FILE_LIST_DIRECTORY, FILE_SHARE_DELETE | FILE_SHARE_READ| FILE_SHARE_WRITE, NULL,OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED,NULL);
+    wchar_t  appData[MAX_PATH];
+    std::string file_DESKTOP;
+    SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, SHGFP_TYPE_DEFAULT, appData);
+    std::wstring ws( appData);
+    std::string test( ws.begin(), ws.end() );
+    file_DESKTOP=test;
+    hFile_DESKTOP = CreateFileA(file_DESKTOP.c_str(), GENERIC_READ | FILE_LIST_DIRECTORY, FILE_SHARE_DELETE | FILE_SHARE_READ| FILE_SHARE_WRITE, NULL,OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED,NULL);
     if (hFile_DESKTOP == INVALID_HANDLE_VALUE)
         return 1;
     OVERLAPPED overlapped;
@@ -56,7 +62,14 @@ int fileChanges::fileChangesThread_DESKTOP(){
     return 0;
 }
 int fileChanges::fileChangesThread_DOWNLOADS(){
-    hFile_DOWNLOADS = CreateFileA("C:\\Users\\karuulme\\Downloads", GENERIC_READ | FILE_LIST_DIRECTORY, FILE_SHARE_DELETE | FILE_SHARE_READ| FILE_SHARE_WRITE, NULL,OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED,NULL);
+    wchar_t  appData[MAX_PATH];
+    std::string file_DOWNLOADS;
+    SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, SHGFP_TYPE_DEFAULT, appData);
+    std::wstring ws( appData);
+    std::string test( ws.begin(), ws.end() );
+    file_DOWNLOADS=test;
+    file_DOWNLOADS.replace(file_DOWNLOADS.find("Desktop"), file_DOWNLOADS.length(), "Downloads");
+    hFile_DOWNLOADS = CreateFileA(file_DOWNLOADS.c_str(), GENERIC_READ | FILE_LIST_DIRECTORY, FILE_SHARE_DELETE | FILE_SHARE_READ| FILE_SHARE_WRITE, NULL,OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED,NULL);
     if (hFile_DOWNLOADS == INVALID_HANDLE_VALUE)
         return 1;
     OVERLAPPED overlapped;

@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QThreadPool>
 #include <QMap>
+#include <QFileDialog>
+#include <QtWidgets>
 class System : public QObject
 {
     Q_OBJECT
@@ -54,6 +56,7 @@ public slots:
     void set_singleVirusChanges(int index,int setvalue);
     void set_ScanResultAutoApply(int index);
     void set_VirusComputerOption(int virus,int computer);
+    void set_OpenFolders();
 };
 #endif // SYSTEM_H
 

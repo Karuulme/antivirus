@@ -83,13 +83,12 @@ void System::scanDiskThread(std::string firstFilePath,long double total){
                     malwareList[malwareListIndex]=QString::fromStdString(firstFilePath)+"//"+fileName;
                     malwareListIndex++;
                 }
-
                 Sleep(200);
               // emit scanFileName_changed(net);
-              //  emit set_scanByte(fileInformation.nFileSizeLow);
+              // emit set_scanByte(fileInformation.nFileSizeLow);
               // emit scanFile_changed(QString::fromStdString(fileInformation.cFileName));
-               // int scaneDisk=(100*total)/scanByte;
-               // emit scandiskArea_changed(scaneDisk);
+               //int scaneDisk=(100*total)/scanByte;
+               //emit scandiskArea_changed(scaneDisk);
             }
         }
     } while (FindNextFileA(firstFile, &fileInformation));
@@ -120,6 +119,19 @@ void System::set_VirusComputerOption(int virus,int computer){
     virusOptionIndex=virus;
     computerOptionIndex=computer;
 }
+void System::set_OpenFolders(){
+
+    /*QFileDialog dialog;
+    dialog.setFileMode(QFileDialog::AnyFile);
+    QStringList fileNames;
+    if (dialog.exec())
+        fileNames = dialog.selectedFiles();
+    qDebug()<<fileNames;*/
+  //  QString fileName=QFileDialog::getOpenFileName(NULL,"Open file","C:\\");
+
+}
+
+
 
 
 

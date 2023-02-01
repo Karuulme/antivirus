@@ -17,11 +17,16 @@
 #define BUFFER 8192
 #define KCharToInt(x) atoi(x)
 #define KSpace(x)(memset(x,0,sizeof(x)))
-#define KBank  "SOFTWARE\\AntiVirus\\Bank\\"
+#define KBank   "SOFTWARE\\AntiVirus\\Bank\\"
+#define KSecure "SOFTWARE\\AntiVirus\\Secure\\"
 struct RegProgramList {
     Kstring pHash;
     Kstring pFile;
     int pRunCount=0;
+};
+struct RegSecureFile {
+    Kstring fPath;
+    Kstring fFile;
 };
 class KLibrary : public QObject
 {
