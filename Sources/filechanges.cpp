@@ -1,4 +1,4 @@
-#include "filechanges.h"
+#include "../Headers/filechanges.h"
 
 fileChanges::fileChanges(QObject *parent): QObject{parent}
 {

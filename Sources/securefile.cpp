@@ -1,4 +1,4 @@
-#include "securefile.h"
+#include "../Headers/securefile.h"
 
 secureFile::secureFile(QObject *parent): QObject{parent}{
 

@@ -7,7 +7,7 @@ Rectangle {
     width: 675
     height: 480
     color:"#f4f4f4"
-    state:securefile.setStart()
+    state:{securefile.setStart(); return true}
     Rectangle{
         id: rectangle1
         width: parent.width
@@ -95,7 +95,6 @@ Rectangle {
             }
         }
     }
-
     Column {
         width: parent.width
         height: 400
@@ -108,6 +107,7 @@ Rectangle {
                 var object2 = componentSecureFileView.createObject(this);
                 object2.fPath=securefile.secureFiles;
             }
+            return true
         }
     }
 }

@@ -3,33 +3,33 @@
         <file>main.qml</file>
         <file>Image/icons8-close-64.png</file>
         <file>Image/icons8-hdd-80.png</file>
-        <file>itemHDD.qml</file>
         <file>Image/icons8-spinner.gif</file>
         <file>Image/icons8-close-red-64.png</file>
         <file>Image/1496.gif</file>
-        <file>KText.qml</file>
         <file>Image/icons8-refresh-96.png</file>
-        <file>scanresultsOptions.qml</file>
         <file>Image/and.png</file>
         <file>Image/icons8-left-67.png</file>
         <file>Image/icons8-right-67.png</file>
         <file>Image/icons8-filedelete.png</file>
         <file>Image/icons8-filequarantine.png</file>
         <file>Image/icons8-double-tick-48.png</file>
-        <file>homeWindows.qml</file>
-        <file>quarantineWindows.qml</file>
-        <file>securefileWindows.qml</file>
-        <file>settingWindows.qml</file>
-        <file>formWindows.qml</file>
-        <file>quarantineListView.qml</file>
         <file>Image/bottom-chevron.png</file>
         <file>Image/right-chevron.png</file>
-        <file>secureFileView.qml</file>
         <file>Image/icons8-delete-document-48.png</file>
         <file>Image/icons8-open-folder-64.png</file>
         <file>Image/logoico.ico</file>
         <file>Image/logopng.png</file>
         <file>Image/logo2ico.ico</file>
+        <file>view/formWindows.qml</file>
+        <file>view/homeWindows.qml</file>
+        <file>view/itemHDD.qml</file>
+        <file>view/KText.qml</file>
+        <file>view/quarantineListView.qml</file>
+        <file>view/quarantineWindows.qml</file>
+        <file>view/scanresultsOptions.qml</file>
+        <file>view/secureFileView.qml</file>
+        <file>view/securefileWindows.qml</file>
+        <file>view/settingWindows.qml</file>
     </qresource>
     <qresource prefix="/files"/>
 </RCC>

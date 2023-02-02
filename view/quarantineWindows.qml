@@ -19,6 +19,7 @@ Rectangle {
                 var ttt=component.createObject(this);
                ttt.listIndex=i+1;
             }
+            return true
         }
     }
 }

@@ -1,4 +1,4 @@
-#include "scanresultoperations.h"
+#include "../Headers/scanresultoperations.h"
 scanResultOperations::scanResultOperations(QObject *parent): QObject{parent}
 {
     getMac();

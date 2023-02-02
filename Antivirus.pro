@@ -9,16 +9,19 @@ CONFIG -= app_bundle
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 SOURCES += \
-        filechanges.cpp \
-        filepathtransactions.cpp \
-        klibrary.cpp \
-        listenprocess.cpp \
-        main.cpp \
-        scanresultoperations.cpp \
-        securefile.cpp \
-        system.cpp \
-        userdefinition.cpp \
-        windowtaskbar.cpp
+        Sources/customsystem.cpp \
+        Sources/filechanges.cpp \
+        Sources/filepathtransactions.cpp \
+        Sources/klibrary.cpp \
+        Sources/listenprocess.cpp \
+        Sources/notificationlisten.cpp \
+        Sources/processmemet.cpp \
+        Sources/scanresultoperations.cpp \
+        Sources/securefile.cpp \
+        Sources/system.cpp \
+        Sources/userdefinition.cpp \
+        Sources/windowtaskbar.cpp \
+        main.cpp
 
 RESOURCES += qml.qrc
 RC_ICONS=
@@ -34,15 +37,18 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    filechanges.h \
-    filepathtransactions.h \
-    klibrary.h \
-    listenprocess.h \
-    scanresultoperations.h \
-    securefile.h \
-    system.h \
-    userdefinition.h \
-    windowtaskbar.h
+    Headers/customsystem.h \
+    Headers/filechanges.h \
+    Headers/filepathtransactions.h \
+    Headers/klibrary.h \
+    Headers/listenprocess.h \
+    Headers/notificationlisten.h \
+    Headers/processmemet.h \
+    Headers/scanresultoperations.h \
+    Headers/securefile.h \
+    Headers/system.h \
+    Headers/userdefinition.h \
+    Headers/windowtaskbar.h
 
 win32: LIBS += -lOle32
 

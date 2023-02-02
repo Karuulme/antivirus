@@ -5,22 +5,21 @@ Rectangle {
     property double dTotal: 500
     property string dName: "Null"
     property string dRadiusColor: "#c8c8c8"
-    Connections{
-        target:system
-        onScanFileName_changed:{
-            if(scanFileName===dName){
-                busyIndicator1.running=true
-                scan_button.visible=false
-                scan_button_cancel.visible=true
-                dRadiusColor="#0047ab"
-            }
-            else{
-                busyIndicator1.running=false
-                scan_button.visible=true
-                scan_button_cancel.visible=false
-                dRadiusColor="#c8c8c8"
-            }
+    state: {
+        var scanFileName=system.scaningDisk
+        if(scanFileName===dName){
+            busyIndicator1.running=true
+            scan_button.visible=false
+            scan_button_cancel.visible=true
+            dRadiusColor="#0047ab"
         }
+        else{
+            busyIndicator1.running=false
+            scan_button.visible=true
+            scan_button_cancel.visible=false
+            dRadiusColor="#c8c8c8"
+        }
+        return true
     }
     id: rectangle
     width: 320
@@ -36,7 +35,7 @@ Rectangle {
         y: 10
         width: 40
         height: 40
-        source: "Image/icons8-hdd-80.png"
+        source: "../Image/icons8-hdd-80.png"
         fillMode: Image.PreserveAspectFit
     }
     Label {

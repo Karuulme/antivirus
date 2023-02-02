@@ -1,4 +1,4 @@
-#include "system.h"
+#include "../Headers/system.h"
 #include <windows.h>
 #include <QStringList>
 #include <fstream>
@@ -6,7 +6,7 @@
 #include <QThread>
 System::System(QObject *parent): QObject{parent}
 {
-    emit scanFileName_changed("NULL");
+    emit setscaningDisk("NULL");
     emit storage_changed();
 }
 
@@ -44,7 +44,7 @@ void System::set_scandisk(QString value,double total,double free){
 
     if(m_scandisk_status!=true){
         scanHDDName=value;
-        emit scanFileName_changed(scanHDDName);
+        setscaningDisk(scanHDDName);
         m_scandisk=value;
         m_scandisk_status=true;
         emit scandisk_status_changed();
@@ -58,13 +58,14 @@ void System::scanDiskThreadControl(std::string firstFilePath,long double total){
     std::thread  scanThread(&System::scanDiskThread, this, firstFilePath,total);
     scanThread.join();
     scanHDDName="";
-    emit scanFileName_changed(scanHDDName);
+    setscaningDisk(scanHDDName);
     breakScanThread=false;
     m_scandisk_status=false;
     emit scandisk_status_changed();
 }
 void System::scanDiskThread(std::string firstFilePath,long double total){
     WIN32_FIND_DATAA fileInformation;
+    qDebug()<<QString::fromStdString(firstFilePath);
     HANDLE firstFile = FindFirstFileExA((firstFilePath+ "/*").c_str(), FindExInfoStandard, &fileInformation, FindExSearchNameMatch, NULL, 0);
     do {
         if(breakScanThread)
@@ -79,7 +80,8 @@ void System::scanDiskThread(std::string firstFilePath,long double total){
                 QString fileName=QString::fromStdString(fileInformation.cFileName);
                 int netLength=fileName.size();
                 if(fileName[netLength-1]=='e' && fileName[netLength-2]=='x' && fileName[netLength-3]=='e'){
-                    emit scanedFileName_changed(fileName+"q:"+QString::number(malwareListIndex));
+                    setSescanedFileName(fileName+"q:"+QString::number(malwareListIndex));
+
                     malwareList[malwareListIndex]=QString::fromStdString(firstFilePath)+"//"+fileName;
                     malwareListIndex++;
                 }
@@ -97,14 +99,14 @@ void System::scanDiskThread(std::string firstFilePath,long double total){
 }
 void System::set_scandiskClose(){
     breakScanThread=true;
-    emit scanFileName_changed("");
+    setscaningDisk("");
     m_scandisk_status=false;
     if(autoScanResult)
        set_ScanResultApply();
 }
 void System::set_get_storage(){
     emit storage_changed();
-    emit scanFileName_changed(scanHDDName);
+    setscaningDisk(scanHDDName);
 }
 void System::set_ScanResultApply(){
     emit setApplyResults(malwareList,malwareListOptions,virusOptionIndex,computerOptionIndex);
@@ -119,18 +121,20 @@ void System::set_VirusComputerOption(int virus,int computer){
     virusOptionIndex=virus;
     computerOptionIndex=computer;
 }
-void System::set_OpenFolders(){
-
-    /*QFileDialog dialog;
-    dialog.setFileMode(QFileDialog::AnyFile);
-    QStringList fileNames;
-    if (dialog.exec())
-        fileNames = dialog.selectedFiles();
-    qDebug()<<fileNames;*/
-  //  QString fileName=QFileDialog::getOpenFileName(NULL,"Open file","C:\\");
-
+QString System::getscanedFileName(){
+    return m_scanedFileName;
 }
-
+void System::setSescanedFileName(QString value){
+    m_scanedFileName=value;
+    emit scanedFileName_changed();
+}
+QString System::getscaningDisk() {
+    return m_scaningDisk;
+}
+void System::setscaningDisk(QString value) {
+   m_scaningDisk=value;
+   emit scaningDisk_changed();
+}
 
 
 

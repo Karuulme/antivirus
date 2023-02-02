@@ -71,7 +71,7 @@ Rectangle {
             width: 30
             height: 30
             anchors.left: parent.left
-            source: "Image/icons8-left-67.png"
+            source: "../Image/icons8-left-67.png"
             anchors.leftMargin: 0
             z:10
             MouseArea{
@@ -96,7 +96,7 @@ Rectangle {
             width: 30
             height: 30
             anchors.right: parent.right
-            source: "Image/icons8-right-67.png"
+            source: "../Image/icons8-right-67.png"
             anchors.rightMargin: -40
 
             z:10

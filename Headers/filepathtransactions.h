@@ -2,7 +2,7 @@
 #define FILEPATHTRANSACTIONS_H
 #include <QObject>
 #include <windows.h>
-#include <klibrary.h>
+#include <Headers/klibrary.h>
 #include <QCryptographicHash>
 #include <QFile>
 #include <QDebug>

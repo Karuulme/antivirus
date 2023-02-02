@@ -1,4 +1,4 @@
-#include "filepathtransactions.h"
+#include "../Headers/filepathtransactions.h"
 
 filePathTransactions::filePathTransactions(QObject *parent): QObject{parent}
 {

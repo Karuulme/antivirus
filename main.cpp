@@ -6,40 +6,38 @@
 #include <QSystemTrayIcon>
 #include <QQmlContext>
 
-#include <windowtaskbar.h>
-#include <system.h>
-//#include <userdefinition.h>
-//#include <listenprocess.h>
-#include <filepathtransactions.h>
-#include <filechanges.h>
-#include <scanresultoperations.h>
-#include <securefile.h>
+#include <Headers/windowtaskbar.h>
+#include <Headers/system.h>
+//#include <Headers/userdefinition.h>
+//#include <Headers/listenprocess.h>
+#include <Headers/filepathtransactions.h>
+#include <Headers/filechanges.h>
+#include <Headers/scanresultoperations.h>
+#include <Headers/securefile.h>
 
 int main(int argc, char *argv[])
 {
-
     QApplication app(argc, argv);
-
     QApplication::setQuitOnLastWindowClosed(false);
     QIcon icon(":Image/logo2ico.ico");
     app.setWindowIcon(icon);
-    QQmlApplicationEngine engine;
 
+    QQmlApplicationEngine engine;
     WindowTaskBar _windowstaskbar;
-      System _system;
+    System _system;
      // listenProcess _listenProcess;
       filePathTransactions  filepathtransactions;
      // userDefinition  _userdefinition;
     fileChanges  _filechanges;
     scanResultOperations _scanresultoperations;
     secureFile _secureFile;
+
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
         QMessageBox::critical(0, QObject::tr("Systray"),
                                  QObject::tr("I couldn't detect any system tray "
                                              "on this system."));
         return 1;
     }
-
 
     QQmlContext *ctx=engine.rootContext();
     ctx->setContextProperty("windowstaskbar",&_windowstaskbar);

@@ -5,7 +5,7 @@
 #include <Tlhelp32.h>
 #include <psapi.h>
 #include <QByteArray>
-#include <klibrary.h>
+#include <Headers/klibrary.h>
 #include <QDebug>
 class userDefinition : public QObject
 {
@@ -29,8 +29,8 @@ public:
     Kstring KTcharToString(TCHAR value[1024]);
     Kstring KWcharToString(wchar_t value[1024]);
     Kstring KcharToString(char value[256]);
-    QString KTcharToQString(TCHAR * value);
-    std::string KQStringToString(QString value);
+   // QString KTcharToQString(TCHAR * value);
+   // std::string KQStringToString(QString value);
 
 signals:
     void setFilePahtReg(QString *filePath);

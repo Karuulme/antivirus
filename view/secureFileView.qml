@@ -23,7 +23,7 @@ Rectangle {
 
         Image {
             y:-5
-            source: "Image/icons8-open-folder-64.png"
+            source: "../Image/icons8-open-folder-64.png"
             width: 28
             height:28
         }
@@ -42,7 +42,7 @@ Rectangle {
         y: 5
         Image {
             y:-5
-            source: "Image/icons8-delete-document-48.png"
+            source: "../Image/icons8-delete-document-48.png"
             width: 28
             height:28
         }

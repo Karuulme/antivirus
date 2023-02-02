@@ -21,7 +21,7 @@ Rectangle {
         y: 2
         width: 20
         height: 20
-        source: "Image/icons8-filequarantine.png"
+        source: "../Image/icons8-filequarantine.png"
         MouseArea{
             anchors.fill: parent
             anchors.rightMargin: 0
@@ -45,7 +45,7 @@ Rectangle {
         y: 5
         width: 15
         height: 15
-        source: "Image/icons8-double-tick-48.png"
+        source: "../Image/icons8-double-tick-48.png"
     }
     Image {
         id: deletefile
@@ -53,7 +53,7 @@ Rectangle {
         y: 2
         width: 20
         height: 20
-        source: "Image/icons8-filedelete.png"
+        source: "../Image/icons8-filedelete.png"
         MouseArea{
             anchors.fill: parent
             anchors.rightMargin: 0

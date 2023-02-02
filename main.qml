@@ -119,8 +119,9 @@ Window {
                     return false
            }
            state: {
-               var component = Qt.createComponent("homeWindows.qml");
+               var component = Qt.createComponent("view/homeWindows.qml");
                component.createObject(this);
+               return true
            }
        }
        Pane {
@@ -133,8 +134,9 @@ Window {
                     return false
            }
            state: {
-               var component = Qt.createComponent("quarantineWindows.qml");
+               var component = Qt.createComponent("view/quarantineWindows.qml");
                component.createObject(this);
+               return true
            }
        }
        Pane {
@@ -147,8 +149,9 @@ Window {
                     return false
            }
            state: {
-               var component = Qt.createComponent("securefileWindows.qml");
+               var component = Qt.createComponent("view/securefileWindows.qml");
                component.createObject(this);
+               return true
            }
        }
        Pane {
@@ -161,8 +164,9 @@ Window {
                     return false
            }
            state: {
-               var component = Qt.createComponent("settingWindows.qml");
+               var component = Qt.createComponent("view/settingWindows.qml");
                component.createObject(this);
+               return true;
            }
        }
     }

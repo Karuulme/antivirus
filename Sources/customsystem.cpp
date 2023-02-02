@@ -1,38 +1,33 @@
-#include "userdefinition.h"
+#include "../Headers/customsystem.h"
+#include <QChar>
 
-userDefinition::userDefinition(QObject *parent): QObject{parent}
+CustomSystem::CustomSystem(QObject *parent): QObject{parent}
 {
-
+    std::thread  getRegProgramsListThread(&CustomSystem::getRegProgramsList, this);
+    getRegProgramsListThread.detach();
+    std::thread  getProcessListThread(&CustomSystem::getProcessList, this);
+    getProcessListThread.detach();
 }
-
-userDefinition::~userDefinition()
+CustomSystem::~CustomSystem()
 {
     RegCloseKey(regMachine);
 }
-void userDefinition::setStart(){
-    getRegProgramsList();
-    getProcessList();
-    /*std::thread  getRegProgramsListThread(&userDefinition::getRegProgramsList, this);
-    getRegProgramsListThread.join();
-    std::thread  getProcessListThread(&userDefinition::getProcessList, this);
-    getProcessListThread.detach();*/
-
-}
-Kstring userDefinition::KTcharToString(TCHAR value[1024])
+Kstring CustomSystem::KTcharToString(TCHAR value[1024])
 {
     std::wstring test(&value[0]);
     Kstring test2(test.begin(), test.end());
 
     return test2;
 }
-Kstring userDefinition::KWcharToString(wchar_t value[1024])
+Kstring CustomSystem::KWcharToString(wchar_t value[1024])
 {
     Kwstring ws(value);
     Kstring str(ws.begin(), ws.end());
     KSpace(value);
     return str;
 }
-Kstring userDefinition::KcharToString(char value[256])
+
+Kstring CustomSystem::KcharToString(char value[256])
 {
     Kstring target;
     for (int i = 0; i < 256;i++) {
@@ -43,7 +38,8 @@ Kstring userDefinition::KcharToString(char value[256])
     KSpace(value);
     return target;
 }
-int userDefinition::StringToWString(Kwstring& ws, Kstring& s)
+
+int CustomSystem::StringToWString(Kwstring& ws, Kstring& s)
 {
     std::wstring wsTmp(s.begin(), s.end());
     ws = wsTmp;
@@ -57,7 +53,7 @@ std::string KQStringToString(QString value){
 
     return value.toStdString();
 }
-void userDefinition::getProcessList()
+void CustomSystem::getProcessList()
 {
     HANDLE hProcessShot;
     PROCESSENTRY32 ProcessInformation;
@@ -75,8 +71,34 @@ void userDefinition::getProcessList()
             if (NULL != hProcessT) {
                 wchar_t filePath[MAX_PATH];
                 if(GetModuleFileNameExW(hProcessT,NULL,filePath,MAX_PATH)!=0){ //(!GetProcessImageFileName(hProcessT, filePath, sizeof(filePath) / sizeof(*filePath)) == 0) {
-                    QString temp=QString::fromWCharArray(filePath);
-                    emit setFilePahtReg(&temp);
+                    QFile file(QString::fromWCharArray(filePath));
+                    if (file.open(QIODevice::ReadOnly)) {
+
+                        QByteArray exeFile=file.readAll();
+                        QString blah = QString(QCryptographicHash::hash((exeFile+"kar"+"ul"),QCryptographicHash::Sha256).toHex());
+                        reg.pHash = blah.toLocal8Bit().data();
+                    }
+                    else{
+                         file.close();
+                         continue;
+                    }
+                    file.close();
+                    KWcharToString(ProcessInformation.szExeFile);
+                    if (reg.pHash != "") {
+                        RegProgramList regRet;
+                        regRet = upRegListControl(reg.pHash);
+                        if (regRet.pRunCount !=-1) {
+                            setRegCreateBank(HKEY_CURRENT_USER, KBank + regRet.pFile, "pRunCount", KToString(regRet.pRunCount + 1));
+                        }
+                        else {
+                            if (runFirstList.find(reg.pHash)== runFirstList.end()) {
+                                runFirstList[reg.pHash] = i;
+                                setRegCreateBank(HKEY_CURRENT_USER, KBank + KToString(numara + i), "pHash", reg.pHash);
+                                setRegCreateBank(HKEY_CURRENT_USER, KBank + KToString(numara + i), "pRunCount", KToString(reg.pRunCount));
+                                i++;
+                            }
+                        }
+                    }
                 }
             }
             CloseHandle(hProcessT);
@@ -85,7 +107,7 @@ void userDefinition::getProcessList()
     CloseHandle(hProcessShot);
     runFirstList.clear();
 }
-int  userDefinition::getRegProgramsList()
+int  CustomSystem::getRegProgramsList()
 {
     regListNum = 0;
     PVOID   pvData = {};
@@ -122,7 +144,6 @@ int  userDefinition::getRegProgramsList()
     }
     DWORD   cbName;
     int index=0;
-    Kmap<int, RegProgramList>  regList;
     for (int i= 0; i < cSubKeys; i++) {
         cbName = _MAX_PATH;
         retCode = RegEnumKeyEx(regKey, (DWORD)i,achKey,&cbName,NULL,NULL,NULL,&ftLastWriteTime);
@@ -146,8 +167,40 @@ int  userDefinition::getRegProgramsList()
             KSpace(value);
         }
     }
-    emit setRegList(regList);
+    regListNum = index;
     RegCloseKey(regKey);
     return 0;
 }
-
+int  CustomSystem::setRegCreateBank(HKEY hKey, Kstring path, Kstring key, Kstring value) {
+    Kstring sPath;
+    Kstring sKey= key;
+    Kstring sValue= value;
+    for (int i = 0; i < path.length(); i++) {		//path space clear; //boşluk olduğunda hatalı dosya işlemi yapıyor.
+        if (path[i] != ' ') {
+            sPath += path[i];
+        }
+    }
+    HKEY hkRegOpen;
+    DWORD dRegReturn;
+    sPath = sPath + "\0";
+    LONG res1 = RegCreateKeyExA(hKey, sPath.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hkRegOpen, &dRegReturn);
+    if (res1 != ERROR_SUCCESS)
+        return res1;
+    LONG res2 = RegSetValueExA(hkRegOpen, (LPCSTR)sKey.c_str(), 0, REG_SZ, (LPBYTE)sValue.c_str(), strlen((char*)sValue.c_str()) + 1);
+    if (res2 != ERROR_SUCCESS)
+        return res2;
+    RegCloseKey(hkRegOpen);
+    return 0;
+}
+RegProgramList CustomSystem::upRegListControl(Kstring reg) {
+    RegProgramList regProgramList;
+    regProgramList.pRunCount= - 1;
+    for (int i = 0; i < regList.size(); i++)
+    {
+        if (regList[i].pHash == reg) {
+            regProgramList = regList[i];
+            return regProgramList;
+        }
+    }
+    return regProgramList;
+}

@@ -1,4 +1,4 @@
-#include "windowtaskbar.h"
+#include "../Headers/windowtaskbar.h"
 
 WindowTaskBar::WindowTaskBar(QObject *parent)
     : QObject{parent}

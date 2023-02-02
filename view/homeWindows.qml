@@ -26,6 +26,7 @@ Rectangle {
                 object.dTotal=disk[1]
                 object.dFree=disk[2]
             }
+            return true
         }
     }
     Rectangle{
@@ -45,29 +46,34 @@ Rectangle {
         color:"#00000000"
         clip: true
         z:50
+        state:{
+            if(system.scanedFileName){
+                var scanedFileName=system.scanedFileName
+
+                var KText = Qt.createComponent("KText.qml");
+                var objectKText = KText.createObject(windows_log_colmn);
+                var values=scanedFileName.split("q:");
+                objectKText.dName=values[0];
+                objectKText.dindex=parseInt(values[1])
+              ////////////// ****    ÇÖZÜLECEK  ÇÖZÜLECEK /////****************************** ------------------------------------
+              /* if(kTextBackColor===false){
+                    objectKText.backColor="#e3e3e3";
+                    kTextBackColor=true;
+                }
+                else
+                    kTextBackColor=false
+                if(windows_log_colmn.height-windows_log.height>0){
+                    scroolBarControl=true
+                }*/
+                ////////////// ****    ÇÖZÜLECEK  ÇÖZÜLECEK /////****************************** ------------------------------------
+            }
+            return true
+        }
         Column{
             id: windows_log_colmn
             width: 318
             z:51
-            Connections{
-                target:system
-                onScanedFileName_changed:{
-                    var component2 = Qt.createComponent("KText.qml");
-                    var object2 = component2.createObject(windows_log_colmn);
-                    var values=scanedFileName.split("q:")
-                    object2.dName=values[0]
-                    object2.dindex=values[1]
-                    if(kTextBackColor===false){
-                        object2.backColor="#e3e3e3"
-                        kTextBackColor=true
-                    }
-                    else
-                        kTextBackColor=false
-                    if(windows_log_colmn.height-windows_log.height>0){
-                        scroolBarControl=true
-                    }
-                }
-            }
+
         }
         Rectangle{
             id:windows_log_scrool_bar
@@ -134,11 +140,11 @@ Rectangle {
             source:{
                 if(windowstastbar_close_icon==0){
                    windowsTaskBar_close.color= "#00000000"
-                    "Image/icons8-close-64.png"
+                    "../Image/icons8-close-64.png"
                     }
                 else{
                     windowsTaskBar_close.color= "#EDEDED"
-                    "Image/icons8-close-red-64.png"
+                    "../Image/icons8-close-red-64.png"
                 }
             }
             fillMode: Image.PreserveAspectFit
@@ -171,7 +177,7 @@ Rectangle {
                 id: image1
                 width: 30
                 height: 30
-                source: "Image/icons8-refresh-96.png"
+                source: "../Image/icons8-refresh-96.png"
                 fillMode: Image.PreserveAspectFit
                 MouseArea{
                     hoverEnabled: true
@@ -214,6 +220,7 @@ Rectangle {
         state: {
             var component = Qt.createComponent("scanresultsOptions.qml");
             var object = component.createObject(scanResultOptions);
+            return true
         }
 
     }
