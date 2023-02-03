@@ -27,23 +27,10 @@ Kstring secureFile::KcharToString(char value[256])
             break;
         target += value[i];
     }
-    KSpace(value);
     return target;
 }
 
-int secureFile::folderPathControl(QString path){
-    if(path.contains(filePathDESKTOP)){
-        for( int i=0;i<secureFile_Index;i++){
-            QString fpath=QString::fromStdString(secureFile_RegList[i].fPath);
-            if(fpath.contains(path)){
-                return -1;
-            }
-        }
-    }
-    else
-        return -1;
-    return 1;
-}
+
 int secureFile::StringToWString(Kwstring& ws, Kstring& s)
 {
     std::wstring wsTmp(s.begin(), s.end());
@@ -61,12 +48,11 @@ int secureFile::getRegSecureFiles()
     std::wstring name;
     StringToWString(name, pathX);
     const wchar_t* szName = name.c_str();
-    DWORD BufferSize = 8192;
     int error = 0;
     if(RegOpenKeyEx(regMachine, szName, 0, KEY_ALL_ACCESS | KEY_QUERY_VALUE, &regKey)!= ERROR_SUCCESS)
     {
         error = GetLastError();
-        return 1;
+        return error;
     }
     TCHAR    achKey[_MAX_PATH];
     TCHAR    achClass[MAX_PATH] = TEXT("");
@@ -80,13 +66,13 @@ int secureFile::getRegSecureFiles()
     DWORD    cbSecurityDescriptor;
     FILETIME ftLastWriteTime;
     DWORD retCode;
+    DWORD BufferSize = BUFFER;
     if(RegQueryInfoKey(regKey,achClass,&cchClassName,NULL,&cSubKeys,&cbMaxSubKey,&cchMaxClass,&cValues,&cchMaxValue,&cbMaxValueData,&cbSecurityDescriptor,&ftLastWriteTime)!=ERROR_SUCCESS)
     {
         error = GetLastError();
-        return 1;
+        return error;
     }
     DWORD   cbName;
-    int index=0;
     for (int i= 0; i < cSubKeys; i++) {
         cbName = _MAX_PATH;
         retCode = RegEnumKeyEx(regKey, (DWORD)i,achKey,&cbName,NULL,NULL,NULL,&ftLastWriteTime);
@@ -98,15 +84,16 @@ int secureFile::getRegSecureFiles()
             str = std::string(wStr.begin(), wStr.end());
             Kstring path2 = pathX + str;
             char value[BUFFER];
-            DWORD BufferSize = BUFFER;
+            RegGetValueA(regMachine, path2.c_str(), "fKey", RRF_RT_ANY, NULL, (PVOID)&value, &BufferSize);
+            regSecureFile.fKey = KcharToString(value);
             RegGetValueA(regMachine, path2.c_str(), "fPath", RRF_RT_ANY, NULL, (PVOID)&value, &BufferSize);
             regSecureFile.fPath = KcharToString(value);
             regSecureFile.fFile = str;
-            secureFile_RegList[index] = regSecureFile;
-            index++;
-            secureFile_Index++;
+            secureFileRegList[secureFileIndex] = regSecureFile;
+            secureFileIndex++;
             KSpace(value);
-            setsecureFiles(QString::fromStdString(regSecureFile.fPath));
+
+            setsecureFiles(QString::fromStdString("Null:?!?:"+regSecureFile.fPath+":?!?:"+regSecureFile.fKey));// kayıt defterinden gelen bir kayıf ise standar olarak gönderiyoruz
         }
     }
     RegCloseKey(regKey);
@@ -133,25 +120,50 @@ int  secureFile::setRegCreateRecure(HKEY hKey, Kstring path, Kstring key, Kstrin
     RegCloseKey(hkRegOpen);
     return 0;
 }
+int secureFile::folderPathControl(QString path){
+    if(path.contains(filePathDESKTOP)){
+        for(int i=0;i<secureFileIndex;i++){
+            if(QString::fromStdString(secureFileRegList[i].fPath).contains(path)){
+                return -1;
+            }
+        }
+    }
+    else
+        return -1;
+    return 1;
+}
 void secureFile::set_folderPath(QString parentFileName){
     parentFileName=parentFileName.replace("file:///","");
-    if(folderPathControl(parentFileName)==1){
-        secureFile_Index++;
-        setRegCreateRecure(regMachine,KSecure+KToString(1000+secureFile_Index),"fPath",parentFileName.toStdString());
-        RegSecureFile regSecureFile;
-        regSecureFile.fPath=parentFileName.toStdString();
-        regSecureFile.fFile=KToString(1000+secureFile_Index);
-        secureFile_RegList[secureFile_Index]=regSecureFile;
-        setsecureFiles(parentFileName);
+    if(folderPathControl(parentFileName)>0){
+        secureFileIndex++;
+        QString Filepassword = QString::fromUtf8(getRandomSha256().toHex());
+        setRegCreateRecure(regMachine,KSecure+KToString(1000+secureFileIndex),"fPath",parentFileName.toStdString());
+        setRegCreateRecure(regMachine,KSecure+KToString(1000+secureFileIndex),"fKey",Filepassword.toStdString());
 
+        secureFileRegList[secureFileIndex-1].fPath=parentFileName.toStdString();
+        secureFileRegList[secureFileIndex-1].fFile=KToString(1000+secureFileIndex);
+        secureFileRegList[secureFileIndex-1].fKey=Filepassword.toStdString();
+        setsecureFiles("new:?!?:"+parentFileName+":?!?:"+Filepassword);// Yeni eklendiğini belirtmek için başına "new" ekliyoruz
+        Kstring newFolderPath=parentFileName.toStdString()+"/"+Filepassword.toStdString();
+        CreateDirectoryA(newFolderPath.c_str(),NULL);
     }
-   // getRegSecureFiles();
 }
 void secureFile::set_RecureOpenFile(QString parentFileName){
     Kstring shelpath=parentFileName.toStdString();
     ShellExecuteA(NULL, "open",shelpath.c_str(), NULL, NULL, SW_SHOWDEFAULT);
 }
+QByteArray secureFile::getRandomSha256(){
+    std::random_device rd;
+    std::mt19937_64 eng(rd());
+    std::uniform_int_distribution<unsigned long long> distr;
 
+    QByteArray randomData;
+    randomData.resize(32);
+    for (int i = 0; i < randomData.size(); ++i) {
+        randomData[i] = static_cast<char>(distr(eng) & 0xff);
+    }
+    return QCryptographicHash::hash(randomData, QCryptographicHash::Sha256);
+}
 
 
 

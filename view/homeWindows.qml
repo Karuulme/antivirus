@@ -2,12 +2,13 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 import QtQuick.Controls 2.15
 Rectangle {
+    id: rectangle
     property variant stringList: system.storageList.split("@")
     property int windowstastbar_close_icon: 0
     property bool kTextBackColor: false
     property bool scroolBarControl: false
     width: 700
-    height: 450
+    height: 470
     visible: true
     color: "#f4f4f4"
     Column {
@@ -42,47 +43,34 @@ Rectangle {
         id:windows_log
         x: 361
         width: 338
-        height: 380
         color:"#00000000"
+        anchors.top: parent.top
+        anchors.bottom: scanResultOptions.top
+        anchors.bottomMargin: 0
+        anchors.topMargin: 0
         clip: true
         z:50
-        state:{
-            if(system.scanedFileName){
-                var scanedFileName=system.scanedFileName
-
-                var KText = Qt.createComponent("KText.qml");
-                var objectKText = KText.createObject(windows_log_colmn);
-                var values=scanedFileName.split("q:");
-                objectKText.dName=values[0];
-                objectKText.dindex=parseInt(values[1])
-              ////////////// ****    ÇÖZÜLECEK  ÇÖZÜLECEK /////****************************** ------------------------------------
-              /* if(kTextBackColor===false){
-                    objectKText.backColor="#e3e3e3";
-                    kTextBackColor=true;
-                }
-                else
-                    kTextBackColor=false
-                if(windows_log_colmn.height-windows_log.height>0){
-                    scroolBarControl=true
-                }*/
-                ////////////// ****    ÇÖZÜLECEK  ÇÖZÜLECEK /////****************************** ------------------------------------
-            }
-            return true
-        }
         Column{
             id: windows_log_colmn
             width: 318
             z:51
-
+            onChildrenChanged: {
+                if(!scroolBarControl){
+                    if(height>300){
+                       console.log("vlaue");
+                        scroolBarControl=true
+                    }
+                }
+            }
         }
         Rectangle{
             id:windows_log_scrool_bar
-            width: 10
-            visible: scroolBarControl
+            width: 5
+            visible:true// scroolBarControl
             height: 150
             color: "#acacac"
             onYChanged: {
-                if(scroolBarControl){
+                if(windows_log_scrool_bar.visible){
                     windows_log_colmn.y=- windows_log_scrool_bar.y*(windows_log_colmn.height-windows_log.height)/(windows_log.height-windows_log_scrool_bar.height)
                 }
             }
@@ -90,6 +78,7 @@ Rectangle {
             anchors.right: parent.right
             anchors.rightMargin:0
             MouseArea{
+                property bool scroolBarEffect: false
                 anchors.fill: parent
                  drag.target: parent
                  drag.axis: Drag.YAxis
@@ -97,12 +86,45 @@ Rectangle {
                  drag.minimumX: 0
                  drag.maximumY: windows_log.height/2+34
                  drag.minimumY: 0
+                 hoverEnabled: true
+                 onEntered:parent.width=10
+                 onExited: {
+                     if(!scroolBarEffect){
+                          parent.width=5
+                     }
+                 }
+                 onPressed:scroolBarEffect=true
+                 onReleased:{
+                     parent.width=5
+                     scroolBarEffect=false
+                 }
             }
+        }
+        state:{
+            if(system.scanedFileName){
+                var scanedFileName=system.scanedFileName
+                var KText = Qt.createComponent("KText.qml");
+                var objectKText = KText.createObject(windows_log_colmn);
+                var values=scanedFileName.split("q:");
+                objectKText.dName=values[0];
+                objectKText.dindex=parseInt(values[1]);
+                if(!windows_log_scrool_bar.visible){
+                   // var vlaue=windows_log_colmn.height;
+
+                  //  if(windows_log_colmn.height>400){
+                       // windows_log_scrool_bar.visible=true;
+                  //  }
+
+                }
+            }
+            return true
         }
         MouseArea{
             anchors.fill: parent
+            anchors.rightMargin: 10
+            z:100
             onWheel: {
-                if(scroolBarControl){
+                if(windows_log_scrool_bar){
                     if (wheel.angleDelta.y > 0)
                     {
                         if(windows_log_scrool_bar.y>0){
@@ -197,31 +219,28 @@ Rectangle {
                 }
             }
         }
-
-
     }
-
     BusyIndicator {
         id: busyIndicator
-        x: 520
-        y: 209
+        x: 514
+        y: 144
         width: 50
         height: 50
         running: system.scandisk_status
     }
-
     Rectangle {
         id: scanResultOptions
-        x: 362
-        y: 391
         width: 338
         height: 80
         color: "#00000000"
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.rightMargin: 0
+        anchors.bottomMargin: 25
         state: {
             var component = Qt.createComponent("scanresultsOptions.qml");
             var object = component.createObject(scanResultOptions);
             return true
         }
-
     }
 }

@@ -30,6 +30,12 @@
         <file>view/secureFileView.qml</file>
         <file>view/securefileWindows.qml</file>
         <file>view/settingWindows.qml</file>
+        <file>Image/icons8-home-96.png</file>
+        <file>Image/icons8-security-lock-100.png</file>
+        <file>Image/icons8-settings-96.png</file>
+        <file>Image/icons8-quarantine-64.png</file>
+        <file>Image/logopng2.png</file>
+        <file>Image/delogo2.png</file>
     </qresource>
     <qresource prefix="/files"/>
 </RCC>

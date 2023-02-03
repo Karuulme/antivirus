@@ -26,6 +26,7 @@ struct RegProgramList {
 };
 struct RegSecureFile {
     Kstring fPath;
+    Kstring fKey;
     Kstring fFile;
 };
 class KLibrary : public QObject

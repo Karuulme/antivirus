@@ -3,9 +3,10 @@ import QtQuick.Window 2.12
 import QtQuick.Controls 2.15
 
 Window {
+    id: window
     property int selectMenuIndex: 0
     width: 880
-    height: 540
+    height: 600
     flags: Qt.Window
     visibility: Window.Windowed
     visible: true
@@ -16,13 +17,24 @@ Window {
     maximumWidth: 880
     minimumWidth: 880
 
+    Rectangle{
+        width: 1
+        height: 500
+        color: "#b8b8b8"
+        anchors.left: menuWindows.right
+        anchors.top: logoPanel.bottom
+        anchors.topMargin: 0
+        anchors.leftMargin:8
+    }
+
     Rectangle {
         id: menuWindows
-        x: 18
-        y: 166
-        width: 120
+        x: 7
+        width: 150
         height: 200
         color: "#00000000"
+        anchors.top: logoPanel.bottom
+        anchors.topMargin: 10
         Rectangle {
             id: selectMenu
             width: 8
@@ -41,8 +53,8 @@ Window {
                 text: qsTr("Home")
                 verticalAlignment: Text.AlignVCenter
                 height: 25
-                leftPadding: 5
-
+                leftPadding: 10
+                x:20
                 font.bold: true
                 font.family: "Tahoma"
                 color: "#949494"
@@ -52,21 +64,35 @@ Window {
                     anchors.fill: parent
                     onClicked: selectMenuIndex=0
                 }
+                Image {
+                    width: 24
+                    height: 24
+                    y:-1
+                    x:-20// icons8-quarantine-64.png--icons8-security-lock-100.png---icons8-settings-96.png
+                    source: "./Image/icons8-home-96.png"
+                }
             }
             Text {
+                x: 20
                 text: qsTr("Quarantine")
                 font.bold: true
                 font.family: "Tahoma"
                 color: "#949494"
                 font.pointSize: 11
-                leftPadding: 5
+                leftPadding: 10
                 verticalAlignment: Text.AlignVCenter
                 height: 25
-                topPadding: 2
                 width: 160
                 MouseArea{
                     anchors.fill: parent
                     onClicked: selectMenuIndex=1
+                }
+                Image {
+                    width: 25
+                    height: 25
+                    x:-21
+                    y:0
+                    source: "./Image/icons8-quarantine-64.png"
                 }
             }
             Text {
@@ -75,13 +101,21 @@ Window {
                 font.family: "Tahoma"
                 color: "#949494"
                 font.pointSize: 11
-                leftPadding: 5
+                leftPadding: 10
+                x:20
                 verticalAlignment: Text.AlignVCenter
                 height: 25
                 width: 160
                 MouseArea{
                     anchors.fill: parent
                     onClicked: selectMenuIndex=2
+                }
+                Image {
+                    width: 22
+                    height: 22
+                    x:-20
+                    y:2
+                    source: "./Image/icons8-security-lock-100.png"
                 }
             }
             Text {
@@ -90,7 +124,8 @@ Window {
                 font.family: "Tahoma"
                 color: "#949494"
                 font.pointSize: 11
-                leftPadding: 5
+                leftPadding: 10
+                x:20
                 verticalAlignment: Text.AlignVCenter
                 height: 25
                 width: 160
@@ -98,17 +133,27 @@ Window {
                     anchors.fill: parent
                     onClicked: selectMenuIndex=3
                 }
+                Image {
+                    width: 22
+                    height: 22
+                    x:-20
+                    y:2
+                    source: "./Image/icons8-settings-96.png"
+                }
             }
         }
     }
     Rectangle{
         id:icerik
-        x: 164
-        y: 60
-       width: 675
-       height: 480
        color:"#00000000"
-
+       anchors.left: menuWindows.right
+       anchors.right: parent.right
+       anchors.top: logoPanel.bottom
+       anchors.bottom: parent.bottom
+       anchors.leftMargin: 20
+       anchors.rightMargin: 5
+       anchors.bottomMargin: 0
+       anchors.topMargin: 10
        Pane {
            id: menuhomeWindows
            anchors.fill: parent
@@ -169,6 +214,30 @@ Window {
                return true;
            }
        }
+    }
+
+    Rectangle {
+        id: logoPanel
+        x: 0
+        y: 0
+        width: 880
+        height: 84
+        color: "#df1010"
+        Text {
+            x: 110
+            y: 19
+            text: qsTr("OURRED")
+            font.pointSize: 26
+            font.bold: true
+            color: "#ffffff"
+        }
+        Image {
+            x: 15
+            y: 12
+            width: 60
+            height: 60
+            source: "./Image/delogo2.png"
+        }
     }
 }
 

@@ -2,9 +2,10 @@ import QtQuick 2.12
 
 Rectangle {
     width: 675
-    height: 30
+    height: 40
     color: "#f4f4f4"
     property string fPath: ""
+    property string fKey: ""
     Text {
         x: 8
         y: 6
@@ -12,13 +13,19 @@ Rectangle {
         font.pointSize: 9
     }
     Text {
+        x: 20
+        y: 25
+        text:"-"+fKey
+        font.pointSize: 7
+    }
+    Text {
         id: text1
         text: qsTr("Open Folder")
         verticalAlignment: Text.AlignVCenter
         leftPadding: 30
         font.pointSize: 10
-        x: 430
-        y: 5
+        x: 429
+        y: 11
         width: 110
 
         Image {
@@ -35,11 +42,11 @@ Rectangle {
     }
     Text {
         text: qsTr("Delete Folder")
-        x: 560
+        x: 557
         font.pointSize: 10
         leftPadding: 30
         width: 110
-        y: 5
+        y: 11
         Image {
             y:-5
             source: "../Image/icons8-delete-document-48.png"

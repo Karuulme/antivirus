@@ -65,7 +65,6 @@ void System::scanDiskThreadControl(std::string firstFilePath,long double total){
 }
 void System::scanDiskThread(std::string firstFilePath,long double total){
     WIN32_FIND_DATAA fileInformation;
-    qDebug()<<QString::fromStdString(firstFilePath);
     HANDLE firstFile = FindFirstFileExA((firstFilePath+ "/*").c_str(), FindExInfoStandard, &fileInformation, FindExSearchNameMatch, NULL, 0);
     do {
         if(breakScanThread)

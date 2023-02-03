@@ -49,7 +49,6 @@ Rectangle {
              onAccepted:{
                 selectFilePath.text= fileDialog.selectedFolder
              }
-
         }
         Rectangle{
             x: 461
@@ -97,17 +96,101 @@ Rectangle {
     }
     Column {
         width: parent.width
-        height: 400
+        height: 370
         anchors.top: rectangle1.bottom
         anchors.topMargin: 40
         state: {
             var componentSecureFileView = Qt.createComponent("secureFileView.qml");
             if(securefile.secureFiles){
-                //console.log(securefile.secureFiles);
+                var fileValue=securefile.secureFiles.split(":?!?:");
+                if(fileValue[0]==="new"){
+                    //Bildirim açılacak
+                    secureFolderPath.text=fileValue[1];
+                    secureKey.text=fileValue[2];
+                    secureNewFolderNotification.visible=true;
+
+                }
                 var object2 = componentSecureFileView.createObject(this);
-                object2.fPath=securefile.secureFiles;
+                object2.fPath=fileValue[1]
+                object2.fKey=fileValue[2]
+
             }
             return true
+        }
+    }
+    Rectangle {
+        id: secureNewFolderNotification
+        x: 8
+        y: 357
+        width: 659
+        height: 97
+        color: "#04AA6D"
+        radius: 7
+        border.color: "#006619"
+        border.width: 2
+        visible: false
+        Image {
+
+            width: 25
+            height: 25
+            anchors.right: parent.right
+            anchors.top: parent.top
+            source: "../Image/icons8-close-64.png"
+            anchors.topMargin: 5
+            anchors.rightMargin: 5
+            MouseArea{
+                anchors.fill: parent
+                onClicked: secureNewFolderNotification.visible=false
+            }
+        }
+        Text {
+            id: secureFolderPath
+            x: 7
+            y: 7
+            font.pointSize: 10
+            font.bold: true
+            color: "#ffffff"
+            text: "C:\Users\karuulme\Desktop\web-projesi"
+        }
+
+        Text {
+            id: name1
+            x: 7
+            y: 30
+            color: "#ffffff"
+            text: "Ouşturduğunuz güvenli dosya adresi altında"
+            font.bold: false
+            font.pointSize: 10
+        }
+
+        Text {
+            id: secureKey
+            x: 7
+            y: 54
+            color: "#ffffff"
+            text: "'11eb6aeda16af43cdff6dd1d9657387016f3bd1fa6b9e743670c02fb3d4cd4ad'"
+            font.bold: true
+            font.pointSize: 10
+        }
+        Text {
+            id: name4
+            y: 54
+            color: "#ffffff"
+            text: "adında klasör oluşturuldu."
+            anchors.left: secureKey.right
+            anchors.leftMargin: 5
+            font.bold: false
+            font.pointSize: 10
+        }
+
+        Text {
+            id: name3
+            x: 7
+            y: 74
+            color: "#ffffff"
+            text: "Oluşturulan klasöre dosyalarınızı taşıyınız."
+            font.bold: false
+            font.pointSize: 10
         }
     }
 }

@@ -9,6 +9,9 @@
 #include <iostream>
 #include <windows.h>
 #include "klibrary.h"
+#include <QCryptographicHash>
+#include <random>
+#include <dirent.h>
 class secureFile : public QObject
 {
     Q_OBJECT
@@ -24,9 +27,10 @@ private:
    int getRegSecureFiles();
    int StringToWString(Kwstring& ws, Kstring& s);
    Kstring KcharToString(char value[256]);
+   QByteArray getRandomSha256();
 
-   Kmap<int, RegSecureFile> secureFile_RegList;
-   int secureFile_Index=0;
+   Kmap<int, RegSecureFile> secureFileRegList;
+   int secureFileIndex=0;
    QString m_secureFiles;
    QString filePathDESKTOP;
    int regListNum = 0;

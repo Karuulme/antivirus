@@ -12,16 +12,18 @@ property int listIndex: 0
         color: "#3f3f3f"
         text:listIndex+"th"
         font.pointSize: 6
-        width: 280
+        width: 25
+        height: 11
     }
     Text {
         id: qhash
         x: 30
-        y: 4
+        y: 3
         color: "#3f3f3f"
         text:"1c50fc3a98187477897b91f01065b2ef6ed5db12622a93d1bd02117c282c12f0"
-        font.pointSize: 6
-        width: 280
+        font.pointSize: 7
+        width: 310
+        height: 12
     }
     Text {
         id: qdate
@@ -29,8 +31,7 @@ property int listIndex: 0
         color: "#5e5e5e"
         text:"5.11.2022"
         anchors.left: qhash.right
-        font.bold: true
-        anchors.leftMargin: 50
+        anchors.leftMargin: 30
         font.pointSize: 8
     }
     Text {
@@ -40,7 +41,7 @@ property int listIndex: 0
         text: qsTr("Delete")
         anchors.left: qdate.right
         font.bold: true
-        anchors.leftMargin: 100
+        anchors.leftMargin: 84
         font.pointSize: 8
         MouseArea{
             anchors.fill: parent

@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 
         QSystemTrayIcon *trayIcon = new QSystemTrayIcon(root);
         trayIcon->setContextMenu(trayIconMenu);
-        trayIcon->setIcon(QIcon(":/Image/logopng.png"));
+        trayIcon->setIcon(QIcon(":/Image/logo2ico"));
         trayIcon->show();
     }
 
