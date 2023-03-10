@@ -3,7 +3,7 @@ import QtQuick 2.12
 Rectangle {
     width: 675
     height: 40
-    color: "#f4f4f4"
+    color: "#f2f4f7"
     property string fPath: ""
     property string fKey: ""
     Text {

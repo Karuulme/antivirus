@@ -1,4 +1,5 @@
 QT += quick
+QT += xml
 QT += core
 QT += widgets
 QT += sql
@@ -24,6 +25,10 @@ SOURCES += \
         main.cpp
 
 RESOURCES += qml.qrc
+
+DISTFILES += \
+    settings2.xml
+
 RC_ICONS=
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -59,3 +64,5 @@ win32: LIBS += -lwbemuuid
 win32: LIBS += -liphlpapi
 
 win32: LIBS += -lshell32
+
+

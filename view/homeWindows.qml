@@ -10,7 +10,7 @@ Rectangle {
     width: 700
     height: 470
     visible: true
-    color: "#f4f4f4"
+    color: "#f2f4f7"
     Column {
         id: listHDD
         x: 0

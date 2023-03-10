@@ -3,7 +3,7 @@ Rectangle{
 id: rectangle
 width: 600
 height: 20
-color: "#f4f4f4"
+color: "#f2f4f7"
 property int listIndex: 0
     Text {
         id: qIndex

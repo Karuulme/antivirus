@@ -6,6 +6,17 @@
 #include <QMap>
 #include <QFileDialog>
 #include <QtWidgets>
+#include <iostream>
+#include <string>
+#include <windows.h>
+#include <QStringList>
+#include <fstream>
+#include <QDebug>
+#include <QThread>
+#include <QtXml>
+#include <QFile>
+
+#include <filesystem>
 class System : public QObject
 {
     Q_OBJECT

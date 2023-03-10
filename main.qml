@@ -11,7 +11,7 @@ Window {
     visibility: Window.Windowed
     visible: true
     title: qsTr("Ourred")
-    color: "#f4f4f4"
+    color: "#f2f4f7"
     maximumHeight: 540
     minimumHeight: 540
     maximumWidth: 880
@@ -221,22 +221,23 @@ Window {
         x: 0
         y: 0
         width: 880
-        height: 84
+        height: 54
         color: "#df1010"
         Text {
-            x: 110
-            y: 19
+            x: 74
+            y: 10
             text: qsTr("OURRED")
-            font.pointSize: 26
+            font.pointSize: 20
             font.bold: true
             color: "#ffffff"
         }
         Image {
-            x: 15
-            y: 12
-            width: 60
-            height: 60
+            x: 8
+            y: 10
+            width: 36
+            height: 36
             source: "./Image/delogo2.png"
+            rotation: 1.219
         }
     }
 }

@@ -6,7 +6,7 @@ Rectangle {
     id: rectangle
     width: 675
     height: 480
-    color:"#f4f4f4"
+    color: "#f2f4f7"
     state:{securefile.setStart(); return true}
     Rectangle{
         id: rectangle1

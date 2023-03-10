@@ -1,7 +1,7 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.15
 Rectangle {
-    property string backColor: "#f4f4f4"
+    property string backColor:"#f2f4f7"
     color:backColor
     height: 25
     width: 320

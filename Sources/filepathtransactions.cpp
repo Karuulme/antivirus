@@ -34,9 +34,9 @@ int filePathTransactions::setRegQuestion(QString filePath){// DOSYA HASH'LEME VE
     RegProgramList regRet;
     regRet = upRegListControl(reg.pHash);
     if (regRet.pRunCount !=-1)
-        setRegCreateBank(HKEY_CURRENT_USER, KBank + regRet.pFile, "pRunCount", KToString(regRet.pRunCount));
+        setRegCreateBank(HKEY_CURRENT_USER, KBank + regRet.pFile, "pRunCount", KToString(regRet.pRunCount));// güncelleme
     else
-        regeditNewRecord(reg);
+        regeditNewRecord(reg);// yeni kayıt
     return 0;
 }
 QString filePathTransactions::getfileHash(QString filePath){ //DOSYA HASH DEĞERİ

@@ -29,8 +29,6 @@ Kstring secureFile::KcharToString(char value[256])
     }
     return target;
 }
-
-
 int secureFile::StringToWString(Kwstring& ws, Kstring& s)
 {
     std::wstring wsTmp(s.begin(), s.end());
@@ -164,7 +162,6 @@ QByteArray secureFile::getRandomSha256(){
     }
     return QCryptographicHash::hash(randomData, QCryptographicHash::Sha256);
 }
-
 
 
 

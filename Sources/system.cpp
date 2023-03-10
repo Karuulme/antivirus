@@ -1,11 +1,27 @@
 #include "../Headers/system.h"
-#include <windows.h>
-#include <QStringList>
-#include <fstream>
-#include <QDebug>
-#include <QThread>
 System::System(QObject *parent): QObject{parent}
 {
+    //qDebug()<<"asdasdasdasd"<<std::filesystem::current_path();
+    qDebug()<<"asdasdasdasd"<<QDir::currentPath();
+
+    QFile inFile("settings2.xml");
+    if (inFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        qDebug()<<"Dosya acildi";
+        QXmlStreamReader xmlReader(&inFile);
+        while (xmlReader.readNextStartElement())
+        {
+            if (xmlReader.name().toString() == "language")
+            {
+                qDebug()<<xmlReader.readElementText();
+            }
+        }
+    }
+    else{
+        qDebug()<<"Dosya acilmadi";
+    }
+
+
     emit setscaningDisk("NULL");
     emit storage_changed();
 }
