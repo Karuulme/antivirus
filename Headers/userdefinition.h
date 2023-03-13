@@ -33,7 +33,7 @@ public:
    // std::string KQStringToString(QString value);
 
 signals:
-    void setFilePahtReg(QString *filePath);
+    void setFilePahtReg(QString *filePath,unsigned long int pID);
     void setRegList(Kmap<int, RegProgramList> setreg);
 };
 #endif // USERDEFINITION_H

@@ -72,6 +72,7 @@ public:
     Kstring KcharToString(char value[256]);
     QString KTcharToQString(TCHAR * value);
     std::string KQStringToString(QString value);
+    void SetStart();
 
 
 

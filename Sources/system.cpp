@@ -1,9 +1,6 @@
 #include "../Headers/system.h"
 System::System(QObject *parent): QObject{parent}
 {
-    //qDebug()<<"asdasdasdasd"<<std::filesystem::current_path();
-    qDebug()<<"asdasdasdasd"<<QDir::currentPath();
-
     QFile inFile("settings2.xml");
     if (inFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {

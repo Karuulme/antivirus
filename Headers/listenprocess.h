@@ -11,6 +11,7 @@
 #include <Wbemidl.h>
 #include <QObject>
 #include <Psapi.h>
+#include <thread>
 class listenProcess : public QObject, public IWbemObjectSink
 {
     Q_OBJECT
@@ -33,6 +34,11 @@ public:
     IWbemObjectSink* pStubSink = NULL;
     IUnsecuredApartment* pUnsecApp = NULL;
     IUnknown* pStubUnk = NULL;
+
+    void listenProcessNamesClear();
+    QList<QString> qls_listenProcessNames;
+    unsigned __int8 ui8_listenProcess_Loop_Number=0;
+    bool listenProcess_Control=false;
 
 signals:
     void setFilePahtReg(QString *filePath);

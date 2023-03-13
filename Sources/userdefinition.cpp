@@ -4,20 +4,24 @@ userDefinition::userDefinition(QObject *parent): QObject{parent}
 {
 
 }
-
+//-----------------------------------------------------------------------------------------
 userDefinition::~userDefinition()
 {
     RegCloseKey(regMachine);
 }
+//-----------------------------------------------------------------------------------------
 void userDefinition::setStart(){
     getRegProgramsList();
     getProcessList();
-    /*std::thread  getRegProgramsListThread(&userDefinition::getRegProgramsList, this);
-    getRegProgramsListThread.join();
-    std::thread  getProcessListThread(&userDefinition::getProcessList, this);
-    getProcessListThread.detach();*/
+
+    /*std::thread  getProcessListThread(&userDefinition::getProcessList, this);
+    getProcessListThread.join();
+    std::thread  getRegProgramsListThread(&userDefinition::getRegProgramsList, this);
+    getRegProgramsListThread.join();*/
+
 
 }
+//-----------------------------------------------------------------------------------------
 Kstring userDefinition::KTcharToString(TCHAR value[1024])
 {
     std::wstring test(&value[0]);
@@ -25,6 +29,7 @@ Kstring userDefinition::KTcharToString(TCHAR value[1024])
 
     return test2;
 }
+//-----------------------------------------------------------------------------------------
 Kstring userDefinition::KWcharToString(wchar_t value[1024])
 {
     Kwstring ws(value);
@@ -32,6 +37,7 @@ Kstring userDefinition::KWcharToString(wchar_t value[1024])
     KSpace(value);
     return str;
 }
+//-----------------------------------------------------------------------------------------
 Kstring userDefinition::KcharToString(char value[256])
 {
     Kstring target;
@@ -43,24 +49,17 @@ Kstring userDefinition::KcharToString(char value[256])
     KSpace(value);
     return target;
 }
+//-----------------------------------------------------------------------------------------
 int userDefinition::StringToWString(Kwstring& ws, Kstring& s)
 {
     std::wstring wsTmp(s.begin(), s.end());
     ws = wsTmp;
     return 0;
 }
-/*
-QString KTcharToQString(TCHAR * value){
-
-    return QString::fromWCharArray(value);
-}
-std::string KQStringToString(QString value){
-
-    return value.toStdString();
-}
-*/
+//-----------------------------------------------------------------------------------------
 void userDefinition::getProcessList()
 {
+    QList<QString> processNames;
     HANDLE hProcessShot;
     PROCESSENTRY32 ProcessInformation;
     hProcessShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -78,7 +77,10 @@ void userDefinition::getProcessList()
                 wchar_t filePath[MAX_PATH];
                 if(GetModuleFileNameExW(hProcessT,NULL,filePath,MAX_PATH)!=0){ //(!GetProcessImageFileName(hProcessT, filePath, sizeof(filePath) / sizeof(*filePath)) == 0) {
                     QString temp=QString::fromWCharArray(filePath);
-                    emit setFilePahtReg(&temp);
+                    if(!processNames.contains(temp)){
+                        processNames.append(temp);
+                         emit setFilePahtReg(&temp,ProcessInformation.th32ProcessID);
+                    }
                 }
             }
             CloseHandle(hProcessT);
@@ -87,6 +89,7 @@ void userDefinition::getProcessList()
     CloseHandle(hProcessShot);
     runFirstList.clear();
 }
+//-----------------------------------------------------------------------------------------
 int  userDefinition::getRegProgramsList()
 {
     regListNum = 0;
@@ -144,6 +147,7 @@ int  userDefinition::getRegProgramsList()
             regProgramList.pRunCount = KCharToInt(value);
             regProgramList.pFile = str;
             regList[index] = regProgramList;
+            qDebug()<<QString::fromStdString(regProgramList.pHash);
             index++;
             KSpace(value);
         }
@@ -152,4 +156,5 @@ int  userDefinition::getRegProgramsList()
     RegCloseKey(regKey);
     return 0;
 }
+//-----------------------------------------------------------------------------------------
 

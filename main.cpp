@@ -8,8 +8,8 @@
 
 #include <Headers/windowtaskbar.h>
 #include <Headers/system.h>
-//#include <Headers/userdefinition.h>
-//#include <Headers/listenprocess.h>
+#include <Headers/userdefinition.h>
+#include <Headers/listenprocess.h>
 #include <Headers/filepathtransactions.h>
 #include <Headers/filechanges.h>
 #include <Headers/scanresultoperations.h>
@@ -25,9 +25,9 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     WindowTaskBar _windowstaskbar;
     System _system;
-     // listenProcess _listenProcess;
-      filePathTransactions  filepathtransactions;
-     // userDefinition  _userdefinition;
+    listenProcess _listenProcess;
+    filePathTransactions  filepathtransactions;
+    userDefinition  _userdefinition;
     fileChanges  _filechanges;
     scanResultOperations _scanresultoperations;
     secureFile _secureFile;
@@ -38,21 +38,20 @@ int main(int argc, char *argv[])
                                              "on this system."));
         return 1;
     }
-
     QQmlContext *ctx=engine.rootContext();
     ctx->setContextProperty("windowstaskbar",&_windowstaskbar);
     ctx->setContextProperty("system",&_system);
     ctx->setContextProperty("securefile",&_secureFile);
 
-    //QObject::connect(&_userdefinition,SIGNAL(setFilePahtReg(QString*)),&filepathtransactions, SLOT(getFilePahtReg(QString*)));
-    //  QObject::connect(&_listenProcess,SIGNAL(setFilePahtReg(QString*)),&filepathtransactions, SLOT(getFilePahtReg(QString*)));
-     // QObject::connect(&_userdefinition,SIGNAL(setRegList(Kmap<int, RegProgramList>)),&filepathtransactions, SLOT(getRegList(Kmap<int, RegProgramList>)));
+    QObject::connect(&_userdefinition,SIGNAL(setFilePahtReg(QString*,unsigned long int)),&filepathtransactions, SLOT(getFilePahtReg(QString*,unsigned long int)));
+    QObject::connect(&_listenProcess,SIGNAL(setFilePahtReg(QString*,unsigned long int)),&filepathtransactions, SLOT(getFilePahtReg(QString*,unsigned long int)));
+    QObject::connect(&_userdefinition,SIGNAL(setRegList(Kmap<int, RegProgramList>)),&filepathtransactions, SLOT(getRegList(Kmap<int, RegProgramList>)));
     QObject::connect(&_filechanges,SIGNAL(setfileChangesNotification(QString)),&filepathtransactions, SLOT(getfileChangesNotification(QString)));
     QObject::connect(&_system,SIGNAL(setApplyResults(QMap<int,QString>,QMap<int,int>,int,int)),&_scanresultoperations, SLOT(getApplyResults(QMap<int,QString>,QMap<int,int>,int,int)));
 
-    //_userdefinition.setStart();
-    //_listenProcess.setStart();
-    //_secureFile.setStart();
+    _userdefinition.setStart();
+    _listenProcess.setStart();
+    _secureFile.setStart();
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
     QObject *root = 0;
     if (engine.rootObjects().size() > 0)
@@ -61,7 +60,6 @@ int main(int argc, char *argv[])
 
         QAction *minimizeAction = new QAction(QObject::tr("&Open"), root);
         root->connect(minimizeAction, SIGNAL(triggered()), root, SLOT(showNormal()));
-
         QAction *restoreAction = new QAction(QObject::tr("&Close"), root);
         root->connect(restoreAction, SIGNAL(triggered()), root, SLOT(hide()));
         QAction *quitAction = new QAction(QObject::tr("&Quit"), root);

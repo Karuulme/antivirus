@@ -1,10 +1,11 @@
 #include "../Headers/listenprocess.h"
-
 listenProcess::listenProcess(QObject *parent): QObject{parent}
 {
     //QObject::connect(this,SIGNAL(setdeneme2(QString*)),this,SLOT(slotDeneme2(QString*)));
     m_lRef = 0;
+    //listenProcessNamesClear
 }
+//-----------------------------------------------------------------------------------------
 listenProcess::~listenProcess() {
      bDone = true;
      hres = pSvc->CancelAsyncCall(pStubSink);
@@ -14,20 +15,19 @@ listenProcess::~listenProcess() {
      pStubUnk->Release();
      pStubSink->Release();
      CoUninitialize();
-
-
- }
-ULONG listenProcess::AddRef()
-{
+}
+//-----------------------------------------------------------------------------------------
+ULONG listenProcess::AddRef(){
     return InterlockedIncrement(&m_lRef);
 }
-ULONG listenProcess::Release()
-{
+//-----------------------------------------------------------------------------------------
+ULONG listenProcess::Release(){
     LONG lRef = InterlockedDecrement(&m_lRef);
     if (lRef == 0)
         delete this;
     return lRef;
 }
+//-----------------------------------------------------------------------------------------
 HRESULT listenProcess::QueryInterface(REFIID riid, void** ppv) {
     if (riid == IID_IUnknown || riid == IID_IWbemObjectSink)
     {
@@ -37,26 +37,37 @@ HRESULT listenProcess::QueryInterface(REFIID riid, void** ppv) {
     }
     else return E_NOINTERFACE;
 }
+//-----------------------------------------------------------------------------------------
+void listenProcess::listenProcessNamesClear(){
+    listenProcess_Control=true;
+    for(;ui8_listenProcess_Loop_Number>0;ui8_listenProcess_Loop_Number--){
+        Sleep(2000);
+        if(qls_listenProcessNames.size()!=0){
+            qls_listenProcessNames.removeFirst();
+        }
+        else{
+            ui8_listenProcess_Loop_Number=0;
+            break;
+        }
+    }
+    listenProcess_Control=false;
+}
+//-----------------------------------------------------------------------------------------
 HRESULT listenProcess::Indicate(long lObjectCount, IWbemClassObject** apObjArray) {
     QString temp;
     HRESULT hr = S_OK;
     QString pInformation;
     _variant_t vtProp;
-    for (int i = 0; i < lObjectCount; i++)
-    {
+    for (int i = 0; i < lObjectCount; i++){
         hr = apObjArray[i]->Get(SysAllocString(L"TargetInstance"), 0, &vtProp, 0, 0);
-        if (!FAILED(hr))
-        {
+        if (!FAILED(hr)){
             IUnknown* str = vtProp;
             hr = str->QueryInterface(IID_IWbemClassObject, reinterpret_cast<void**>(&apObjArray[i]));
-            if (SUCCEEDED(hr))
-            {
+            if (SUCCEEDED(hr)){
                 _variant_t cn;
                 hr = apObjArray[i]->Get(L"Handle", 0, &cn, NULL, NULL);
-                if (SUCCEEDED(hr))
-                {
-                    if (!(cn.vt == VT_NULL) || !(cn.vt == VT_EMPTY))
-                    {
+                if (SUCCEEDED(hr)){
+                    if (!(cn.vt == VT_NULL) || !(cn.vt == VT_EMPTY)){
                         if (!(cn.vt & VT_ARRAY)){
                             pInformation= QString::fromWCharArray(cn.bstrVal);
                             HANDLE hProcessT;
@@ -66,7 +77,15 @@ HRESULT listenProcess::Indicate(long lObjectCount, IWbemClassObject** apObjArray
                                 if(GetModuleFileNameExW(hProcessT,NULL,filePath,MAX_PATH)!=0){
                                     temp=QString::fromWCharArray(filePath);
                                     if(!temp.contains("C:\\Program Files\\WindowsApps")){
-                                        emit setFilePahtReg(&temp);
+                                        qDebug()<<"temp:"<<temp;
+                                        if(!qls_listenProcessNames.contains(temp)){
+                                            qDebug()<<"temp:"<<"YOK";
+                                            qls_listenProcessNames.append(temp);
+                                            emit setFilePahtReg(&temp);
+                                        }
+                                        else{
+                                            qDebug()<<"temp:"<<"VAR";
+                                        }
                                     }
                                 }
                             }
@@ -80,8 +99,14 @@ HRESULT listenProcess::Indicate(long lObjectCount, IWbemClassObject** apObjArray
         }
     }
     VariantClear(&vtProp);
+    ui8_listenProcess_Loop_Number+=4;
+    if(!listenProcess_Control){
+        std::thread  th_listenProcessNamesClear(&listenProcess::listenProcessNamesClear, this);
+        th_listenProcessNamesClear.detach();
+    }
     return WBEM_S_NO_ERROR;
 }
+//-----------------------------------------------------------------------------------------
 HRESULT listenProcess::SetStatus(LONG lFlags, HRESULT hResult, BSTR strParam, IWbemClassObject __RPC_FAR* pObjParam) {
     if (lFlags == WBEM_STATUS_COMPLETE)
     {
@@ -93,7 +118,7 @@ HRESULT listenProcess::SetStatus(LONG lFlags, HRESULT hResult, BSTR strParam, IW
     }
     return WBEM_S_NO_ERROR;
 }
-
+//-----------------------------------------------------------------------------------------
 int listenProcess::setStart() {
     hres = CoInitializeEx(0, COINIT_APARTMENTTHREADED);
     if (FAILED(hres))
@@ -158,5 +183,6 @@ int listenProcess::setStart() {
     }
     return 0;
 }
+//-----------------------------------------------------------------------------------------
 //https://learn.microsoft.com/en-us/windows/win32/wmisdk/example--receiving-event-notifications-through-wmi-?redirectedfrom=MSDN
 //https://stackoverflow.com/questions/31753518/get-process-handle-of-created-processes-windows

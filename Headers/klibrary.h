@@ -19,6 +19,8 @@
 #define KSpace(x)(memset(x,0,sizeof(x)))
 #define KBank   "SOFTWARE\\AntiVirus\\Bank\\"
 #define KSecure "SOFTWARE\\AntiVirus\\Secure\\"
+#define KDllSource 5
+
 struct RegProgramList {
     Kstring pHash;
     Kstring pFile;

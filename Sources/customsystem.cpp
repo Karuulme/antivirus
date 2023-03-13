@@ -3,14 +3,17 @@
 
 CustomSystem::CustomSystem(QObject *parent): QObject{parent}
 {
-    std::thread  getRegProgramsListThread(&CustomSystem::getRegProgramsList, this);
-    getRegProgramsListThread.detach();
+    /*getRegProgramsListThread.join();
     std::thread  getProcessListThread(&CustomSystem::getProcessList, this);
-    getProcessListThread.detach();
+    getProcessListThread.detach();*/
 }
 CustomSystem::~CustomSystem()
 {
     RegCloseKey(regMachine);
+}
+void CustomSystem::SetStart(){
+    getRegProgramsList();
+    getProcessList();
 }
 Kstring CustomSystem::KTcharToString(TCHAR value[1024])
 {
