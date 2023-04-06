@@ -8,25 +8,51 @@ userDefinition::userDefinition(QObject *parent): QObject{parent}
 userDefinition::~userDefinition()
 {
     RegCloseKey(regMachine);
+    //qDebug() << "now: " << std::ctime(&now_t);
+    //qDebug() << "elapsed time: " << elapsed_seconds.count();
+    //qDebug() << "elapsed time: " << std::chrono::duration_cast<std::chrono::minutes>(elapsed_seconds).count();
 }
 //-----------------------------------------------------------------------------------------
 void userDefinition::setStart(){
     getRegProgramsList();
-    getProcessList();
+    if(getIdentityCheck()<KIdentification_Time){
+        std::thread  time(&userDefinition::timeMeasurement, this);
+        time.detach();
+        std::thread  getRegProgramsListThread(&userDefinition::getRegProgramsList, this);
+        getRegProgramsListThread.detach();
 
-    /*std::thread  getProcessListThread(&userDefinition::getProcessList, this);
-    getProcessListThread.join();
-    std::thread  getRegProgramsListThread(&userDefinition::getRegProgramsList, this);
-    getRegProgramsListThread.join();*/
-
-
+    }else
+        identityCheck=true;
+}
+//-----------------------------------------------------------------------------------------
+void userDefinition::timeMeasurement(){
+    while(true){
+        Sleep(100000);
+        ui8_time++;
+        emit setProgramTime(ui8_time);
+    }
+}
+//-----------------------------------------------------------------------------------------
+int userDefinition::getIdentityCheck(){
+    Kstring pathX=KLocal;
+    HKEY  regKey;
+    std::wstring name;
+    const wchar_t* szName = name.c_str();
+    if(RegOpenKeyEx(regMachine, szName, 0, KEY_ALL_ACCESS | KEY_QUERY_VALUE, &regKey)!= ERROR_SUCCESS)
+    {
+        return -1;
+    }
+    char value[BUFFER];
+    DWORD BufferSize = BUFFER;
+    RegGetValueA(regKey, pathX.c_str(), "Time", RRF_RT_ANY, NULL, (PVOID)&value, &BufferSize);
+    ui8_time=std::stoi(value);
+    return ui8_time;
 }
 //-----------------------------------------------------------------------------------------
 Kstring userDefinition::KTcharToString(TCHAR value[1024])
 {
     std::wstring test(&value[0]);
     Kstring test2(test.begin(), test.end());
-
     return test2;
 }
 //-----------------------------------------------------------------------------------------
@@ -79,7 +105,7 @@ void userDefinition::getProcessList()
                     QString temp=QString::fromWCharArray(filePath);
                     if(!processNames.contains(temp)){
                         processNames.append(temp);
-                         emit setFilePahtReg(&temp,ProcessInformation.th32ProcessID);
+                         emit setFilePahtReg(temp,ProcessInformation.th32ProcessID);
                     }
                 }
             }
@@ -147,7 +173,7 @@ int  userDefinition::getRegProgramsList()
             regProgramList.pRunCount = KCharToInt(value);
             regProgramList.pFile = str;
             regList[index] = regProgramList;
-            qDebug()<<QString::fromStdString(regProgramList.pHash);
+            //qDebug()<<QString::fromStdString(regProgramList.pHash);
             index++;
             KSpace(value);
         }

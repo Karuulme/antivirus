@@ -14,23 +14,23 @@
 #include <Headers/filechanges.h>
 #include <Headers/scanresultoperations.h>
 #include <Headers/securefile.h>
-
+#include <Headers/hookingcalls.h>
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     QApplication::setQuitOnLastWindowClosed(false);
     QIcon icon(":Image/logo2ico.ico");
     app.setWindowIcon(icon);
-
     QQmlApplicationEngine engine;
     WindowTaskBar _windowstaskbar;
     System _system;
     listenProcess _listenProcess;
-    filePathTransactions  filepathtransactions;
+    filePathTransactions  _filepathtransactions;
     userDefinition  _userdefinition;
     fileChanges  _filechanges;
     scanResultOperations _scanresultoperations;
     secureFile _secureFile;
+    HookingCalls _hookingCalls;
 
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
         QMessageBox::critical(0, QObject::tr("Systray"),
@@ -43,11 +43,18 @@ int main(int argc, char *argv[])
     ctx->setContextProperty("system",&_system);
     ctx->setContextProperty("securefile",&_secureFile);
 
-    QObject::connect(&_userdefinition,SIGNAL(setFilePahtReg(QString*,unsigned long int)),&filepathtransactions, SLOT(getFilePahtReg(QString*,unsigned long int)));
-    QObject::connect(&_listenProcess,SIGNAL(setFilePahtReg(QString*,unsigned long int)),&filepathtransactions, SLOT(getFilePahtReg(QString*,unsigned long int)));
-    QObject::connect(&_userdefinition,SIGNAL(setRegList(Kmap<int, RegProgramList>)),&filepathtransactions, SLOT(getRegList(Kmap<int, RegProgramList>)));
-    QObject::connect(&_filechanges,SIGNAL(setfileChangesNotification(QString)),&filepathtransactions, SLOT(getfileChangesNotification(QString)));
+    QObject::connect(&_userdefinition,SIGNAL(setFilePahtReg(QString,unsigned long int)),&_filepathtransactions, SLOT(getFilePahtReg(QString,unsigned long int)));
+    QObject::connect(&_listenProcess,SIGNAL(setFilePahtReg(QString,unsigned long int)),&_filepathtransactions, SLOT(getFilePahtReg(QString,unsigned long int)));
+    QObject::connect(&_userdefinition,SIGNAL(setRegList(Kmap<int, RegProgramList>)),&_filepathtransactions, SLOT(getRegList(Kmap<int, RegProgramList>)));
+    QObject::connect(&_filechanges,SIGNAL(setfileChangesNotification(QString)),&_filepathtransactions, SLOT(getfileChangesNotification(QString)));
     QObject::connect(&_system,SIGNAL(setApplyResults(QMap<int,QString>,QMap<int,int>,int,int)),&_scanresultoperations, SLOT(getApplyResults(QMap<int,QString>,QMap<int,int>,int,int)));
+    QObject::connect(&_secureFile,SIGNAL(setSecureList(QList<QString>*)),&_hookingCalls, SLOT(getSecureList(QList<QString>*)));
+    QObject::connect(&_filepathtransactions,SIGNAL(setDllEnjection(unsigned long int)),&_hookingCalls, SLOT(getDllEnjection(unsigned long int)));
+   // QObject::connect(&_userdefinition,SIGNAL(setProgramTime(unsigned long int)),&_filepathtransactions, SLOT(getDllEnjection(unsigned long int)));
+
+
+
+
 
     _userdefinition.setStart();
     _listenProcess.setStart();

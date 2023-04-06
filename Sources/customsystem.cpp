@@ -7,14 +7,17 @@ CustomSystem::CustomSystem(QObject *parent): QObject{parent}
     std::thread  getProcessListThread(&CustomSystem::getProcessList, this);
     getProcessListThread.detach();*/
 }
+//-----------------------------------------------------------------------------------------
 CustomSystem::~CustomSystem()
 {
     RegCloseKey(regMachine);
 }
+//-----------------------------------------------------------------------------------------
 void CustomSystem::SetStart(){
     getRegProgramsList();
     getProcessList();
 }
+//-----------------------------------------------------------------------------------------
 Kstring CustomSystem::KTcharToString(TCHAR value[1024])
 {
     std::wstring test(&value[0]);
@@ -22,6 +25,7 @@ Kstring CustomSystem::KTcharToString(TCHAR value[1024])
 
     return test2;
 }
+//-----------------------------------------------------------------------------------------
 Kstring CustomSystem::KWcharToString(wchar_t value[1024])
 {
     Kwstring ws(value);
@@ -29,7 +33,7 @@ Kstring CustomSystem::KWcharToString(wchar_t value[1024])
     KSpace(value);
     return str;
 }
-
+//-----------------------------------------------------------------------------------------
 Kstring CustomSystem::KcharToString(char value[256])
 {
     Kstring target;
@@ -41,21 +45,24 @@ Kstring CustomSystem::KcharToString(char value[256])
     KSpace(value);
     return target;
 }
-
+//-----------------------------------------------------------------------------------------
 int CustomSystem::StringToWString(Kwstring& ws, Kstring& s)
 {
     std::wstring wsTmp(s.begin(), s.end());
     ws = wsTmp;
     return 0;
 }
+//-----------------------------------------------------------------------------------------
 QString KTcharToQString(TCHAR * value){
 
     return QString::fromWCharArray(value);
 }
+//-----------------------------------------------------------------------------------------
 std::string KQStringToString(QString value){
 
     return value.toStdString();
 }
+//-----------------------------------------------------------------------------------------
 void CustomSystem::getProcessList()
 {
     HANDLE hProcessShot;
@@ -110,6 +117,7 @@ void CustomSystem::getProcessList()
     CloseHandle(hProcessShot);
     runFirstList.clear();
 }
+//-----------------------------------------------------------------------------------------
 int  CustomSystem::getRegProgramsList()
 {
     regListNum = 0;
@@ -174,6 +182,7 @@ int  CustomSystem::getRegProgramsList()
     RegCloseKey(regKey);
     return 0;
 }
+//-----------------------------------------------------------------------------------------
 int  CustomSystem::setRegCreateBank(HKEY hKey, Kstring path, Kstring key, Kstring value) {
     Kstring sPath;
     Kstring sKey= key;
@@ -195,6 +204,7 @@ int  CustomSystem::setRegCreateBank(HKEY hKey, Kstring path, Kstring key, Kstrin
     RegCloseKey(hkRegOpen);
     return 0;
 }
+//-----------------------------------------------------------------------------------------
 RegProgramList CustomSystem::upRegListControl(Kstring reg) {
     RegProgramList regProgramList;
     regProgramList.pRunCount= - 1;
@@ -207,3 +217,4 @@ RegProgramList CustomSystem::upRegListControl(Kstring reg) {
     }
     return regProgramList;
 }
+//-----------------------------------------------------------------------------------------

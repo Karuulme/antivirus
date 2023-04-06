@@ -2,7 +2,9 @@
 scanResultOperations::scanResultOperations(QObject *parent): QObject{parent}
 {
     getMac();
+    getAppDataAddress();
 }
+//-----------------------------------------------------------------------------------------
 void scanResultOperations::getProgramData(){
     wchar_t  appData[MAX_PATH];
     if (!SUCCEEDED(SHGetFolderPath(NULL, CSIDL_COMMON_APPDATA, NULL, SHGFP_TYPE_DEFAULT, appData)))
@@ -11,6 +13,15 @@ void scanResultOperations::getProgramData(){
     }
     quarantineAddress+="/Antivirus/quarantine/";
 }
+//-----------------------------------------------------------------------------------------
+void scanResultOperations::getAppDataAddress(){
+
+    wchar_t  appData[MAX_PATH];
+    std::string file_DESKTOP;
+    SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_DEFAULT, appData);
+    appDataAddress=QString::fromStdString(KProgramName)+"\\"+QString::fromWCharArray(appData)+"\\";
+}
+//-----------------------------------------------------------------------------------------
 void scanResultOperations::getMac() {
     PIP_ADAPTER_INFO AdapterInfo;
     AdapterInfo = (IP_ADAPTER_INFO*)malloc(sizeof(IP_ADAPTER_INFO));
@@ -31,6 +42,7 @@ void scanResultOperations::getMac() {
     }
 //https://docs.google.com/document/d/1FLLpN588_OIlLsoEqNaB4OkjLx3ZKGk8TevD2cJppSo/edit
 }
+//-----------------------------------------------------------------------------------------
 void scanResultOperations::Decrypt(QString file){
     wchar_t  appData[MAX_PATH];
     SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, SHGFP_TYPE_DEFAULT, appData);
@@ -56,9 +68,11 @@ void scanResultOperations::Decrypt(QString file){
         int temp = (c - key);
         fout << (char)temp;
     }
+    //appDataAddress -> kayıt edilecek dosya dolu
     fin.close();
     fout.close();
 }
+//-----------------------------------------------------------------------------------------
 void scanResultOperations::encrypt(QString filePath){
     QString retValue="000";
     QFile file(filePath);
@@ -94,7 +108,9 @@ void scanResultOperations::encrypt(QString filePath){
         fin.close();
         fout.close();
     }
+
 }
+//-----------------------------------------------------------------------------------------
 void scanResultOperations::virusProcesses(QString path,int Options){
     switch(Options){
     case 0: // Quarantine
@@ -114,6 +130,7 @@ void scanResultOperations::virusProcesses(QString path,int Options){
     break;
     }
 }
+//-----------------------------------------------------------------------------------------
 void scanResultOperations::computerOperations(int Options){
     switch(Options){
     case 0: //Wait
@@ -137,6 +154,7 @@ void scanResultOperations::computerOperations(int Options){
     break;
     }
 }
+//-----------------------------------------------------------------------------------------
 void scanResultOperations::getApplyResults(QMap<int,QString> malwaress,QMap<int,int> malwareListOptions,int virusOptions,int computerOptions){
     for(int i=0;i<malwaress.size();i++){
         if(virusOptions==0){
@@ -148,3 +166,4 @@ void scanResultOperations::getApplyResults(QMap<int,QString> malwaress,QMap<int,
     }
     computerOperations(computerOptions);
 }
+//-----------------------------------------------------------------------------------------

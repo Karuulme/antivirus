@@ -35,10 +35,11 @@ private:
    QString filePathDESKTOP;
    int regListNum = 0;
    HKEY regMachine = HKEY_CURRENT_USER;
+   QList<QString> secureList;
 
 signals:
    void secureFilesChanged();
-
+   void setSecureList(QList<QString> *secureList);
 public slots:
    void set_folderPath(QString parentFileName);
    void setStart();

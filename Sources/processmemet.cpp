@@ -5,6 +5,7 @@ processmemet::processmemet()
    // deneme222();
 
 }
+//-----------------------------------------------------------------------------------------
  processmemet::~processmemet() {
      bDone = true;
      hres = pSvc->CancelAsyncCall(pStubSink);
@@ -17,14 +18,15 @@ processmemet::processmemet()
     // pSink->Release();
      pStubSink->Release();
      CoUninitialize();
-     //qDebug()<<" HATASIZ ÇIKIŞ YAPILDI:";
     // return 0;   // Program successfully completed.
 
  }
+ //-----------------------------------------------------------------------------------------
 ULONG processmemet::AddRef()
 {
     return InterlockedIncrement(&m_lRef);
 }
+//-----------------------------------------------------------------------------------------
 ULONG processmemet::Release()
 {
     LONG lRef = InterlockedDecrement(&m_lRef);
@@ -32,6 +34,7 @@ ULONG processmemet::Release()
         delete this;
     return lRef;
 }
+//-----------------------------------------------------------------------------------------
 HRESULT processmemet::QueryInterface(REFIID riid, void** ppv) {
     if (riid == IID_IUnknown || riid == IID_IWbemObjectSink)
     {
@@ -41,8 +44,8 @@ HRESULT processmemet::QueryInterface(REFIID riid, void** ppv) {
     }
     else return E_NOINTERFACE;
 }
+//-----------------------------------------------------------------------------------------
 HRESULT processmemet::Indicate(long lObjectCount, IWbemClassObject** apObjArray) {
-       qDebug() <<"1111";
     HRESULT hr = S_OK;
     QString pInformation;
     _variant_t vtProp;
@@ -64,8 +67,6 @@ HRESULT processmemet::Indicate(long lObjectCount, IWbemClassObject** apObjArray)
                             pInformation= QString::fromWCharArray(cn.bstrVal);
                 }
                 //QList<QString> aaa=pInformation.split("--");
-               // qDebug()<<"CommandLine:"<<aaa[0].mid(1,aaa[0].length()-3);
-               qDebug()<<pInformation;
                 VariantClear(&cn);
                 hr = apObjArray[i]->Get(L"Handle", 0, &cn, NULL, NULL);
                 if (SUCCEEDED(hr))
@@ -74,17 +75,15 @@ HRESULT processmemet::Indicate(long lObjectCount, IWbemClassObject** apObjArray)
                         if (!(cn.vt & VT_ARRAY))
                             pInformation= QString::fromWCharArray(cn.bstrVal);
                 }
-               // qDebug()<<"Process ID"<<pInformation;
                 VariantClear(&cn);
             }
             VariantClear(&vtProp);
         }
     }
     VariantClear(&vtProp);
-
-    qDebug() << "----------------------------------------------";
     return WBEM_S_NO_ERROR;
 }
+//-----------------------------------------------------------------------------------------
 HRESULT processmemet::SetStatus(LONG lFlags, HRESULT hResult, BSTR strParam, IWbemClassObject __RPC_FAR* pObjParam) {
     if (lFlags == WBEM_STATUS_COMPLETE)
     {
@@ -96,6 +95,7 @@ HRESULT processmemet::SetStatus(LONG lFlags, HRESULT hResult, BSTR strParam, IWb
     }
     return WBEM_S_NO_ERROR;
 }
+//-----------------------------------------------------------------------------------------
 int processmemet::dinleyiciStart() {
 
 
@@ -207,5 +207,6 @@ int processmemet::dinleyiciStart() {
 
 
 }
+//-----------------------------------------------------------------------------------------
 //https://learn.microsoft.com/en-us/windows/win32/wmisdk/example--receiving-event-notifications-through-wmi-?redirectedfrom=MSDN
 //https://stackoverflow.com/questions/31753518/get-process-handle-of-created-processes-windows

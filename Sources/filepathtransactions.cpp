@@ -23,6 +23,9 @@ int  filePathTransactions::setRegCreateBank(HKEY hKey, Kstring path, Kstring key
         return res2;
     RegCloseKey(hkRegOpen);
     return 0;
+}//-----------------------------------------------------------------------------------------
+void filePathTransactions::getProgramTime(unsigned __int8 value){
+    setRegCreateBank(KMachine,KLocal,"Time",std::to_string(value));
 }
 //-----------------------------------------------------------------------------------------
 int filePathTransactions::setRegQuestion(QString filePath,unsigned long int pID){// DOSYA HASH'LEME VE KAYIT İŞLEMLERİ
@@ -32,50 +35,30 @@ int filePathTransactions::setRegQuestion(QString filePath,unsigned long int pID)
         return 1;
     }
     reg = upRegListControl(reg.pHash);
-   // qDebug()<<QString::fromStdString(reg.pHash)<<"        "<<reg.pRunCount;
     if (reg.pRunCount !=-1)
     {
         reg.pRunCount=0;
         if(KDllSource > reg.pRunCount){
-            //std::thread  thDllEnjection(&filePathTransactions::dllEnjection, this,pID); // --------------->> dll enjecksyon yapılacak, temiz olarka işaretlenenler hariç
+            //----------------------------------------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            // DEĞERİ KÜÇÜK İSE
+            // DLL injection YAPILACAK
+            emit setDllEnjection(pID);
+            //----------------------------------------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         }
-        setRegCreateBank(HKEY_CURRENT_USER, KBank + reg.pFile, "pRunCount", KToString(reg.pRunCount));// güncelleme
-        //----------------------------------------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        // DEĞERİ KÜÇÜK İSE
-        // DLL injection YAPILACAK
-        //----------------------------------------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        setRegCreateBank(KMachine, KBank + reg.pFile, "pRunCount", KToString(reg.pRunCount));// güncelleme
+
     }
     else
     {
         regeditNewRecord(reg);// yeni kayıt
         //----------------------------------------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         //DLL injection YAPILACAK
-        //std::thread  thDllEnjection(&filePathTransactions::dllEnjection, this,pID);
+        emit setDllEnjection(pID);
         //----------------------------------------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     }
     return 0;
 }
-//-----------------------------------------------------------------------------------------
-int filePathTransactions::dllEnjection(unsigned long int pID){
-    char dllFile[] = "C:\\Users\\karuulme\\source\\repos\\Dll1\\x64\\Release\\Dll1.dll";
-    unsigned int dllFileSize = sizeof(dllFile) + 1;
-    HANDLE hrProcess;
-    HANDLE hrVirtual;
-    HANDLE hr;
-    hrProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pID);
-    if (hrProcess == NULL)
-        return -1;
-    hrVirtual =VirtualAllocEx(hrProcess,NULL, dllFileSize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-    if (hrVirtual ==NULL)
-        return -2;
-    if (WriteProcessMemory(hrProcess, hrVirtual, dllFile, dllFileSize, NULL)==0)
-        return -3;
-    LPVOID addr = (LPVOID)GetProcAddress(GetModuleHandle(L"kernel32.dll"), "LoadLibraryA");
-    if (CreateRemoteThread(hrProcess, NULL, 0, (LPTHREAD_START_ROUTINE)addr, hrVirtual, NULL, NULL) == NULL)
-        return -4;
-    CloseHandle(hrProcess);
-    return 1;
-}
+
 //-----------------------------------------------------------------------------------------
 QString filePathTransactions::getfileHash(QString filePath){ //DOSYA HASH DEĞERİ
     QString retValue="000";
@@ -91,8 +74,8 @@ QString filePathTransactions::getfileHash(QString filePath){ //DOSYA HASH DEĞER
 //-----------------------------------------------------------------------------------------
 int filePathTransactions::regeditNewRecord(RegProgramList regProgram){ //YENİ KAYIT EKLEME
     regListIndex++;
-    setRegCreateBank(HKEY_CURRENT_USER, KBank + KToString(1000 +regListIndex), "pHash", regProgram.pHash);
-    setRegCreateBank(HKEY_CURRENT_USER, KBank + KToString(1000 +regListIndex), "pRunCount", KToString(regProgram.pRunCount));
+    setRegCreateBank(KMachine, KBank + KToString(1000 +regListIndex), "pHash", regProgram.pHash);
+    setRegCreateBank(KMachine, KBank + KToString(1000 +regListIndex), "pRunCount", KToString(regProgram.pRunCount));
     regList[regListIndex-1]=regProgram;
 }
 //-----------------------------------------------------------------------------------------
@@ -100,8 +83,7 @@ RegProgramList filePathTransactions::upRegListControl(Kstring regg) { // LİSTED
     RegProgramList regProgramList;
     regProgramList.pHash=regg;
     regProgramList.pRunCount= - 1;
-    for (int i = 0; i < regListIndex; i++)
-    {
+    for (int i = 0; i < regListIndex; i++){
         if (regList[i].pHash == regg) {
             regList[i].pRunCount++;
             regProgramList = regList[i];
@@ -121,9 +103,8 @@ bool filePathTransactions::boolRegListControl(Kstring regg){
     return false;
 }
 //-----------------------------------------------------------------------------------------
-void filePathTransactions::getFilePahtReg(QString * filePath,unsigned long int pID){//AÇILAN İŞLEMLER BURAYA GÖNDERİLİR
-    setRegQuestion(*filePath,pID);
-   // qDebug()<<"getFilePahtReg::"<<*filePath;
+void filePathTransactions::getFilePahtReg(QString  filePath,unsigned long int pID){//AÇILAN İŞLEMLER BURAYA GÖNDERİLİR
+    setRegQuestion(filePath,pID);
 }
 //-----------------------------------------------------------------------------------------
 void filePathTransactions::getRegList(Kmap<int, RegProgramList> reg){// BAŞLANGIÇTA KAYIT DEFTERİNDEKİ LİSTE BURAYA GÖNDERİLİR
@@ -132,7 +113,6 @@ void filePathTransactions::getRegList(Kmap<int, RegProgramList> reg){// BAŞLANG
 }
 //-----------------------------------------------------------------------------------------
 void filePathTransactions::getfileChangesNotification(QString filePath){ // BİR .EXE DOSYASI OLUŞTURULDUĞUNDA BURAYA GELİR
-      qDebug()<<filePath;
       RegProgramList fileChangesProgram;
       fileChangesProgram.pFile=KToString(1000 +regListIndex);
       fileChangesProgram.pHash=getfileHash(filePath).toStdString();

@@ -1,7 +1,6 @@
 #include "../Headers/listenprocess.h"
 listenProcess::listenProcess(QObject *parent): QObject{parent}
 {
-    //QObject::connect(this,SIGNAL(setdeneme2(QString*)),this,SLOT(slotDeneme2(QString*)));
     m_lRef = 0;
     //listenProcessNamesClear
 }
@@ -70,21 +69,19 @@ HRESULT listenProcess::Indicate(long lObjectCount, IWbemClassObject** apObjArray
                     if (!(cn.vt == VT_NULL) || !(cn.vt == VT_EMPTY)){
                         if (!(cn.vt & VT_ARRAY)){
                             pInformation= QString::fromWCharArray(cn.bstrVal);
-                            HANDLE hProcessT;
-                            hProcessT = OpenProcess(PROCESS_ALL_ACCESS, FALSE,_wtoi(cn.bstrVal));
+                            if(_wtoi(cn.bstrVal)==GetCurrentProcessId()){
+                                return WBEM_S_NO_ERROR;
+                            }
+                            HANDLE hProcessT=OpenProcess(PROCESS_ALL_ACCESS, FALSE,_wtoi(cn.bstrVal));
                             if (NULL != hProcessT) {
                                 wchar_t filePath[MAX_PATH];
                                 if(GetModuleFileNameExW(hProcessT,NULL,filePath,MAX_PATH)!=0){
                                     temp=QString::fromWCharArray(filePath);
                                     if(!temp.contains("C:\\Program Files\\WindowsApps")){
-                                        qDebug()<<"temp:"<<temp;
                                         if(!qls_listenProcessNames.contains(temp)){
-                                            qDebug()<<"temp:"<<"YOK";
                                             qls_listenProcessNames.append(temp);
-                                            emit setFilePahtReg(&temp);
-                                        }
-                                        else{
-                                            qDebug()<<"temp:"<<"VAR";
+                                            emit setFilePahtReg(temp,_wtoi(cn.bstrVal));
+
                                         }
                                     }
                                 }

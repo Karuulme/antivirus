@@ -7,16 +7,18 @@ fileChanges::fileChanges(QObject *parent): QObject{parent}
     std::thread  setStart_DOWNLOADS(&fileChanges::fileChangesThread_DOWNLOADS, this);
     setStart_DOWNLOADS.detach();
 }
+//-----------------------------------------------------------------------------------------
 fileChanges::~fileChanges(){
     //CloseHandle(hFile_DESKTOP);
   //  CloseHandle(hFile_DOWNLOADS);
 }
+//-----------------------------------------------------------------------------------------
 int fileChanges::fileChangesThread_DESKTOP(){
     wchar_t  appData[MAX_PATH];
     std::string file_DESKTOP;
     SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, SHGFP_TYPE_DEFAULT, appData);
-    std::wstring ws( appData);
-    std::string test( ws.begin(), ws.end() );
+    std::wstring ws(appData);
+    std::string test(ws.begin(), ws.end() );
     file_DESKTOP=test;
     hFile_DESKTOP = CreateFileA(file_DESKTOP.c_str(), GENERIC_READ | FILE_LIST_DIRECTORY, FILE_SHARE_DELETE | FILE_SHARE_READ| FILE_SHARE_WRITE, NULL,OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED,NULL);
     if (hFile_DESKTOP == INVALID_HANDLE_VALUE)
@@ -61,6 +63,7 @@ int fileChanges::fileChangesThread_DESKTOP(){
     CloseHandle(hFile_DESKTOP);
     return 0;
 }
+//-----------------------------------------------------------------------------------------
 int fileChanges::fileChangesThread_DOWNLOADS(){
     wchar_t  appData[MAX_PATH];
     std::string file_DOWNLOADS;
@@ -112,3 +115,4 @@ int fileChanges::fileChangesThread_DOWNLOADS(){
     CloseHandle(hFile_DOWNLOADS);
     return 0;
 }
+//-----------------------------------------------------------------------------------------

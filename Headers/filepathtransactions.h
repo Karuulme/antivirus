@@ -26,8 +26,12 @@ private:
     Kmap<int, RegProgramList>  regList;
     int regListIndex=0;
 public slots:
-    void getFilePahtReg(QString *filePath,unsigned long int pID);
+    void getFilePahtReg(QString filePath,unsigned long int pID);
     void getRegList(Kmap<int, RegProgramList> reg);
-    void getfileChangesNotification(QString filePath);;
+    void getfileChangesNotification(QString filePath);
+    void getProgramTime(unsigned __int8 value);
+signals:
+    void setDllEnjection(unsigned long int pID);
+
 };
 #endif // FILEPATHTRANSACTIONS_H

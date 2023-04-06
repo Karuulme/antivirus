@@ -9,6 +9,8 @@
 #include <fstream>
 #include <QCryptographicHash>
 #include <QFile>
+#include <Headers/klibrary.h>
+#include <Shlobj.h>
 class scanResultOperations : public QObject
 {
     Q_OBJECT
@@ -21,8 +23,10 @@ private:
     void getMac();
     void encrypt(QString file);
     void Decrypt(QString file);
+    void getAppDataAddress();
     QString mac_Address;
     QString quarantineAddress;
+    QString appDataAddress;
 signals:
 public slots:
     void getApplyResults(QMap<int,QString> malwares,QMap<int,int> malwareListOptions,int virusOptions,int computerOptions);

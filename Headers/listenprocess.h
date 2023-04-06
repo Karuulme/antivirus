@@ -41,7 +41,7 @@ public:
     bool listenProcess_Control=false;
 
 signals:
-    void setFilePahtReg(QString *filePath);
+    void setFilePahtReg(QString filePath,unsigned long int pID);
 };
 #endif    // end of EventSink.h
 #endif // LISTENPROCESS_H

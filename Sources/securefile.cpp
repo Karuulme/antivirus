@@ -3,6 +3,7 @@
 secureFile::secureFile(QObject *parent): QObject{parent}{
 
 }
+//-----------------------------------------------------------------------------------------
 void secureFile::setStart(){
     wchar_t  appData[MAX_PATH];
     SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, SHGFP_TYPE_DEFAULT, appData);
@@ -12,13 +13,16 @@ void secureFile::setStart(){
     filePathDESKTOP=filePathDESKTOP.replace("\\","/");
     getRegSecureFiles();
 }
+//-----------------------------------------------------------------------------------------
 void secureFile::setsecureFiles(QString childFileName){
     m_secureFiles=childFileName;
     emit secureFilesChanged();
 }
+//-----------------------------------------------------------------------------------------
 QString secureFile::getsecureFiles(){
     return m_secureFiles;
 }
+//-----------------------------------------------------------------------------------------
 Kstring secureFile::KcharToString(char value[256])
 {
     Kstring target;
@@ -29,12 +33,14 @@ Kstring secureFile::KcharToString(char value[256])
     }
     return target;
 }
+//-----------------------------------------------------------------------------------------
 int secureFile::StringToWString(Kwstring& ws, Kstring& s)
 {
     std::wstring wsTmp(s.begin(), s.end());
     ws = wsTmp;
     return 0;
 }
+//-----------------------------------------------------------------------------------------
 int secureFile::getRegSecureFiles()
 {
     regListNum = 0;
@@ -74,8 +80,7 @@ int secureFile::getRegSecureFiles()
     for (int i= 0; i < cSubKeys; i++) {
         cbName = _MAX_PATH;
         retCode = RegEnumKeyEx(regKey, (DWORD)i,achKey,&cbName,NULL,NULL,NULL,&ftLastWriteTime);
-        if (retCode == ERROR_SUCCESS)
-        {
+        if (retCode == ERROR_SUCCESS){
             RegSecureFile regSecureFile;
             std::string str;
             std::wstring wStr = achKey;
@@ -90,13 +95,15 @@ int secureFile::getRegSecureFiles()
             secureFileRegList[secureFileIndex] = regSecureFile;
             secureFileIndex++;
             KSpace(value);
-
-            setsecureFiles(QString::fromStdString("Null:?!?:"+regSecureFile.fPath+":?!?:"+regSecureFile.fKey));// kayıt defterinden gelen bir kayıf ise standar olarak gönderiyoruz
+            secureList.append(QString::fromStdString(regSecureFile.fKey));
+            setsecureFiles(QString::fromStdString("Null:?!?:"+regSecureFile.fPath+":?!?:"+regSecureFile.fKey));// kayıt defterinden gelen bir kayıf ise standart olarak gönderiyoruz
         }
     }
+    setSecureList(&secureList);
     RegCloseKey(regKey);
     return 0;
 }
+//-----------------------------------------------------------------------------------------
 int  secureFile::setRegCreateRecure(HKEY hKey, Kstring path, Kstring key, Kstring value) { // KAYIT DEFTERİNE VERİ EKLEME VE GÜNCELLEME
     Kstring sPath;
     Kstring sKey= key;
@@ -118,6 +125,7 @@ int  secureFile::setRegCreateRecure(HKEY hKey, Kstring path, Kstring key, Kstrin
     RegCloseKey(hkRegOpen);
     return 0;
 }
+//-----------------------------------------------------------------------------------------
 int secureFile::folderPathControl(QString path){
     if(path.contains(filePathDESKTOP)){
         for(int i=0;i<secureFileIndex;i++){
@@ -130,6 +138,7 @@ int secureFile::folderPathControl(QString path){
         return -1;
     return 1;
 }
+//-----------------------------------------------------------------------------------------
 void secureFile::set_folderPath(QString parentFileName){
     parentFileName=parentFileName.replace("file:///","");
     if(folderPathControl(parentFileName)>0){
@@ -144,12 +153,16 @@ void secureFile::set_folderPath(QString parentFileName){
         setsecureFiles("new:?!?:"+parentFileName+":?!?:"+Filepassword);// Yeni eklendiğini belirtmek için başına "new" ekliyoruz
         Kstring newFolderPath=parentFileName.toStdString()+"/"+Filepassword.toStdString();
         CreateDirectoryA(newFolderPath.c_str(),NULL);
+        secureList.append(Filepassword);
+
     }
 }
+//-----------------------------------------------------------------------------------------
 void secureFile::set_RecureOpenFile(QString parentFileName){
     Kstring shelpath=parentFileName.toStdString();
     ShellExecuteA(NULL, "open",shelpath.c_str(), NULL, NULL, SW_SHOWDEFAULT);
 }
+//-----------------------------------------------------------------------------------------
 QByteArray secureFile::getRandomSha256(){
     std::random_device rd;
     std::mt19937_64 eng(rd());
@@ -162,6 +175,7 @@ QByteArray secureFile::getRandomSha256(){
     }
     return QCryptographicHash::hash(randomData, QCryptographicHash::Sha256);
 }
+//-----------------------------------------------------------------------------------------
 
 
 

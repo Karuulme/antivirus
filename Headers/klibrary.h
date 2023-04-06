@@ -1,6 +1,7 @@
 #ifndef KLIBRARY_H
 #define KLIBRARY_H
 #include <QObject>
+#define KProgramName "Vkarul"
 #define Kstring  std::string
 #define Kwstring std::wstring
 #define Kmap std::map
@@ -19,7 +20,11 @@
 #define KSpace(x)(memset(x,0,sizeof(x)))
 #define KBank   "SOFTWARE\\AntiVirus\\Bank\\"
 #define KSecure "SOFTWARE\\AntiVirus\\Secure\\"
-#define KDllSource 5
+#define KLocal  "SOFTWARE\\AntiVirus"
+#define KDllSource 10
+#define KIdentification_Time 50
+#define KMachine HKEY_CURRENT_USER
+
 
 struct RegProgramList {
     Kstring pHash;
