@@ -16,7 +16,6 @@ class scanResultOperations : public QObject
     Q_OBJECT
 public:
     explicit scanResultOperations(QObject *parent = nullptr);
-    void getProgramData();
 private:
     void virusProcesses(QString path,int Options);
     void computerOperations(int Options);
@@ -26,7 +25,6 @@ private:
     void getAppDataAddress();
     QString mac_Address;
     QString quarantineAddress;
-    QString appDataAddress;
 signals:
 public slots:
     void getApplyResults(QMap<int,QString> malwares,QMap<int,int> malwareListOptions,int virusOptions,int computerOptions);

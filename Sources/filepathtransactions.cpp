@@ -50,10 +50,11 @@ int filePathTransactions::setRegQuestion(QString filePath,unsigned long int pID)
     }
     else
     {
+        emit setDllEnjection(pID);
         regeditNewRecord(reg);// yeni kayıt
         //----------------------------------------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         //DLL injection YAPILACAK
-        emit setDllEnjection(pID);
+
         //----------------------------------------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     }
     return 0;

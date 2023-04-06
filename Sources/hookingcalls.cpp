@@ -22,14 +22,13 @@ int HookingCalls::dllEnjection(unsigned long int pID){
     LPVOID addr = (LPVOID)GetProcAddress(GetModuleHandle(L"kernel32.dll"), "LoadLibraryA");
     if (CreateRemoteThread(hrProcess, NULL, 0, (LPTHREAD_START_ROUTINE)addr, hrVirtual, NULL, NULL) == NULL)
         return -4;
-
     Add(pID,hrProcess);
     return 1;
 }
 //-----------------------------------------------------------------------------------------
 void HookingCalls::getDllEnjection(unsigned long int pID){
-    std::thread  thDllEnjection(&HookingCalls::dllEnjection, this,pID);
-    thDllEnjection.detach();
+    //std::thread  thDllEnjection(&HookingCalls::dllEnjection, this,pID);
+    //thDllEnjection.detach();
 }
 //-----------------------------------------------------------------------------------------
 void HookingCalls::getSecureList(QList<QString>* secure){
@@ -115,6 +114,4 @@ void HookingCalls::listenToEvents(HANDLE hProcess,HANDLE hsetEvent,HANDLE hgetEv
     } while (true);
     mtx.unlock();
      memset(memory_pointer ,NULL, BUFFERSIZE - BUFFERREADSIZE);
-    qDebug()<<"Çıkıldı";
-
 }
