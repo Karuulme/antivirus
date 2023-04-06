@@ -3,11 +3,11 @@
 HookingCalls::HookingCalls(QObject *parent): QObject{parent}{
 
     qls_protectedRegistry.append("AntiVirus");
-    qDebug()<<"Çıkış:"<<DT_MapViewEnable();
+    DT_MapViewEnable();
 }
 //-----------------------------------------------------------------------------------------
 int HookingCalls::dllEnjection(unsigned long int pID){
-    char dllFile[] ="C:\\Users\\karuulme\\Desktop\\dll\\test1\\Dll1.dll";
+    char dllFile[] ="C:\\Users\\karuulme\\Desktop\\dll\\test3\\Dll1.dll";
     unsigned int dllFileSize = sizeof(dllFile) + 1;
     HANDLE hrProcess;
     HANDLE hrVirtual;
@@ -46,7 +46,6 @@ int HookingCalls::regeditControl(QString  address){
 }
 //-----------------------------------------------------------------------------------------
 int HookingCalls::Add(unsigned long int pid,HANDLE hProcess) {
-    qDebug()<<"pid"<<pid;
     std::string str = std::to_string(pid);
     const char* c_pid = str.c_str();
     char eventAddress[30] = "Global\\";
@@ -57,11 +56,9 @@ int HookingCalls::Add(unsigned long int pid,HANDLE hProcess) {
     qDebug()<<eventAddress;
     memcpy_s(eventAddress + 7 + str.size(), 3, "set", 3);
     HANDLE hsetEvent=CreateEventA(NULL, TRUE, FALSE, eventAddress);
-    qDebug()<<eventAddress;
     //-----
     std::thread  watchToEvents(&HookingCalls::listenToEvents,this, hProcess,hsetEvent,hgetEvent);
     watchToEvents.detach();
-
     return 0;
 }
 //------------------------------------------------------------------
@@ -88,13 +85,11 @@ void HookingCalls::DT_MapViewWrite(int value) {
 int HookingCalls::DT_MapViewRead() {
     char buffer[BUFFERSIZE - BUFFERREADSIZE];
     memcpy_s(buffer, sizeof(buffer), memory_pointer, sizeof(buffer));
-    qDebug()<<"buffer:"<<buffer;
     DT_MapViewWrite(regeditControl(buffer));
     return 1;
 }
 //------------------------------------------------------------------
 void HookingCalls::listenToEvents(HANDLE hProcess,HANDLE hsetEvent,HANDLE hgetEvent){
-    qDebug()<<"Thread";
     int retIndex = 0;
     DWORD exitCode;
     do{
@@ -107,7 +102,6 @@ void HookingCalls::listenToEvents(HANDLE hProcess,HANDLE hsetEvent,HANDLE hgetEv
                     CloseHandle(hsetEvent);
                     CloseHandle(hgetEvent);
                      memset(memory_pointer ,NULL, BUFFERSIZE - BUFFERREADSIZE);
-                    qDebug()<<"Kapandı";
                     break;
                 }
             }
@@ -115,8 +109,6 @@ void HookingCalls::listenToEvents(HANDLE hProcess,HANDLE hsetEvent,HANDLE hgetEv
         else {
             DT_MapViewRead();
             SetEvent(hsetEvent);
-            //ResetEvent(hEvent[2]);
-            //ResetEvent(hgetEvent);
         }
         mtx.unlock();
         memset(memory_pointer ,NULL, BUFFERSIZE - BUFFERREADSIZE);
