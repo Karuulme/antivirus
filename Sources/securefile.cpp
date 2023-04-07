@@ -96,7 +96,10 @@ int secureFile::getRegSecureFiles()
             secureFileIndex++;
             KSpace(value);
             secureList.append(QString::fromStdString(regSecureFile.fKey));
+            qDebug()<<QString::fromStdString(regSecureFile.fPath);
             setsecureFiles(QString::fromStdString("Null:?!?:"+regSecureFile.fPath+":?!?:"+regSecureFile.fKey));// kayıt defterinden gelen bir kayıf ise standart olarak gönderiyoruz
+
+
         }
     }
     setSecureList(&secureList);

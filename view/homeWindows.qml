@@ -80,24 +80,24 @@ Rectangle {
             MouseArea{
                 property bool scroolBarEffect: false
                 anchors.fill: parent
-                 drag.target: parent
-                 drag.axis: Drag.YAxis
-                 drag.maximumX: 0
-                 drag.minimumX: 0
-                 drag.maximumY: windows_log.height/2+34
-                 drag.minimumY: 0
-                 hoverEnabled: true
-                 onEntered:parent.width=10
-                 onExited: {
-                     if(!scroolBarEffect){
-                          parent.width=5
-                     }
-                 }
-                 onPressed:scroolBarEffect=true
-                 onReleased:{
-                     parent.width=5
-                     scroolBarEffect=false
-                 }
+                drag.target: parent
+                drag.axis: Drag.YAxis
+                drag.maximumX: 0
+                drag.minimumX: 0
+                drag.maximumY: windows_log.height/2+34
+                drag.minimumY: 0
+                hoverEnabled: true
+                onEntered:parent.width=10
+                onExited: {
+                    if(!scroolBarEffect){
+                         parent.width=5
+                    }
+                }
+                onPressed:scroolBarEffect=true
+                onReleased:{
+                   parent.width=5
+                    scroolBarEffect=false
+                }
             }
         }
         state:{
@@ -110,11 +110,9 @@ Rectangle {
                 objectKText.dindex=parseInt(values[1]);
                 if(!windows_log_scrool_bar.visible){
                    // var vlaue=windows_log_colmn.height;
-
                   //  if(windows_log_colmn.height>400){
                        // windows_log_scrool_bar.visible=true;
                   //  }
-
                 }
             }
             return true

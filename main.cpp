@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
     ctx->setContextProperty("windowstaskbar",&_windowstaskbar);
     ctx->setContextProperty("system",&_system);
     ctx->setContextProperty("securefile",&_secureFile);
+    ctx->setContextProperty("quarantine",&_scanresultoperations);
 
     QObject::connect(&_userdefinition,SIGNAL(setFilePahtReg(QString,unsigned long int)),&_filepathtransactions, SLOT(getFilePahtReg(QString,unsigned long int)));
     QObject::connect(&_listenProcess,SIGNAL(setFilePahtReg(QString,unsigned long int)),&_filepathtransactions, SLOT(getFilePahtReg(QString,unsigned long int)));
@@ -52,13 +53,10 @@ int main(int argc, char *argv[])
     QObject::connect(&_filepathtransactions,SIGNAL(setDllEnjection(unsigned long int)),&_hookingCalls, SLOT(getDllEnjection(unsigned long int)));
    // QObject::connect(&_userdefinition,SIGNAL(setProgramTime(unsigned long int)),&_filepathtransactions, SLOT(getDllEnjection(unsigned long int)));
 
-
-
-
-
     _userdefinition.setStart();
     _listenProcess.setStart();
-    _secureFile.setStart();
+   // _secureFile.setStart();
+    //_scanresultoperations.setStart();
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
     QObject *root = 0;
     if (engine.rootObjects().size() > 0)

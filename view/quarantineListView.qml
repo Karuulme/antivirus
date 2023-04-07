@@ -1,38 +1,49 @@
 import QtQuick 2.12
+import QtQuick 2.15
 Rectangle{
-id: rectangle
+id: main
 width: 600
 height: 20
 color: "#f2f4f7"
+property int indexNo: -1
 property int listIndex: 0
+property string fileAddress: ""
+property string fileDate: "25.02.2023 12.25"
     Text {
         id: qIndex
         x: 5
-        y: 4
+        y: 1
         color: "#3f3f3f"
         text:listIndex+"th"
-        font.pointSize: 6
+        font.bold: true
+        font.pointSize: 9
         width: 25
-        height: 11
+        height: 15
     }
     Text {
         id: qhash
         x: 30
-        y: 3
+        y: 2
         color: "#3f3f3f"
-        text:"1c50fc3a98187477897b91f01065b2ef6ed5db12622a93d1bd02117c282c12f0"
-        font.pointSize: 7
+        text:fileAddress
+        font.pointSize: 9
         width: 310
-        height: 12
+        height: 15
+        wrapMode: Text.Wrap
+        clip: true
+        MouseArea{
+            anchors.fill: parent;
+            //onH:
+        }
     }
     Text {
         id: qdate
         y: 2
         color: "#5e5e5e"
-        text:"5.11.2022"
+        text:fileDate
         anchors.left: qhash.right
         anchors.leftMargin: 30
-        font.pointSize: 8
+        font.pointSize: 9
     }
     Text {
         id: qactionDelete
@@ -46,6 +57,9 @@ property int listIndex: 0
         MouseArea{
             anchors.fill: parent
             hoverEnabled: true
+            onClicked:{ quarantine.getQuarantineOptions(indexNo,0);
+             main.destroy();
+            }
             onEntered: {
                 parent.font.underline=true
                 parent.color="#3f3f3f"
@@ -68,6 +82,9 @@ property int listIndex: 0
         MouseArea{
             anchors.fill: parent
             hoverEnabled: true
+            onClicked: {quarantine.getQuarantineOptions(indexNo,1);
+             main.destroy();
+            }
             onEntered: {
                 parent.font.underline=true
                 parent.color="#3f3f3f"
