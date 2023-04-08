@@ -84,11 +84,15 @@ int secureFile::getRegSecureFiles()
             RegSecureFile regSecureFile;
             std::string str;
             std::wstring wStr = achKey;
+
             str = std::string(wStr.begin(), wStr.end());
+            secureListFileName.append(QString::fromStdString(str));
             Kstring path2 = pathX + str;
             char value[BUFFER];
+            BufferSize = BUFFER;
             RegGetValueA(regMachine, path2.c_str(), "fKey", RRF_RT_ANY, NULL, (PVOID)&value, &BufferSize);
             regSecureFile.fKey = KcharToString(value);
+            BufferSize = BUFFER;
             RegGetValueA(regMachine, path2.c_str(), "fPath", RRF_RT_ANY, NULL, (PVOID)&value, &BufferSize);
             regSecureFile.fPath = KcharToString(value);
             regSecureFile.fFile = str;
@@ -96,7 +100,6 @@ int secureFile::getRegSecureFiles()
             secureFileIndex++;
             KSpace(value);
             secureList.append(QString::fromStdString(regSecureFile.fKey));
-            qDebug()<<QString::fromStdString(regSecureFile.fPath);
             setsecureFiles(QString::fromStdString("Null:?!?:"+regSecureFile.fPath+":?!?:"+regSecureFile.fKey));// kayıt defterinden gelen bir kayıf ise standart olarak gönderiyoruz
 
 
@@ -111,7 +114,7 @@ int  secureFile::setRegCreateRecure(HKEY hKey, Kstring path, Kstring key, Kstrin
     Kstring sPath;
     Kstring sKey= key;
     Kstring sValue= value;
-    for (int i = 0; i < path.length(); i++) {		//path space clear; //boşluk olduğunda hatalı dosya işlemi yapıyor.
+    for (int i = 0; i < path.length(); i++) {//path space clear; //boşluk olduğunda hatalı dosya işlemi yapıyor.
         if (path[i] != ' ') {
             sPath += path[i];
         }
@@ -149,7 +152,6 @@ void secureFile::set_folderPath(QString parentFileName){
         QString Filepassword = QString::fromUtf8(getRandomSha256().toHex());
         setRegCreateRecure(regMachine,KSecure+KToString(1000+secureFileIndex),"fPath",parentFileName.toStdString());
         setRegCreateRecure(regMachine,KSecure+KToString(1000+secureFileIndex),"fKey",Filepassword.toStdString());
-
         secureFileRegList[secureFileIndex-1].fPath=parentFileName.toStdString();
         secureFileRegList[secureFileIndex-1].fFile=KToString(1000+secureFileIndex);
         secureFileRegList[secureFileIndex-1].fKey=Filepassword.toStdString();
@@ -157,7 +159,7 @@ void secureFile::set_folderPath(QString parentFileName){
         Kstring newFolderPath=parentFileName.toStdString()+"/"+Filepassword.toStdString();
         CreateDirectoryA(newFolderPath.c_str(),NULL);
         secureList.append(Filepassword);
-
+        secureListFileName.append(QString::fromStdString(KSecure+KToString(1000+secureFileIndex)));
     }
 }
 //-----------------------------------------------------------------------------------------
@@ -179,6 +181,113 @@ QByteArray secureFile::getRandomSha256(){
     return QCryptographicHash::hash(randomData, QCryptographicHash::Sha256);
 }
 //-----------------------------------------------------------------------------------------
+LPCTSTR qstringToLPCTSTR(const QString& str)
+{
+#ifdef UNICODE
+    return reinterpret_cast<const wchar_t*>(str.utf16());
+#else
+    QByteArray utf8Data = str.toUtf8();
+    return utf8Data.constData();
+#endif
+}
+void secureFile::set_RecureDeleteFile(QString rKey,QString rPath){
+    int i=secureList.indexOf(rKey);
+    LPCTSTR deleteAddress=qstringToLPCTSTR(QString::fromStdString(KSecure)+secureListFileName.at(i));
+    BOOL bSuccess=RegDelnode(HKEY_CURRENT_USER, deleteAddress);
+    if(!bSuccess)
+        printf("Success!\n");
+    setsecureFiles("Null:?!?:"+rPath+":?!?:"+rKey);
+
+}
+BOOL secureFile::RegDelnodeRecurse (HKEY hKeyRoot, LPTSTR lpSubKey)
+{
+    LPTSTR lpEnd;
+    LONG lResult;
+    DWORD dwSize;
+    TCHAR szName[MAX_PATH];
+    HKEY hKey;
+    FILETIME ftWrite;
+
+    // First, see if we can delete the key without having
+    // to recurse.
+
+    lResult = RegDeleteKey(hKeyRoot, lpSubKey);
+
+    if (lResult == ERROR_SUCCESS)
+        return TRUE;
+
+    lResult = RegOpenKeyEx (hKeyRoot, lpSubKey, 0, KEY_READ, &hKey);
+
+    if (lResult != ERROR_SUCCESS)
+    {
+        if (lResult == ERROR_FILE_NOT_FOUND) {
+            printf("Key not found.\n");
+            return TRUE;
+        }
+        else {
+            printf("Error opening key.\n");
+            return FALSE;
+        }
+    }
+
+    // Check for an ending slash and add one if it is missing.
+
+    lpEnd = lpSubKey + lstrlen(lpSubKey);
+
+    if (*(lpEnd - 1) != TEXT('\\'))
+    {
+        *lpEnd =  TEXT('\\');
+        lpEnd++;
+        *lpEnd =  TEXT('\0');
+    }
+
+    // Enumerate the keys
+
+    dwSize = MAX_PATH;
+    lResult = RegEnumKeyEx(hKey, 0, szName, &dwSize, NULL,
+                           NULL, NULL, &ftWrite);
+
+    if (lResult == ERROR_SUCCESS)
+    {
+        do {
+
+            *lpEnd = TEXT('\0');
+            StringCchCat(lpSubKey, MAX_PATH * 2, szName);
+
+            if (!RegDelnodeRecurse(hKeyRoot, lpSubKey)) {
+                break;
+            }
+
+            dwSize = MAX_PATH;
+
+            lResult = RegEnumKeyEx(hKey, 0, szName, &dwSize, NULL,
+                                   NULL, NULL, &ftWrite);
+
+        } while (lResult == ERROR_SUCCESS);
+    }
+
+    lpEnd--;
+    *lpEnd = TEXT('\0');
+
+    RegCloseKey (hKey);
+
+    // Try again to delete the key.
+
+    lResult = RegDeleteKey(hKeyRoot, lpSubKey);
+
+    if (lResult == ERROR_SUCCESS)
+        return TRUE;
+
+    return FALSE;
+}
+BOOL secureFile::RegDelnode (HKEY hKeyRoot, LPCTSTR lpSubKey)
+{
+    TCHAR szDelKey[MAX_PATH*2];
+
+    StringCchCopy (szDelKey, MAX_PATH*2, lpSubKey);
+    return RegDelnodeRecurse(hKeyRoot, szDelKey);
+
+}
 
 
 

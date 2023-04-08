@@ -2,9 +2,9 @@ import QtQuick 2.12
 import QtQuick 2.15
 Rectangle{
 id: main
-width: 600
-height: 20
-color: "#f2f4f7"
+width: 900
+height: 40
+color: "#f2f2f2"
 property int indexNo: -1
 property int listIndex: 0
 property string fileAddress: ""
@@ -27,32 +27,30 @@ property string fileDate: "25.02.2023 12.25"
         color: "#3f3f3f"
         text:fileAddress
         font.pointSize: 9
-        width: 310
+        width: 862
         height: 15
         wrapMode: Text.Wrap
         clip: true
-        MouseArea{
+       /* MouseArea{
             anchors.fill: parent;
             //onH:
-        }
+        }*/
     }
     Text {
         id: qdate
-        y: 2
+        x: 30
+        y: 20
         color: "#5e5e5e"
         text:fileDate
-        anchors.left: qhash.right
-        anchors.leftMargin: 30
         font.pointSize: 9
     }
     Text {
         id: qactionDelete
-        y: 2
+        x: 150
+        y: 21
         color: "#525252"
         text: qsTr("Delete")
-        anchors.left: qdate.right
         font.bold: true
-        anchors.leftMargin: 84
         font.pointSize: 8
         MouseArea{
             anchors.fill: parent
@@ -72,12 +70,12 @@ property string fileDate: "25.02.2023 12.25"
     }
     Text {
         id: qactionReturn
-        y: 2
+        y: 21
         color: "#525252"
         text: qsTr("Return")
         anchors.left: qactionDelete.right
         font.bold: true
-        anchors.leftMargin: 20
+        anchors.leftMargin: 27
         font.pointSize: 8
         MouseArea{
             anchors.fill: parent

@@ -12,6 +12,7 @@
 #include <QCryptographicHash>
 #include <random>
 #include <dirent.h>
+#include <strsafe.h>
 class secureFile : public QObject
 {
     Q_OBJECT
@@ -28,7 +29,8 @@ private:
    int StringToWString(Kwstring& ws, Kstring& s);
    Kstring KcharToString(char value[256]);
    QByteArray getRandomSha256();
-
+   BOOL RegDelnodeRecurse (HKEY hKeyRoot, LPTSTR lpSubKey);
+   BOOL RegDelnode (HKEY hKeyRoot, LPCTSTR lpSubKey);
    Kmap<int, RegSecureFile> secureFileRegList;
    int secureFileIndex=0;
    QString m_secureFiles;
@@ -36,11 +38,13 @@ private:
    int regListNum = 0;
    HKEY regMachine = HKEY_CURRENT_USER;
    QList<QString> secureList;
+   QList<QString> secureListFileName;
 
 signals:
    void secureFilesChanged();
    void setSecureList(QList<QString> *secureList);
 public slots:
+   void set_RecureDeleteFile(QString rKey,QString rPath);
    void set_folderPath(QString parentFileName);
    void setStart();
    void set_RecureOpenFile(QString parentFileName);

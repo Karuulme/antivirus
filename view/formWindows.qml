@@ -4,5 +4,5 @@ import QtQuick.Controls 2.15
 Item {
     width: 500
     height: 500
-    color:"red"
+    color:"f2f2f2"
 }

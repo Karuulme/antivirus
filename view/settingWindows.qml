@@ -5,9 +5,9 @@ import QtQuick 2.12
 
 
 Rectangle {
-    width: 675
-    height: 480
-    color: "#f2f4f7"
+    width: 750
+    height: 470
+    color: "#f2f2f2"
 
     TextEdit {
         id: textEdit
@@ -17,7 +17,7 @@ Rectangle {
         font.pixelSize: 22
         font.bold: true
     }
-
+/*
     TextEdit {
         id: textLanguage
         x: 34
@@ -34,7 +34,31 @@ Rectangle {
         height: 25
         model: ["Turkish","English"]
     }
+    Rectangle {
+        x: 314
+        y: 59
+        width: 100
+        height: 25
+        color: "#0047ab"
+        radius: 5
+        border.color: "#c3c2c2"
+        border.width: 1
+        Text {
+            color: "#ffffff"
+            text: qsTr("APPLY")
+            anchors.fill: parent
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            font.pointSize: 8
+            font.bold: true
+        }
 
+        MouseArea {
+            anchors.fill: parent
+            onClicked: diolog.open()
+        }
+    }
+*/
     TextEdit {
         id: textEdit3
         x: 34
@@ -83,30 +107,7 @@ Rectangle {
         onYesClicked: console.log("YES")
     }
 
-    Rectangle {
-        x: 314
-        y: 59
-        width: 100
-        height: 25
-        color: "#0047ab"
-        radius: 5
-        border.color: "#c3c2c2"
-        border.width: 1
-        Text {
-            color: "#ffffff"
-            text: qsTr("APPLY")
-            anchors.fill: parent
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            font.pointSize: 8
-            font.bold: true
-        }
 
-        MouseArea {
-            anchors.fill: parent
-            onClicked: diolog.open()
-        }
-    }
 }
 
 

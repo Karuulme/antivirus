@@ -1,12 +1,13 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.15
 import QtQuick.Dialogs
+import QtQuick.Controls
 Rectangle {
     property int writeFileIndex: 2
     id: rectangle
-    width: 675
-    height: 480
-    color: "#f2f4f7"
+    width: 930
+    height: 470
+    color: "#f2f2f2"
     state:{securefile.setStart(); return true}
     Rectangle{
         id: rectangle1
@@ -31,7 +32,7 @@ Rectangle {
         Rectangle{
             x: 51
             y: 4
-            width: 616
+            width: 865
             height: 25
             color:"#00000000"
             border.width: 1
@@ -46,13 +47,13 @@ Rectangle {
         }
         FolderDialog {
             id: fileDialog
-             onAccepted:{
+            onAccepted:{
                 selectFilePath.text= fileDialog.selectedFolder
              }
         }
         Rectangle{
-            x: 461
-            y: 32
+            x: 702
+            y: 35
             width: 100
             height: 25
             color:"#00000000"
@@ -72,8 +73,8 @@ Rectangle {
             }
         }
         Rectangle{
-            x: 567
-            y: 32
+            x: 816
+            y: 35
             width: 100
             height: 25
             color:"#00000000"
@@ -94,33 +95,43 @@ Rectangle {
             }
         }
     }
-    Column {
-        width: parent.width
-        height: 370
+    Rectangle{
+        width: 860
+        height: 390
+        color: "#00000000"
+        anchors.left: parent.left
         anchors.top: rectangle1.bottom
-        anchors.topMargin: 40
-        state: {
-            var componentSecureFileView = Qt.createComponent("secureFileView.qml");
-            if(securefile.secureFiles){
-                var fileValue=securefile.secureFiles.split(":?!?:");
-                if(fileValue[0]==="new"){
-                    //Bildirim açılacak
-                    secureFolderPath.text=fileValue[1];
-                    secureKey.text=fileValue[2];
-                    secureNewFolderNotification.visible=true;
-
+        anchors.leftMargin: 50
+        anchors.topMargin: 0
+        ScrollView {
+            width: parent.width
+            height: parent.height
+            //ScrollBar.horizontalPolicy: ScrollBar.AlwaysOff
+            Column{
+                width: parent.width
+                height: parent.height
+                spacing: 10
+                state: {
+                    var componentSecureFileView = Qt.createComponent("secureFileView.qml");
+                    if(securefile.secureFiles){
+                        var fileValue=securefile.secureFiles.split(":?!?:");
+                        if(fileValue[0]==="new"){
+                            secureFolderPath.text=fileValue[1];
+                            secureKey.text=fileValue[2];
+                            secureNewFolderNotification.visible=true;
+                        }
+                        var object2 = componentSecureFileView.createObject(this);
+                        object2.fPath=fileValue[1]
+                        object2.fKey=fileValue[2]
+                    }
+                    return true
                 }
-                var object2 = componentSecureFileView.createObject(this);
-                object2.fPath=fileValue[1]
-                object2.fKey=fileValue[2]
-
             }
-            return true
         }
     }
+
     Rectangle {
         id: secureNewFolderNotification
-        x: 8
         y: 357
         width: 659
         height: 97
@@ -128,6 +139,8 @@ Rectangle {
         radius: 7
         border.color: "#006619"
         border.width: 2
+        anchors.left: parent.left
+        anchors.leftMargin: 20
         visible: false
         Image {
 

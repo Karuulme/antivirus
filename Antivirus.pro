@@ -38,8 +38,6 @@ SOURCES += \
         Sources/hookingcalls.cpp \
         Sources/klibrary.cpp \
         Sources/listenprocess.cpp \
-        Sources/notificationlisten.cpp \
-        Sources/processmemet.cpp \
         Sources/scanresultoperations.cpp \
         Sources/securefile.cpp \
         Sources/system.cpp \
@@ -54,8 +52,6 @@ HEADERS += \
     Headers/hookingcalls.h \
     Headers/klibrary.h \
     Headers/listenprocess.h \
-    Headers/notificationlisten.h \
-    Headers/processmemet.h \
     Headers/scanresultoperations.h \
     Headers/securefile.h \
     Headers/system.h \

@@ -22,7 +22,7 @@ Rectangle {
         return true
     }
     id: rectangle
-    width: 320
+    width: 410
     height: 65
     color:"#f9f9f9"
     border.width: 1
@@ -95,8 +95,8 @@ Rectangle {
        id:scan_button
         width: 80
         height: 20
-        x:220
-        y:22
+        x:309
+        y:23
         visible: true
         border.width: 1
         color:"#00000000"
@@ -124,8 +124,8 @@ Rectangle {
         width: 40
         visible: false
         height: 20
-        x:232
-        y:22
+        x:309
+        y:23
         border.width: 1
         color:"#00000000"
         radius: 5
@@ -147,8 +147,8 @@ Rectangle {
 
     }
     BusyIndicator {
-        x: 278
-        y:14
+        x: 368
+        y:16
         width: 34
         height: 34
         id: busyIndicator1

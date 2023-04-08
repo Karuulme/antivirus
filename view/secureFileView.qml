@@ -1,9 +1,10 @@
 import QtQuick 2.12
 
 Rectangle {
-    width: 675
+    id:secureFile_qml
+    width: 860
     height: 40
-    color: "#f2f4f7"
+    color: "#f2f2f2"
     property string fPath: ""
     property string fKey: ""
     Text {
@@ -21,7 +22,9 @@ Rectangle {
     Text {
         id: text1
         text: qsTr("Open Folder")
+        anchors.right: parent.right
         verticalAlignment: Text.AlignVCenter
+        anchors.rightMargin: 140
         leftPadding: 30
         font.pointSize: 10
         x: 429
@@ -42,6 +45,8 @@ Rectangle {
     }
     Text {
         text: qsTr("Delete Folder")
+        anchors.right: parent.right
+        anchors.rightMargin: 0
         x: 557
         font.pointSize: 10
         leftPadding: 30
@@ -52,6 +57,13 @@ Rectangle {
             source: "../Image/icons8-delete-document-48.png"
             width: 28
             height:28
+        }
+        MouseArea{
+            anchors.fill: parent
+            onClicked: {securefile.set_RecureDeleteFile(fKey,fPath);
+                secureFile_qml.destroy();
+            }
+
         }
     }
 
