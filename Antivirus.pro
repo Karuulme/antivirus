@@ -55,7 +55,10 @@ HEADERS += \
     Headers/securefile.h \
     Headers/system.h \
     Headers/userdefinition.h \
+    Headers/scanresultoperations.h \
     Headers/windowtaskbar.h
+
+
 
 RESOURCES += qml.qrc
 
