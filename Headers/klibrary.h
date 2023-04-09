@@ -22,7 +22,7 @@
 #define KSecure "SOFTWARE\\AntiVirus\\Secure\\"
 #define KLocal  "SOFTWARE\\AntiVirus"
 #define KDllSource 10
-#define KIdentification_Time 50
+#define KIdentification_Time 20
 #define KMachine HKEY_CURRENT_USER
 
 

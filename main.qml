@@ -133,29 +133,6 @@ Window {
                 }*/
             }
             Text {
-                x: 20
-                text: qsTr("Quarantine")
-                font.bold: true
-                font.family: "Tahoma"
-                color: menuColor
-                font.pointSize: 11
-                leftPadding: 10
-                verticalAlignment: Text.AlignVCenter
-                height: 25
-                width: 110
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: selectMenuIndex=1
-                }
-               /* Image {
-                    width: 25
-                    height: 25
-                    x:-21
-                    y:0
-                    source: "./Image/icons8-quarantine-64.png"
-                }*/
-            }
-            Text {
                 text: qsTr("Secure File")
                 font.bold: true
                 font.family: "Tahoma"
@@ -178,6 +155,30 @@ Window {
                     source: "./Image/icons8-security-lock-100.png"
                 }*/
             }
+            Text {
+                x: 20
+                text: qsTr("Quarantine")
+                font.bold: true
+                font.family: "Tahoma"
+                color: menuColor
+                font.pointSize: 11
+                leftPadding: 10
+                verticalAlignment: Text.AlignVCenter
+                height: 25
+                width: 110
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: selectMenuIndex=1
+                }
+               /* Image {
+                    width: 25
+                    height: 25
+                    x:-21
+                    y:0
+                    source: "./Image/icons8-quarantine-64.png"
+                }*/
+            }
+
             Text {
                 text: qsTr("Setting")
                 font.bold: true

@@ -3,7 +3,7 @@ scanResultOperations::scanResultOperations(QObject *parent): QObject{parent}
 {
     getMac();
     getAppDataAddress();
-    //encrypt("C:\\Users\\karuulme\\Desktop\\ConsoleApplication8.exe");
+    //encrypt("C:\\Users\\karuulme\\Desktop\\systemInformation.exe");
     //Decrypt("C:\\Users\\karuulme\\AppData\\Local\\Vkarul\\98e8827c7f23cacb33986ad22ed42eca2801fb095b292a2b8825f316348146ef");
 
 }
@@ -248,3 +248,22 @@ void scanResultOperations::getApplyResults(QMap<int,QString> malwaress,QMap<int,
     computerOperations(computerOptions);
 }
 //-----------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

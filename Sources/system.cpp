@@ -19,8 +19,8 @@ System::System(QObject *parent): QObject{parent}
     }
 
 
-    emit setscaningDisk("NULL");
-    emit storage_changed();
+    //emit setscaningDisk("NULL");
+    //emit storage_changed();
 }
 //-----------------------------------------------------------------------------------------
 bool System::get_scandisk_status(){
@@ -34,7 +34,6 @@ double System::byteToGb(long double byte) {
     kilobyte = byte / 1024;
     megabyte = kilobyte / 1024;
     gigabyte = megabyte / 1024;
-
     return gigabyte;
 }
 //-----------------------------------------------------------------------------------------

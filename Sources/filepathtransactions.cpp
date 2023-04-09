@@ -46,7 +46,6 @@ int filePathTransactions::setRegQuestion(QString filePath,unsigned long int pID)
             //----------------------------------------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         }
         setRegCreateBank(KMachine, KBank + reg.pFile, "pRunCount", KToString(reg.pRunCount));// güncelleme
-
     }
     else
     {

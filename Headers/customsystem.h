@@ -1,4 +1,5 @@
-#ifndef CUSTOMSYSTEM_H
+
+/*#ifndef CUSTOMSYSTEM_H
 #define CUSTOMSYSTEM_H
 #include <D3d9.h>
 #include <Windows.h>
@@ -48,6 +49,7 @@ struct RegProgramList {
     int pRunCount=0;
 };
 
+extern bool _identificationConfirmation;
 
 class CustomSystem : public QObject
 {
@@ -81,3 +83,4 @@ signals:
 };
 
 #endif // CUSTOMSYSTEM_H
+*/

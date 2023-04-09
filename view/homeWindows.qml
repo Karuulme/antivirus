@@ -21,6 +21,7 @@ Rectangle {
             width: parent.width
             height: parent.height
             Column{
+                id:listHDD
                 x: 0
                 y: 40
                 width: parent.width

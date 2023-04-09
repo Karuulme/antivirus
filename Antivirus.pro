@@ -52,7 +52,6 @@ HEADERS += \
     Headers/hookingcalls.h \
     Headers/klibrary.h \
     Headers/listenprocess.h \
-    Headers/scanresultoperations.h \
     Headers/securefile.h \
     Headers/system.h \
     Headers/userdefinition.h \

@@ -5,7 +5,9 @@
 #include <QMenu>
 #include <QSystemTrayIcon>
 #include <QQmlContext>
-
+//------------------------------------------------------------------
+bool _identificationConfirmation=false;
+//------------------------------------------------------------------
 #include <Headers/windowtaskbar.h>
 #include <Headers/system.h>
 #include <Headers/userdefinition.h>
@@ -15,6 +17,7 @@
 #include <Headers/scanresultoperations.h>
 #include <Headers/securefile.h>
 #include <Headers/hookingcalls.h>
+
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
@@ -22,11 +25,11 @@ int main(int argc, char *argv[])
     QIcon icon(":Image/logo2ico.ico");
     app.setWindowIcon(icon);
     QQmlApplicationEngine engine;
+    userDefinition  _userdefinition;
     WindowTaskBar _windowstaskbar;
     System _system;
     listenProcess _listenProcess;
     filePathTransactions  _filepathtransactions;
-    userDefinition  _userdefinition;
     fileChanges  _filechanges;
     scanResultOperations _scanresultoperations;
     secureFile _secureFile;
@@ -43,6 +46,7 @@ int main(int argc, char *argv[])
     ctx->setContextProperty("system",&_system);
     ctx->setContextProperty("securefile",&_secureFile);
     ctx->setContextProperty("quarantine",&_scanresultoperations);
+    ctx->setContextProperty("userdefinition",&_userdefinition);
 
     QObject::connect(&_userdefinition,SIGNAL(setFilePahtReg(QString,unsigned long int)),&_filepathtransactions, SLOT(getFilePahtReg(QString,unsigned long int)));
     QObject::connect(&_listenProcess,SIGNAL(setFilePahtReg(QString,unsigned long int)),&_filepathtransactions, SLOT(getFilePahtReg(QString,unsigned long int)));
@@ -51,7 +55,6 @@ int main(int argc, char *argv[])
     QObject::connect(&_system,SIGNAL(setApplyResults(QMap<int,QString>,QMap<int,int>,int,int)),&_scanresultoperations, SLOT(getApplyResults(QMap<int,QString>,QMap<int,int>,int,int)));
     QObject::connect(&_secureFile,SIGNAL(setSecureList(QList<QString>*)),&_hookingCalls, SLOT(getSecureList(QList<QString>*)));
     QObject::connect(&_filepathtransactions,SIGNAL(setDllEnjection(unsigned long int)),&_hookingCalls, SLOT(getDllEnjection(unsigned long int)));
-   // QObject::connect(&_userdefinition,SIGNAL(setProgramTime(unsigned long int)),&_filepathtransactions, SLOT(getDllEnjection(unsigned long int)));
 
     _userdefinition.setStart();
     _listenProcess.setStart();

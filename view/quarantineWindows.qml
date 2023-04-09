@@ -28,16 +28,16 @@ Rectangle {
                 height: parent.height
                 spacing: 10
                 state: {
+                    var component = Qt.createComponent("quarantineListView.qml");
                     if(quarantine.quarantineFile){
                         quarantinelistIndex++;
                         var myArray = quarantine.quarantineFile.split("--");
-                        var component = Qt.createComponent("quarantineListView.qml");
                         var ttt=component.createObject(this);
                         ttt.fileAddress=myArray[0];
                         ttt.fileDate=myArray[1].split(" ")[0];
                         ttt.indexNo=myArray[2];
                         ttt.listIndex=quarantinelistIndex;
-                        return false
+
                     }
                     return false
                 }

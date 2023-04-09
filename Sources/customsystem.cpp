@@ -1,3 +1,4 @@
+/*
 #include "../Headers/customsystem.h"
 #include <QChar>
 
@@ -6,7 +7,7 @@ CustomSystem::CustomSystem(QObject *parent): QObject{parent}
     /*getRegProgramsListThread.join();
     std::thread  getProcessListThread(&CustomSystem::getProcessList, this);
     getProcessListThread.detach();*/
-}
+/*}
 //-----------------------------------------------------------------------------------------
 CustomSystem::~CustomSystem()
 {
@@ -93,7 +94,7 @@ void CustomSystem::getProcessList()
                          continue;
                     }
                     file.close();
-                    KWcharToString(ProcessInformation.szExeFile);
+                    //KWcharToString(ProcessInformation.szExeFile);
                     if (reg.pHash != "") {
                         RegProgramList regRet;
                         regRet = upRegListControl(reg.pHash);
@@ -101,11 +102,13 @@ void CustomSystem::getProcessList()
                             setRegCreateBank(HKEY_CURRENT_USER, KBank + regRet.pFile, "pRunCount", KToString(regRet.pRunCount + 1));
                         }
                         else {
-                            if (runFirstList.find(reg.pHash)== runFirstList.end()) {
-                                runFirstList[reg.pHash] = i;
-                                setRegCreateBank(HKEY_CURRENT_USER, KBank + KToString(numara + i), "pHash", reg.pHash);
-                                setRegCreateBank(HKEY_CURRENT_USER, KBank + KToString(numara + i), "pRunCount", KToString(reg.pRunCount));
-                                i++;
+                            if(_identificationConfirmation){
+                                if (runFirstList.find(reg.pHash)== runFirstList.end()) {
+                                    runFirstList[reg.pHash] = i;
+                                    setRegCreateBank(HKEY_CURRENT_USER, KBank + KToString(numara + i), "pHash", reg.pHash);
+                                    setRegCreateBank(HKEY_CURRENT_USER, KBank + KToString(numara + i), "pRunCount", KToString(reg.pRunCount));
+                                    i++;
+                                }
                             }
                         }
                     }
@@ -218,3 +221,4 @@ RegProgramList CustomSystem::upRegListControl(Kstring reg) {
     return regProgramList;
 }
 //-----------------------------------------------------------------------------------------
+*/
