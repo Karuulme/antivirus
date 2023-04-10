@@ -3,7 +3,7 @@ import Qt.labs.platform
 import QtQuick 2.12
 
 Rectangle {
-    width: 750
+    width: 930
     height: 470
     color: "#f2f2f2"
 /*
@@ -49,14 +49,17 @@ Rectangle {
     }
 */
     Rectangle{
+        x: 115
+        y: 256
         visible:!userdefinition.userDefinition
-        width: 900
-        height: 470
+        width: 700
+        height: 200
         color: "#00000000"
+
         TextEdit {
             id: textEdit3
             x: 34
-            y: 380
+            y: 120
             text: qsTr("Set user definition now with open processes and single programs")
             font.pixelSize: 14
             font.bold: true
@@ -64,7 +67,7 @@ Rectangle {
         TextEdit {
             id: textEdit4
             x: 34
-            y: 400
+            y: 140
             text: qsTr("Skips the 200 hour definition time and creates the definition immediately")
             font.pixelSize: 12
             font.bold: false
@@ -72,7 +75,7 @@ Rectangle {
 
         Rectangle {
             x: 496
-            y: 380
+            y: 120
             width: 147
             height: 36
             color: "#0047ab"

@@ -47,6 +47,7 @@ int main(int argc, char *argv[])
     ctx->setContextProperty("securefile",&_secureFile);
     ctx->setContextProperty("quarantine",&_scanresultoperations);
     ctx->setContextProperty("userdefinition",&_userdefinition);
+    ctx->setContextProperty("filepathtransactions",&_filepathtransactions);
 
     QObject::connect(&_userdefinition,SIGNAL(setFilePahtReg(QString,unsigned long int)),&_filepathtransactions, SLOT(getFilePahtReg(QString,unsigned long int)));
     QObject::connect(&_listenProcess,SIGNAL(setFilePahtReg(QString,unsigned long int)),&_filepathtransactions, SLOT(getFilePahtReg(QString,unsigned long int)));
@@ -55,6 +56,9 @@ int main(int argc, char *argv[])
     QObject::connect(&_system,SIGNAL(setApplyResults(QMap<int,QString>,QMap<int,int>,int,int)),&_scanresultoperations, SLOT(getApplyResults(QMap<int,QString>,QMap<int,int>,int,int)));
     QObject::connect(&_secureFile,SIGNAL(setSecureList(QList<QString>*)),&_hookingCalls, SLOT(getSecureList(QList<QString>*)));
     QObject::connect(&_filepathtransactions,SIGNAL(setDllEnjection(unsigned long int)),&_hookingCalls, SLOT(getDllEnjection(unsigned long int)));
+    QObject::connect(&_userdefinition,SIGNAL(setUserDefinitions_Delete_Signal()),&_secureFile, SLOT(getUserDefinitions_Delete_Signal()));
+    QObject::connect(&_userdefinition,SIGNAL(setUserDefinitions_FileOperations(QVector<QString>*)),&_filepathtransactions, SLOT(getUserDefinitions_FileOperations(QVector<QString>*)));
+
 
     _userdefinition.setStart();
     _listenProcess.setStart();

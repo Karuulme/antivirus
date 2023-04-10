@@ -190,6 +190,7 @@ LPCTSTR qstringToLPCTSTR(const QString& str)
     return utf8Data.constData();
 #endif
 }
+//-----------------------------------------------------------------------------------------
 void secureFile::set_RecureDeleteFile(QString rKey,QString rPath){
     int i=secureList.indexOf(rKey);
     LPCTSTR deleteAddress=qstringToLPCTSTR(QString::fromStdString(KSecure)+secureListFileName.at(i));
@@ -199,6 +200,7 @@ void secureFile::set_RecureDeleteFile(QString rKey,QString rPath){
     setsecureFiles("Null:?!?:"+rPath+":?!?:"+rKey);
 
 }
+//-----------------------------------------------------------------------------------------
 BOOL secureFile::RegDelnodeRecurse (HKEY hKeyRoot, LPTSTR lpSubKey)
 {
     LPTSTR lpEnd;
@@ -280,6 +282,7 @@ BOOL secureFile::RegDelnodeRecurse (HKEY hKeyRoot, LPTSTR lpSubKey)
 
     return FALSE;
 }
+//-----------------------------------------------------------------------------------------
 BOOL secureFile::RegDelnode (HKEY hKeyRoot, LPCTSTR lpSubKey)
 {
     TCHAR szDelKey[MAX_PATH*2];
@@ -287,6 +290,10 @@ BOOL secureFile::RegDelnode (HKEY hKeyRoot, LPCTSTR lpSubKey)
     StringCchCopy (szDelKey, MAX_PATH*2, lpSubKey);
     return RegDelnodeRecurse(hKeyRoot, szDelKey);
 
+}
+//-----------------------------------------------------------------------------------------
+void secureFile::getUserDefinitions_Delete_Signal(){
+    RegDelnode(KMachine, qstringToLPCTSTR(KBank));
 }
 
 

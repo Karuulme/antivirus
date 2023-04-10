@@ -47,7 +47,7 @@ void scanResultOperations::findQuarantineFile(){
             std::ifstream readFile;
             readFile.open(quarantineAddress.toStdString().c_str()+fileName, std::ios::binary);
             if (!readFile.is_open()) {
-
+                continue;
             }
             int lineNumber=0;
             while (readFile.get(c)){

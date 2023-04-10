@@ -2,7 +2,7 @@
 
 filePathTransactions::filePathTransactions(QObject *parent): QObject{parent}
 {
-
+    qDebug()<<"_identificationConfirmation:"<<_identificationConfirmation;
 }
 //-----------------------------------------------------------------------------------------
 int  filePathTransactions::setRegCreateBank(HKEY hKey, Kstring path, Kstring key, Kstring value) { // KAYIT DEFTERİNE VERİ EKLEME VE GÜNCELLEME
@@ -45,12 +45,20 @@ int filePathTransactions::setRegQuestion(QString filePath,unsigned long int pID)
             emit setDllEnjection(pID);
             //----------------------------------------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         }
-        setRegCreateBank(KMachine, KBank + reg.pFile, "pRunCount", KToString(reg.pRunCount));// güncelleme
+        if(_identificationConfirmation){
+            setRegCreateBank(KMachine, KBank + reg.pFile, "pRunCount", KToString(reg.pRunCount));// güncelleme
+        }
     }
-    else
-    {
-        emit setDllEnjection(pID);
-        regeditNewRecord(reg);// yeni kayıt
+    else{// yeni kayıt
+
+        if(pID==-1){
+            regeditNewRecord(reg,200);
+        }else{
+            emit setDllEnjection(pID);
+            regeditNewRecord(reg);
+        }
+
+
         //----------------------------------------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         //DLL injection YAPILACAK
 
@@ -72,10 +80,10 @@ QString filePathTransactions::getfileHash(QString filePath){ //DOSYA HASH DEĞER
     return retValue;
 }
 //-----------------------------------------------------------------------------------------
-int filePathTransactions::regeditNewRecord(RegProgramList regProgram){ //YENİ KAYIT EKLEME
+int filePathTransactions::regeditNewRecord(RegProgramList regProgram,int runCount){ //YENİ KAYIT EKLEME , -1 olmamasının şartı kullanıcı tanımınlarının eklenmesi. onların değerleri 101 olarak gelir
     regListIndex++;
     setRegCreateBank(KMachine, KBank + KToString(1000 +regListIndex), "pHash", regProgram.pHash);
-    setRegCreateBank(KMachine, KBank + KToString(1000 +regListIndex), "pRunCount", KToString(regProgram.pRunCount));
+    setRegCreateBank(KMachine, KBank + KToString(1000 +regListIndex), "pRunCount", KToString(runCount ==-1 ? regProgram.pRunCount:runCount));
     regList[regListIndex-1]=regProgram;
 }
 //-----------------------------------------------------------------------------------------
@@ -113,16 +121,32 @@ void filePathTransactions::getRegList(Kmap<int, RegProgramList> reg){// BAŞLANG
 }
 //-----------------------------------------------------------------------------------------
 void filePathTransactions::getfileChangesNotification(QString filePath){ // BİR .EXE DOSYASI OLUŞTURULDUĞUNDA BURAYA GELİR
-      RegProgramList fileChangesProgram;
-      fileChangesProgram.pFile=KToString(1000 +regListIndex);
-      fileChangesProgram.pHash=getfileHash(filePath).toStdString();
-      if(fileChangesProgram.pHash!="000"){
-          if(!boolRegListControl(fileChangesProgram.pHash)){
-              regeditNewRecord(fileChangesProgram);
-              //Bundan sonra taramaya gidecek
-          }
-      }
+    RegProgramList fileChangesProgram;
+    fileChangesProgram.pFile=KToString(1000 +regListIndex);
+    fileChangesProgram.pHash=getfileHash(filePath).toStdString();
+    if(fileChangesProgram.pHash!="000"){
+        if(!boolRegListControl(fileChangesProgram.pHash)){
+            regeditNewRecord(fileChangesProgram);
+            //Bundan sonra taramaya gidecek
+        }
+    }
 }
 //-----------------------------------------------------------------------------------------
-
-
+void filePathTransactions::getUserDefinitions_FileOperations(QVector<QString>* regInstallProgram){
+    std::thread  UserDefinitions(&filePathTransactions::getUserDefinitions_FileOperations_Thread, this, regInstallProgram);
+    UserDefinitions.detach();
+}
+//-----------------------------------------------------------------------------------------
+void filePathTransactions::getUserDefinitions_FileOperations_Thread(QVector<QString>* regInstallProgram){
+    regListIndex=0;
+    regList.clear();
+    for(int i=0;i<regInstallProgram->size();i++){
+        // TARAMAYA GİDECEK GÜVENLİ İSE KAYIT DEFTERİNE EKLENECEK
+        m_userDefinitions_UploadIndexNo=QString::number(i)+"*&*"+QString::number(regInstallProgram->size());
+        emit userDefinitions_UploadIndexNoChanged();
+        setRegQuestion(regInstallProgram->at(i),-1);
+    }
+}
+QString filePathTransactions::getuserDefinitions_UploadIndexNo(){
+    return m_userDefinitions_UploadIndexNo;
+}

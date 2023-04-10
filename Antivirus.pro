@@ -32,7 +32,6 @@ CONFIG(release, debug|release) {
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 SOURCES += \
-        Sources/customsystem.cpp \
         Sources/filechanges.cpp \
         Sources/filepathtransactions.cpp \
         Sources/hookingcalls.cpp \
@@ -46,7 +45,6 @@ SOURCES += \
         main.cpp
 
 HEADERS += \
-    Headers/customsystem.h \
     Headers/filechanges.h \
     Headers/filepathtransactions.h \
     Headers/hookingcalls.h \
@@ -83,3 +81,4 @@ win32: LIBS += -lOleAut32
 win32: LIBS += -lwbemuuid
 win32: LIBS += -liphlpapi
 win32: LIBS += -lshell32
+

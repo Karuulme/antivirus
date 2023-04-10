@@ -1,15 +1,26 @@
 #include "../Headers/userdefinition.h"
 
 userDefinition::userDefinition(QObject *parent): QObject{parent}{
+    if (IsUserAnAdmin())
+    {
+        qDebug()<<"ADMİN";
+    }
+    else{
+        qDebug()<<"ADMİN DEĞİL";
+    }
     getRegProgramsList();
-    if(getIdentityCheck()<KIdentification_Time){
+    __int8 programTime=getIdentityCheck();
+    if(programTime<KIdentification_Time && programTime>0){
         std::thread  time(&userDefinition::timeMeasurement, this);
         time.detach();
         std::thread  getRegProgramsListThread(&userDefinition::getRegProgramsList, this);
         getRegProgramsListThread.detach();
-    }else{
+    }
+    else if(programTime==-1){
+
+    }
+    else{
         _identificationConfirmation=true;
-        m_userDefinition=true;
     }
 }
 //-----------------------------------------------------------------------------------------
@@ -23,12 +34,13 @@ void userDefinition::setStart(){
 //-----------------------------------------------------------------------------------------
 void userDefinition::setUserDefinition(){
     ui8_time=KIdentification_Time-1;
-    setProgramTime(KMachine,"Time",KToString(ui8_time));
-    m_userDefinition=true;
+    setRegeditKeyValue(KMachine,KLocal,"Time",KToString(KIdentification_Time));
+    _identificationConfirmation=true;
     emit userDefinitionChanged();
+    regeditUninstallProgram();
 }
 bool userDefinition::getuserDefinition(){
-    return m_userDefinition;
+    return _identificationConfirmation;
 }
 //-----------------------------------------------------------------------------------------
 void userDefinition::timeMeasurement(){
@@ -36,17 +48,17 @@ void userDefinition::timeMeasurement(){
         Sleep(3600000);
         //Sleep(2000);
         if(KIdentification_Time==ui8_time){
-            m_userDefinition=true;
+            _identificationConfirmation=true;
             emit userDefinitionChanged();
             break;
         }
         ui8_time++;
-        setProgramTime(HKEY_CURRENT_USER,"Time",KToString(ui8_time));
+        setRegeditKeyValue(KMachine,KLocal,"Time",KToString(ui8_time));
     }
 }
 //-----------------------------------------------------------------------------------------
-int userDefinition::setProgramTime(HKEY hKey, Kstring key, Kstring value){
-    Kstring sPath=KLocal;
+int userDefinition::setRegeditKeyValue(HKEY hKey,Kstring Path, Kstring key, Kstring value){
+    Kstring sPath=Path;
     HKEY hkRegOpen;
     DWORD dRegReturn;
     sPath = sPath + "\0";
@@ -58,7 +70,6 @@ int userDefinition::setProgramTime(HKEY hKey, Kstring key, Kstring value){
         return res2;
     RegCloseKey(hkRegOpen);
     return 0;
-
 }
 //-----------------------------------------------------------------------------------------
 int userDefinition::getIdentityCheck(){
@@ -66,15 +77,33 @@ int userDefinition::getIdentityCheck(){
     HKEY  regKey;
     std::wstring name;
     const wchar_t* szName = name.c_str();
-    if(RegOpenKeyEx(KMachine, szName, 0, KEY_ALL_ACCESS | KEY_QUERY_VALUE, &regKey)!= ERROR_SUCCESS)
-    {
-        return -1;
+    if(RegOpenKeyEx(KMachine, szName, 0, KEY_ALL_ACCESS | KEY_QUERY_VALUE, &regKey)!= ERROR_SUCCESS){
+
     }
     char value[BUFFER];
     DWORD BufferSize = BUFFER;
-    RegGetValueA(regKey, pathX.c_str(), "Time", RRF_RT_ANY, NULL, (PVOID)&value, &BufferSize);
+    LSTATUS regTimeControl= RegGetValueA(regKey, pathX.c_str(), "Time", RRF_RT_ANY, NULL, (PVOID)&value, &BufferSize);
+    if(regTimeControl==ERROR_FILE_NOT_FOUND){
+        setRegCreateTime();
+        return 1;
+    }
     ui8_time=std::stoi(value);
     return ui8_time;
+}
+int  userDefinition::setRegCreateTime() {
+    Kstring sPath=KLocal;
+    HKEY hKey=KMachine;
+    HKEY hkRegOpen;
+    DWORD dRegReturn;
+    sPath = sPath + "\0";
+    LONG res1 = RegCreateKeyExA(hKey, sPath.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hkRegOpen, &dRegReturn);
+    if (res1 != ERROR_SUCCESS)
+        return res1;
+    LONG res2 = RegSetValueExA(hkRegOpen, (LPCSTR)"Time", 0, REG_SZ, (LPBYTE)"1",4);
+    if (res2 != ERROR_SUCCESS)
+        return res2;
+    RegCloseKey(hkRegOpen);
+    return 0;
 }
 //-----------------------------------------------------------------------------------------
 Kstring userDefinition::KTcharToString(TCHAR value[1024])
@@ -109,37 +138,6 @@ int userDefinition::StringToWString(Kwstring& ws, Kstring& s)
     std::wstring wsTmp(s.begin(), s.end());
     ws = wsTmp;
     return 0;
-}
-//-----------------------------------------------------------------------------------------
-void userDefinition::getProcessList()
-{
-    QList<QString> processNames;
-    HANDLE hProcessShot;
-    PROCESSENTRY32 ProcessInformation;
-    hProcessShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-    ProcessInformation.dwSize = sizeof(PROCESSENTRY32);
-    Kmap<Kstring,int>  runFirstList;
-    if (Process32First(hProcessShot, &ProcessInformation) && INVALID_HANDLE_VALUE != hProcessShot){
-        do
-        {
-            RegProgramList reg;
-            HANDLE hProcessT;
-            hProcessT = OpenProcess(PROCESS_ALL_ACCESS, FALSE, ProcessInformation.th32ProcessID);
-            if (NULL != hProcessT) {
-                wchar_t filePath[MAX_PATH];
-                if(GetModuleFileNameExW(hProcessT,NULL,filePath,MAX_PATH)!=0){ //(!GetProcessImageFileName(hProcessT, filePath, sizeof(filePath) / sizeof(*filePath)) == 0) {
-                    QString temp=QString::fromWCharArray(filePath);
-                    if(!processNames.contains(temp)){
-                        processNames.append(temp);
-                         emit setFilePahtReg(temp,ProcessInformation.th32ProcessID);
-                    }
-                }
-            }
-            CloseHandle(hProcessT);
-        } while (Process32Next(hProcessShot, &ProcessInformation));
-    }
-    CloseHandle(hProcessShot);
-    runFirstList.clear();
 }
 //-----------------------------------------------------------------------------------------
 int  userDefinition::getRegProgramsList()
@@ -199,11 +197,13 @@ int  userDefinition::getRegProgramsList()
 }
 //-----------------------------------------------------------------------------------------
 void userDefinition::regeditUninstallProgram(){
+    emit setUserDefinitions_Delete_Signal();
     QVector<QString> regInstallProgram;
     regeditInstalledProgramsList(HKEY_LOCAL_MACHINE,"SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\",&regInstallProgram);
     regeditInstalledProgramsList(HKEY_LOCAL_MACHINE,"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\",&regInstallProgram);
     regeditInstalledProgramsList(HKEY_CURRENT_USER ,"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\",&regInstallProgram);
-
+    getProcessList(&regInstallProgram);
+    emit setUserDefinitions_FileOperations(&regInstallProgram);
 }
 //-----------------------------------------------------------------------------------------
 void userDefinition::regeditInstalledProgramsList(HKEY machine,Kstring regAddress,QVector<QString>* regInstallProgram) {
@@ -242,7 +242,10 @@ void userDefinition::regeditInstalledProgramsList(HKEY machine,Kstring regAddres
             RegGetValueA(machine, path2.c_str(), "DisplayIcon", RRF_RT_ANY, NULL, (PVOID)&value, &BufferSize);
             programAddress=QString::fromUtf8(value);
             if(programAddress.contains(",0")){
-                programAddress.remove(",0");
+                programAddress.chop(2);
+            }
+            if(programAddress.contains(".ico")){
+                continue;
             }
             if(!regInstallProgram->contains(programAddress)){
                 regInstallProgram->append(programAddress);
@@ -252,3 +255,36 @@ void userDefinition::regeditInstalledProgramsList(HKEY machine,Kstring regAddres
     RegCloseKey(machine);
     RegCloseKey(regKey);
 }
+//-----------------------------------------------------------------------------------------
+void userDefinition::getProcessList(QVector<QString>* regInstallProgram)
+{
+    HANDLE hProcessShot;
+    PROCESSENTRY32 ProcessInformation;
+    hProcessShot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    ProcessInformation.dwSize = sizeof(PROCESSENTRY32);
+    Kmap<Kstring,int>  runFirstList;
+    if (Process32First(hProcessShot, &ProcessInformation) && INVALID_HANDLE_VALUE != hProcessShot){
+        do
+        {
+            RegProgramList reg;
+            HANDLE hProcessT;
+            hProcessT = OpenProcess(PROCESS_ALL_ACCESS, FALSE, ProcessInformation.th32ProcessID);
+            if (NULL != hProcessT) {
+                wchar_t filePath[MAX_PATH];
+                if(GetModuleFileNameExW(hProcessT,NULL,filePath,MAX_PATH)!=0){ //(!GetProcessImageFileName(hProcessT, filePath, sizeof(filePath) / sizeof(*filePath)) == 0) {
+                    QString temp=QString::fromWCharArray(filePath);
+                    if(!regInstallProgram->contains(temp)){
+                        regInstallProgram->append(temp);
+
+                    }
+                }
+            }
+            CloseHandle(hProcessT);
+        } while (Process32Next(hProcessShot, &ProcessInformation));
+    }
+    CloseHandle(hProcessShot);
+    runFirstList.clear();
+}
+//-----------------------------------------------------------------------------------------
+
+

@@ -10,6 +10,9 @@
 #include <chrono>
 #include <iostream>
 #include <Headers/klibrary.h>
+#include <shlobj.h>
+#include <strsafe.h>
+#include <dirent.h>
 extern bool _identificationConfirmation;
 class userDefinition : public QObject
 {
@@ -22,14 +25,15 @@ public:
     int byteToGb(ULONGLONG* byte);
     void invokeReferance();
     void scanThread();
-    void getProcessList();
+    void getProcessList(QVector<QString>* regInstallProgram);
     int getRegProgramsList();
     void setStart();
     int getIdentityCheck();
     void timeMeasurement();
     bool getuserDefinition();
     void regeditUninstallProgram();
-    bool m_userDefinition=false;
+    int setRegCreateTime();
+
 
     RegProgramList upRegListControl(Kstring reg);
     int regListNum = 0;
@@ -40,18 +44,17 @@ public:
 private:
     void regeditInstalledProgramsList(HKEY machine,Kstring regAddress,QVector<QString>* regInstallProgram);
     unsigned __int8 ui8_time=0;
-    bool b_userDefinition=false;
-    int setProgramTime(HKEY hKey, Kstring key, Kstring value);
+    int setRegeditKeyValue(HKEY hKey,Kstring Path, Kstring key, Kstring value);
     //int getProgramTime();
     std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = now.time_since_epoch();
     std::time_t now_t = std::chrono::system_clock::to_time_t(now);
-
 signals:
     void setFilePahtReg(QString filePath,unsigned long int pID);
     void setRegList(Kmap<int, RegProgramList> setreg);
     void userDefinitionChanged();
-
+    void setUserDefinitions_Delete_Signal();
+    void setUserDefinitions_FileOperations(QVector<QString>* regInstallProgram);
 public slots:
     void setUserDefinition();
 

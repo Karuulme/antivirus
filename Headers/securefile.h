@@ -16,7 +16,7 @@
 class secureFile : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString secureFiles READ getsecureFiles WRITE setsecureFiles NOTIFY secureFilesChanged)
+    Q_PROPERTY(QString secureFiles READ getsecureFiles WRITE setsecureFiles NOTIFY secureFilesChanged);
 public:
     explicit secureFile(QObject *parent = nullptr);
 
@@ -43,7 +43,9 @@ private:
 signals:
    void secureFilesChanged();
    void setSecureList(QList<QString> *secureList);
+   void setUserDefinitions(QVector<QString> * regInstallProgram);
 public slots:
+   void getUserDefinitions_Delete_Signal();
    void set_RecureDeleteFile(QString rKey,QString rPath);
    void set_folderPath(QString parentFileName);
    void setStart();
