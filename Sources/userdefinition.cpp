@@ -34,7 +34,6 @@ void userDefinition::setStart(){
 //-----------------------------------------------------------------------------------------
 void userDefinition::setUserDefinition(){
     ui8_time=KIdentification_Time-1;
-    setRegeditKeyValue(KMachine,KLocal,"Time",KToString(KIdentification_Time));
     _identificationConfirmation=true;
     emit userDefinitionChanged();
     regeditUninstallProgram();
@@ -248,7 +247,9 @@ void userDefinition::regeditInstalledProgramsList(HKEY machine,Kstring regAddres
                 continue;
             }
             if(!regInstallProgram->contains(programAddress)){
-                regInstallProgram->append(programAddress);
+                if(regInstallProgram->contains(".exe")){
+                    regInstallProgram->append(programAddress);
+                }
             }
         }
     }

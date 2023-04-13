@@ -22,7 +22,7 @@ public:
     int regeditNewRecord(RegProgramList regProgram,int runCount=-1);
     QString getfileHash(QString filePath);
     int dllEnjection(unsigned long int pID);
-    void getUserDefinitions_FileOperations_Thread(QVector<QString>* regInstallProgram);
+    void getUserDefinitions_FileOperations_Thread(QVector<QString> regInstallProgram);
     QString getuserDefinitions_UploadIndexNo();
     QString m_userDefinitions_UploadIndexNo;
 

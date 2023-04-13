@@ -1,13 +1,12 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.15
+import QtQuick 2.0
+import QtQuick.Controls 2.0
 Rectangle {
     property double dFree: 50
     property double dTotal: 500
     property string dName: "Null"
     property string dRadiusColor: "#c8c8c8"
     state: {
-        var scanFileName=system.scaningDisk
-        if(scanFileName===dName){
+        if(system.scaningDisk===dName){
             busyIndicator1.running=true
             scan_button.visible=false
             scan_button_cancel.visible=true

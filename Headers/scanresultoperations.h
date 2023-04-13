@@ -40,5 +40,6 @@ public slots:
     void setStart();
     void getQuarantineOptions(int indexNo,int OptionsNo);
     void getApplyResults(QMap<int,QString> malwares,QMap<int,int> malwareListOptions,int virusOptions,int computerOptions);
+    void getVirusOne(QString filePath,int virusOptions);
 };
 #endif // SCANRESULTOPERATIONS_H

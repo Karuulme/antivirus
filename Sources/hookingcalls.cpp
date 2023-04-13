@@ -52,7 +52,6 @@ int HookingCalls::Add(unsigned long int pid,HANDLE hProcess) {
     memcpy_s(eventAddress + 7, str.size(), c_pid, str.size());
     memcpy_s(eventAddress + 7 + str.size(), 3, "get", 3);
     HANDLE hgetEvent=CreateEventA(NULL, TRUE, FALSE, eventAddress);
-    qDebug()<<eventAddress;
     memcpy_s(eventAddress + 7 + str.size(), 3, "set", 3);
     HANDLE hsetEvent=CreateEventA(NULL, TRUE, FALSE, eventAddress);
     //-----
@@ -64,12 +63,10 @@ int HookingCalls::Add(unsigned long int pid,HANDLE hProcess) {
 int HookingCalls::DT_MapViewEnable() {
     memory_handle = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, BUFFERSIZE, L"example_memory");
     if (memory_handle == NULL) {
-        qDebug() << "İsimli bellek alanı oluşturma hatası: " << GetLastError();
         return -1;
     }
     memory_pointer = MapViewOfFile(memory_handle, FILE_MAP_ALL_ACCESS, 0, 0, BUFFERSIZE);
     if (memory_pointer == NULL) {
-        qDebug()<< "Bellek alanına bağlanma hatası: " << GetLastError();
         CloseHandle(memory_handle);
         return -2;
     }

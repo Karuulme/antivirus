@@ -72,6 +72,7 @@ signals:
     void setApplyResults(QMap<int,QString> malwares,QMap<int,int> malwareListOptions,int virusOptions,int computerOptions);
     void scanedFileName_changed();
     void scaningDisk_changed();
+    void setVirusOne(QString filePath,int virusOptions);
 public slots:
     void set_scandisk(QString value,double total,double free);
     void set_scandiskClose();
@@ -80,6 +81,7 @@ public slots:
     void set_singleVirusChanges(int index,int setvalue);
     void set_ScanResultAutoApply(int index);
     void set_VirusComputerOption(int virus,int computer);
+    void getVirusOne(QString filePath,int virusOptions,int index);
 };
 #endif // SYSTEM_H
 

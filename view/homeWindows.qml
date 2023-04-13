@@ -1,7 +1,6 @@
-import QtQuick 2.12
-import QtQuick.Window 2.12
-import QtQuick.Controls 2.15
-import QtQuick.Controls
+import QtQuick 2.0
+import QtQuick.Window 2.0
+import QtQuick.Controls 2.0
 Rectangle {
     id: rectangle
     property variant stringList: system.storageList.split("@")
@@ -105,9 +104,10 @@ Rectangle {
                             var scanedFileName=system.scanedFileName
                             var KText = Qt.createComponent("KText.qml");
                             var objectKText = KText.createObject(this);
-                            var values=scanedFileName.split("q:");
+                            var values=scanedFileName.split("q:*!");
                             objectKText.vFileName=values[0];
                             objectKText.dindex=parseInt(values[1]);
+                            objectKText.vFileAddress=values[2]
                         }
                         return true
                      }

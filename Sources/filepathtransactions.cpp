@@ -2,7 +2,6 @@
 
 filePathTransactions::filePathTransactions(QObject *parent): QObject{parent}
 {
-    qDebug()<<"_identificationConfirmation:"<<_identificationConfirmation;
 }
 //-----------------------------------------------------------------------------------------
 int  filePathTransactions::setRegCreateBank(HKEY hKey, Kstring path, Kstring key, Kstring value) { // KAYIT DEFTERİNE VERİ EKLEME VE GÜNCELLEME
@@ -34,7 +33,7 @@ int filePathTransactions::setRegQuestion(QString filePath,unsigned long int pID)
     if(reg.pHash=="000"){
         return 1;
     }
-    reg = upRegListControl(reg.pHash);
+     reg = upRegListControl(reg.pHash);
     if (reg.pRunCount !=-1)
     {
         reg.pRunCount=0;
@@ -85,6 +84,7 @@ int filePathTransactions::regeditNewRecord(RegProgramList regProgram,int runCoun
     setRegCreateBank(KMachine, KBank + KToString(1000 +regListIndex), "pHash", regProgram.pHash);
     setRegCreateBank(KMachine, KBank + KToString(1000 +regListIndex), "pRunCount", KToString(runCount ==-1 ? regProgram.pRunCount:runCount));
     regList[regListIndex-1]=regProgram;
+    return 0;
 }
 //-----------------------------------------------------------------------------------------
 RegProgramList filePathTransactions::upRegListControl(Kstring regg) { // LİSTEDEN KAYDI BULUR VE +1 EKLEYEREK GERİ DÖNDÜRÜR
@@ -133,19 +133,21 @@ void filePathTransactions::getfileChangesNotification(QString filePath){ // BİR
 }
 //-----------------------------------------------------------------------------------------
 void filePathTransactions::getUserDefinitions_FileOperations(QVector<QString>* regInstallProgram){
-    std::thread  UserDefinitions(&filePathTransactions::getUserDefinitions_FileOperations_Thread, this, regInstallProgram);
-    UserDefinitions.detach();
-}
-//-----------------------------------------------------------------------------------------
-void filePathTransactions::getUserDefinitions_FileOperations_Thread(QVector<QString>* regInstallProgram){
     regListIndex=0;
     regList.clear();
-    for(int i=0;i<regInstallProgram->size();i++){
+    setRegCreateBank(KMachine,KLocal,"Time",KToString(KIdentification_Time));
+    std::thread  userDefinitions(&filePathTransactions::getUserDefinitions_FileOperations_Thread, this, *regInstallProgram);
+    userDefinitions.detach();
+}
+//-----------------------------------------------------------------------------------------
+void filePathTransactions::getUserDefinitions_FileOperations_Thread(QVector<QString> regInstallProgram){
+    for(int i=0;i<regInstallProgram.size();i++){
         // TARAMAYA GİDECEK GÜVENLİ İSE KAYIT DEFTERİNE EKLENECEK
-        m_userDefinitions_UploadIndexNo=QString::number(i)+"*&*"+QString::number(regInstallProgram->size());
+        m_userDefinitions_UploadIndexNo=QString::number(i)+"*&*"+QString::number(regInstallProgram.size());
         emit userDefinitions_UploadIndexNoChanged();
-        setRegQuestion(regInstallProgram->at(i),-1);
+        setRegQuestion(regInstallProgram.at(i),-1);
     }
+
 }
 QString filePathTransactions::getuserDefinitions_UploadIndexNo(){
     return m_userDefinitions_UploadIndexNo;

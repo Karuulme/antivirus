@@ -1,7 +1,6 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.15
+import QtQuick 2.0
+import QtQuick.Controls 2.0
 import QtQuick.Dialogs
-import QtQuick.Controls
 Rectangle {
     property int writeFileIndex: 2
     id: rectangle
@@ -30,6 +29,7 @@ Rectangle {
             font.pointSize: 11
         }
         Rectangle{
+            id: rectangle2
             x: 51
             y: 4
             width: 865
@@ -38,11 +38,15 @@ Rectangle {
             border.width: 1
             border.color: "black"
             radius:5
-            TextInput{
+            Text{
                 id:selectFilePath
-                anchors.fill: parent
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
                 verticalAlignment: Text.AlignVCenter
-                leftPadding: 5
+                font.pointSize: 10
+                anchors.leftMargin: 5
             }
         }
         FolderDialog {

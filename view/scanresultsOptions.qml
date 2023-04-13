@@ -1,5 +1,5 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.15
+import QtQuick 2.0
+import QtQuick.Controls 2.0
 Rectangle {
     width: 340
     height: 80
@@ -155,8 +155,6 @@ Rectangle {
         autoExclusive: false
         checked: false
         onCheckedChanged: system.set_ScanResultAutoApply(switch1.checked ? 1:0)
-
-
     }
     //auto apply
 

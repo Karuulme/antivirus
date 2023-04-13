@@ -1,7 +1,7 @@
 #include "../Headers/system.h"
 System::System(QObject *parent): QObject{parent}
 {
-    QFile inFile("settings2.xml");
+   /* QFile inFile("settings2.xml");
     if (inFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         qDebug()<<"Dosya acildi";
@@ -17,7 +17,7 @@ System::System(QObject *parent): QObject{parent}
     else{
         qDebug()<<"Dosya acilmadi";
     }
-
+*/
 
     //emit setscaningDisk("NULL");
     //emit storage_changed();
@@ -82,31 +82,25 @@ void System::scanDiskThreadControl(std::string firstFilePath,long double total){
 //-----------------------------------------------------------------------------------------
 void System::scanDiskThread(std::string firstFilePath,long double total){
     WIN32_FIND_DATAA fileInformation;
-    HANDLE firstFile = FindFirstFileExA((firstFilePath+ "/*").c_str(), FindExInfoStandard, &fileInformation, FindExSearchNameMatch, NULL, 0);
+    HANDLE firstFile = FindFirstFileExA((firstFilePath+ "\\*").c_str(), FindExInfoStandard, &fileInformation, FindExSearchNameMatch, NULL, 0);
     do {
         if(breakScanThread)
             goto exit;
         if ((std::string)fileInformation.cFileName !="." && (std::string)fileInformation.cFileName != "..") {
-            if (GetFileAttributesA((firstFilePath + "/" + fileInformation.cFileName).c_str()) == FILE_ATTRIBUTE_DIRECTORY) {
+            if (GetFileAttributesA((firstFilePath + "\\" + fileInformation.cFileName).c_str()) == FILE_ATTRIBUTE_DIRECTORY) {
                 if(breakScanThread)
                     goto exit;
-                scanDiskThread(firstFilePath + "/" + fileInformation.cFileName,total);
+                scanDiskThread(firstFilePath + "\\" + fileInformation.cFileName,total);
             }
             else {
                 QString fileName=QString::fromStdString(fileInformation.cFileName);
                 int netLength=fileName.size();
                 if(fileName[netLength-1]=='e' && fileName[netLength-2]=='x' && fileName[netLength-3]=='e'){
-                    setSescanedFileName(fileName+"q:"+QString::number(malwareListIndex));
-
-                    malwareList[malwareListIndex]=QString::fromStdString(firstFilePath)+"//"+fileName;
+                    setSescanedFileName(fileName+"q:*!"+QString::number(malwareListIndex)+"q:*!"+QString::fromStdString(firstFilePath));
+                    malwareList[malwareListIndex]=QString::fromStdString(firstFilePath).replace("\\\\","\\")+"\\"+fileName;
                     malwareListIndex++;
                 }
                 Sleep(200);
-              // emit scanFileName_changed(net);
-              // emit set_scanByte(fileInformation.nFileSizeLow);
-              // emit scanFile_changed(QString::fromStdString(fileInformation.cFileName));
-               //int scaneDisk=(100*total)/scanByte;
-               //emit scandiskArea_changed(scaneDisk);
             }
         }
     } while (FindNextFileA(firstFile, &fileInformation));
@@ -162,9 +156,12 @@ void System::setscaningDisk(QString value) {
    emit scaningDisk_changed();
 }
 //-----------------------------------------------------------------------------------------
-
-
-
+void System::getVirusOne(QString filePath,int virusOptions,int index){
+   malwareList.remove(index);
+   malwareListIndex--;
+   emit setVirusOne(filePath,virusOptions);
+}
+//-----------------------------------------------------------------------------------------
 
 
 

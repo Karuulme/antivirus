@@ -20,6 +20,7 @@ bool _identificationConfirmation=false;
 
 int main(int argc, char *argv[])
 {
+    qDebug() << QCoreApplication::applicationDirPath() + "/plugins/platforms";
     QApplication app(argc, argv);
     QApplication::setQuitOnLastWindowClosed(false);
     QIcon icon(":Image/logo2ico.ico");
@@ -58,6 +59,8 @@ int main(int argc, char *argv[])
     QObject::connect(&_filepathtransactions,SIGNAL(setDllEnjection(unsigned long int)),&_hookingCalls, SLOT(getDllEnjection(unsigned long int)));
     QObject::connect(&_userdefinition,SIGNAL(setUserDefinitions_Delete_Signal()),&_secureFile, SLOT(getUserDefinitions_Delete_Signal()));
     QObject::connect(&_userdefinition,SIGNAL(setUserDefinitions_FileOperations(QVector<QString>*)),&_filepathtransactions, SLOT(getUserDefinitions_FileOperations(QVector<QString>*)));
+    QObject::connect(&_system,SIGNAL(setVirusOne(QString ,int )),&_scanresultoperations, SLOT(getVirusOne(QString ,int )));
+
 
 
     _userdefinition.setStart();

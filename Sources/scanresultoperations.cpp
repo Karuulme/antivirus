@@ -194,13 +194,13 @@ void scanResultOperations::encrypt(QString filePath){
 //-----------------------------------------------------------------------------------------
 void scanResultOperations::virusProcesses(QString path,int Options){
     switch(Options){
-    case 0: // Quarantine
+    case 1: // Quarantine
         qDebug()<<"DOSYAYI KARANTINAYA AL";
         ///////////////////////////////////////////////////////////////////////
         /////////////////////////////encrypt(path);////////////////////////////
         ///////////////////////////////////////////////////////////////////////
     break;
-    case 1: // Delete
+    case 2: // Delete
         qDebug()<<"DOSYAYI SIL";
         ///////////////////////////////////////////////////////////////////////
         /////////////////////////////remove(path);/////////////////////////////
@@ -248,8 +248,10 @@ void scanResultOperations::getApplyResults(QMap<int,QString> malwaress,QMap<int,
     computerOperations(computerOptions);
 }
 //-----------------------------------------------------------------------------------------
-
-
+void scanResultOperations::getVirusOne(QString filePath,int virusOptions){
+    //virusProcesses(filePath,virusOptions);
+}
+//-----------------------------------------------------------------------------------------
 
 
 
