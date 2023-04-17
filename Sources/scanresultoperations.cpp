@@ -28,6 +28,8 @@ QString scanResultOperations::getQuarantineFile(){
 }
 //-----------------------------------------------------------------------------------------
 void scanResultOperations::findQuarantineFile(){
+    quarentineFileNameList.clear();
+    quarentineOrjinalFileNameList.clear();
     std::string aaa = mac_Address.toStdString();
     long  key = 0;
     for (int i = 0,j=10; i< aaa.length();i++,j*=10) {
@@ -59,6 +61,7 @@ void scanResultOperations::findQuarantineFile(){
                     array[1].remove("X_2*HTZ*");
                     quarentineFileNameList.append(QString::fromStdString(fileName));
                     quarentineOrjinalFileNameList.append(array[0]);
+                    qDebug()<<"AASDSADSADSADSADSADSAD";
                     setQuarantineFile(array[0]+"--"+array[1]+"--"+QString::fromStdString(KToString(indexNo)));
                     indexNo++;
                     readFile.close();

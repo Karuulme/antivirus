@@ -13,6 +13,7 @@
 #include <shlobj.h>
 #include <strsafe.h>
 #include <dirent.h>
+#include <QMessageBox>
 extern bool _identificationConfirmation;
 class userDefinition : public QObject
 {

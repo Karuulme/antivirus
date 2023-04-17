@@ -1,54 +1,10 @@
-import QtQuick.Controls
-import Qt.labs.platform
 import QtQuick 2.0
-
+import QtQuick.Controls 2.0
 Rectangle {
     width: 930
     height: 470
     color: "#f2f2f2"
     property bool userDefinitionsShow: false
-/*
-    TextEdit {
-        id: textLanguage
-        x: 34
-        y: 59
-        text: qsTr("Language")
-        font.pixelSize: 14
-        font.bold: false
-    }
-    ComboBox {
-        id: comboBox
-        x: 158
-        y: 59
-        width: 120
-        height: 25
-        model: ["Turkish","English"]
-    }
-    Rectangle {
-        x: 314
-        y: 59
-        width: 100
-        height: 25
-        color: "#0047ab"
-        radius: 5
-        border.color: "#c3c2c2"
-        border.width: 1
-        Text {
-            color: "#ffffff"
-            text: qsTr("APPLY")
-            anchors.fill: parent
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            font.pointSize: 8
-            font.bold: true
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            onClicked: diolog.open()
-        }
-    }
-*/
     Rectangle{
         x: 115
         y: 256
@@ -96,22 +52,24 @@ Rectangle {
                 property int indicatorWidth: 2
                 property int indicatorRadius: 0
                 property int indicatorExtend: 0
-                onValueChanged: {
-                    if(value==to){
-                        userDefinitionsShow=false
-                    }
-                }
                 value:{
+                    var retValue;
                     var value=filepathtransactions.userDefinitions_UploadIndexNo
                     var upload=value.split("*&*")
                     if(filepathtransactions.userDefinitions_UploadIndexNo){
                         if(userDefinitionsShow===false){
                             userDefinitionsShow=true
                             to=parseInt(upload[1])-1
-                        }
-                        progressBaryuzdesi.text=(parseInt(upload[0])*100 / (parseInt(upload[1])-1)).toFixed(1)+"/100"
 
-                        return parseInt(upload[0])
+
+                        }
+                        progressBaryuzdesi.text=(parseInt(upload[0])*100 / (parseInt(upload[1])-1)).toFixed(1)+"/100.0"
+                        console.log(parseInt(upload[1])-1+"----"+parseInt(upload[0]))
+                        retValue=parseInt(upload[0]);
+                        if(retValue===to){
+                            userDefinitionsShow=false
+                        }
+                        return retValue
                     }
                     return 50;
                 }
@@ -154,58 +112,51 @@ Rectangle {
                 }
             }
         }
-        Rectangle{
-            visible: !userDefinitionsShow
-            width: 700
-            height: 80
-            y: 120
-            color: "#00000000"
-        TextEdit {
-            id: textEdit3
-            x: 34
-            text: qsTr("Set user definition now with open processes and single programs")
-            font.pixelSize: 14
-            font.bold: true
-        }
-        TextEdit {
-            id: textEdit4
-            x: 34
-            y: 20
-            text: qsTr("Skips the 200 hour definition time and creates the definition immediately")
-            font.pixelSize: 12
-            font.bold: false
-        }
-
-        Rectangle {
-            x: 496
-            y: 5
-            width: 147
-            height: 36
-            color: "#0047ab"
-            border.width: 1
-            radius: 5
-            border.color: "#c3c2c2"
-            Text {
-                text: qsTr("REBUILD")
-                anchors.fill: parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                color: "#ffffff"
+            Rectangle{
+                visible: !userDefinitionsShow
+                width: 700
+                height: 80
+                y: 120
+                color: "#00000000"
+            TextEdit {
+                id: textEdit3
+                x: 34
+                text: qsTr("Set user definition now with open processes and single programs")
+                font.pixelSize: 14
                 font.bold: true
+            }
+            TextEdit {
+                id: textEdit4
+                x: 34
+                y: 20
+                text: qsTr("Skips the 200 hour definition time and creates the definition immediately")
+                font.pixelSize: 12
+                font.bold: false
+            }
 
+            Rectangle {
+                x: 496
+                y: 5
+                width: 147
+                height: 36
+                color: "#0047ab"
+                border.width: 1
+                radius: 5
+                border.color: "#c3c2c2"
+                Text {
+                    text: qsTr("REBUILD")
+                    anchors.fill: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    color: "#ffffff"
+                    font.bold: true
+
+                }
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: userdefinition.setUserDefinition()
+                }
             }
-            MouseArea{
-                anchors.fill: parent
-                onClicked: diolog.open()
-            }
-        }
-        MessageDialog {
-            id:diolog
-            text: qsTr("User definition is requested to be recreated")
-            informativeText: qsTr("Do you want to redefine?")
-            buttons: MessageDialog.Yes | MessageDialog.Cancel
-            onYesClicked: userdefinition.setUserDefinition()
-        }
         }
 
     }

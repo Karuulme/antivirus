@@ -15,35 +15,71 @@ Rectangle {
     anchors.left: parent.left
     anchors.top: parent.top
     anchors.bottom: parent.bottom
+    //clip: true
     anchors.bottomMargin: 15
     anchors.topMargin: 40
     anchors.leftMargin: 15
-    state:  {
-        var component = Qt.createComponent("quarantineListView.qml")
-        if(quarantine.quarantineFile){
-            quarantinelistIndex++
-            var myArray = quarantine.quarantineFile.split("--")
-            var ttt=component.createObject(deneme)
-            ttt.fileAddress=myArray[0]
-            ttt.fileDate=myArray[1].split(" ")[0]
-            ttt.indexNo=myArray[2]
-            ttt.listIndex=quarantinelistIndex
-        }
-        return true
-    }
-
     color: "#00000000"
-        ScrollView {
+
+    ScrollView {
             width: parent.width
             height: parent.height
             Column{
-                id:deneme
+                id:quarantineList_Column
                 width: parent.width
                 height: parent.height
                 spacing: 10
+                state:  {
+                    if(quarantine.quarantineFile){
+                        var component = Qt.createComponent("quarantineListView.qml");
+                        quarantinelistIndex++;
+                        var myArray = quarantine.quarantineFile.split("--");
+                        var ttt=component.createObject(this);
+                        ttt.fileAddress=myArray[0];
+                        ttt.fileDate=myArray[1].split(" ")[0];
+                        ttt.indexNo=myArray[2];
+                        ttt.listIndex=quarantinelistIndex;
+                    }
+                    return true;
+                }
 
             }
         }
     }
+    Rectangle {
+        x: 295
+        y: 5
+        width: 25
+        height: 25
+        color: "#00000000"
+        radius: 5
+        anchors.right: parent.right
+        Image {
+            width: 25
+            height: 25
+            source: "../Image/icons8-refresh-96.png"
+            MouseArea {
+                anchors.fill: parent
+                onEntered: {
+                            parent.parent.color="#e3e3e3"
+                        }
+                hoverEnabled: true
+                onClicked: {
+                            for(var i = quarantineList_Column.children.length; i > 0 ; i--) {
+                              quarantineList_Column.children[i-1].destroy()
+                            }
+                            quarantinelistIndex=0;
+                            //quarantine.setStart();
+                        }
+                onExited:{
+                            parent.parent.color="#00000000"
+                        }
+            }
+            fillMode: Image.PreserveAspectFit
+        }
+        anchors.rightMargin: 10
+    }
+
+
 
 }

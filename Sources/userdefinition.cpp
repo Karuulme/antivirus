@@ -1,13 +1,6 @@
 #include "../Headers/userdefinition.h"
 
 userDefinition::userDefinition(QObject *parent): QObject{parent}{
-    if (IsUserAnAdmin())
-    {
-        qDebug()<<"ADMİN";
-    }
-    else{
-        qDebug()<<"ADMİN DEĞİL";
-    }
     getRegProgramsList();
     __int8 programTime=getIdentityCheck();
     if(programTime<KIdentification_Time && programTime>0){
@@ -33,10 +26,14 @@ void userDefinition::setStart(){
 }
 //-----------------------------------------------------------------------------------------
 void userDefinition::setUserDefinition(){
-    ui8_time=KIdentification_Time-1;
-    _identificationConfirmation=true;
-    emit userDefinitionChanged();
-    regeditUninstallProgram();
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(nullptr, "Antivirus", "User definition is requested to be recreated\nDo you want to redefine?", QMessageBox::Yes|QMessageBox::No);
+    if (reply == QMessageBox::Yes) {
+        ui8_time=KIdentification_Time-1;
+        _identificationConfirmation=true;
+        emit userDefinitionChanged();
+        regeditUninstallProgram();
+    }
 }
 bool userDefinition::getuserDefinition(){
     return _identificationConfirmation;

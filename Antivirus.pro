@@ -9,7 +9,7 @@ CONFIG += c++17 console
 CONFIG -= app_bundle
 CONFIG += separate_debug_info
 CONFIG += link_separate
-
+CONFIG -= console
 
 # Debug configuration
 CONFIG(debug, debug|release) {

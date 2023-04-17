@@ -5,6 +5,7 @@
 #include <QMenu>
 #include <QSystemTrayIcon>
 #include <QQmlContext>
+#include <windows.h>
 //------------------------------------------------------------------
 bool _identificationConfirmation=false;
 //------------------------------------------------------------------
@@ -18,13 +19,19 @@ bool _identificationConfirmation=false;
 #include <Headers/securefile.h>
 #include <Headers/hookingcalls.h>
 
-int main(int argc, char *argv[])
+int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-    qDebug() << QCoreApplication::applicationDirPath() + "/plugins/platforms";
-    QApplication app(argc, argv);
+    QApplication app(__argc,__argv);
     QApplication::setQuitOnLastWindowClosed(false);
     QIcon icon(":Image/logo2ico.ico");
     app.setWindowIcon(icon);
+
+    if (!IsUserAnAdmin()) //Admin Control
+    {
+        //MessageBoxA(NULL,"Please Start As Admin","Error",MB_OK);
+        //return app.exec();
+    }
+
     QQmlApplicationEngine engine;
     userDefinition  _userdefinition;
     WindowTaskBar _windowstaskbar;

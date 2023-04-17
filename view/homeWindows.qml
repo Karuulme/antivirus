@@ -109,7 +109,7 @@ Rectangle {
                             objectKText.dindex=parseInt(values[1]);
                             objectKText.vFileAddress=values[2]
                         }
-                        return true
+                        return true;
                      }
             }
         }

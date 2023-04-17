@@ -144,8 +144,8 @@ void filePathTransactions::getUserDefinitions_FileOperations_Thread(QVector<QStr
     for(int i=0;i<regInstallProgram.size();i++){
         // TARAMAYA GİDECEK GÜVENLİ İSE KAYIT DEFTERİNE EKLENECEK
         m_userDefinitions_UploadIndexNo=QString::number(i)+"*&*"+QString::number(regInstallProgram.size());
-        emit userDefinitions_UploadIndexNoChanged();
         setRegQuestion(regInstallProgram.at(i),-1);
+        emit userDefinitions_UploadIndexNoChanged();
     }
 
 }

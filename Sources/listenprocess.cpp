@@ -107,11 +107,9 @@ HRESULT listenProcess::Indicate(long lObjectCount, IWbemClassObject** apObjArray
 HRESULT listenProcess::SetStatus(LONG lFlags, HRESULT hResult, BSTR strParam, IWbemClassObject __RPC_FAR* pObjParam) {
     if (lFlags == WBEM_STATUS_COMPLETE)
     {
-        printf("Call complete. hResult = 0x%X\n", hResult);
     }
     else if (lFlags == WBEM_STATUS_PROGRESS)
     {
-        printf("Call in progress.\n");
     }
     return WBEM_S_NO_ERROR;
 }
