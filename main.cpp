@@ -10,7 +10,7 @@
 bool _identificationConfirmation=false;
 //------------------------------------------------------------------
 #include <Headers/windowtaskbar.h>
-#include <Headers/system.h>
+//#include <Headers/system.h>
 #include <Headers/userdefinition.h>
 #include <Headers/listenprocess.h>
 #include <Headers/filepathtransactions.h>
@@ -35,7 +35,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
     QQmlApplicationEngine engine;
     userDefinition  _userdefinition;
     WindowTaskBar _windowstaskbar;
-    System _system;
+    //System _system;
     listenProcess _listenProcess;
     filePathTransactions  _filepathtransactions;
     fileChanges  _filechanges;
@@ -51,7 +51,6 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
     }
     QQmlContext *ctx=engine.rootContext();
     ctx->setContextProperty("windowstaskbar",&_windowstaskbar);
-    ctx->setContextProperty("system",&_system);
     ctx->setContextProperty("securefile",&_secureFile);
     ctx->setContextProperty("quarantine",&_scanresultoperations);
     ctx->setContextProperty("userdefinition",&_userdefinition);
@@ -61,12 +60,12 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
     QObject::connect(&_listenProcess,SIGNAL(setFilePahtReg(QString,unsigned long int)),&_filepathtransactions, SLOT(getFilePahtReg(QString,unsigned long int)));
     QObject::connect(&_userdefinition,SIGNAL(setRegList(Kmap<int, RegProgramList>)),&_filepathtransactions, SLOT(getRegList(Kmap<int, RegProgramList>)));
     QObject::connect(&_filechanges,SIGNAL(setfileChangesNotification(QString)),&_filepathtransactions, SLOT(getfileChangesNotification(QString)));
-    QObject::connect(&_system,SIGNAL(setApplyResults(QMap<int,QString>,QMap<int,int>,int,int)),&_scanresultoperations, SLOT(getApplyResults(QMap<int,QString>,QMap<int,int>,int,int)));
+    QObject::connect(&_filepathtransactions,SIGNAL(setApplyResults(QMap<int,QString>,QMap<int,int>,int,int)),&_scanresultoperations, SLOT(getApplyResults(QMap<int,QString>,QMap<int,int>,int,int)));
     QObject::connect(&_secureFile,SIGNAL(setSecureList(QList<QString>*)),&_hookingCalls, SLOT(getSecureList(QList<QString>*)));
     QObject::connect(&_filepathtransactions,SIGNAL(setDllEnjection(unsigned long int)),&_hookingCalls, SLOT(getDllEnjection(unsigned long int)));
     QObject::connect(&_userdefinition,SIGNAL(setUserDefinitions_Delete_Signal()),&_secureFile, SLOT(getUserDefinitions_Delete_Signal()));
     QObject::connect(&_userdefinition,SIGNAL(setUserDefinitions_FileOperations(QVector<QString>*)),&_filepathtransactions, SLOT(getUserDefinitions_FileOperations(QVector<QString>*)));
-    QObject::connect(&_system,SIGNAL(setVirusOne(QString ,int )),&_scanresultoperations, SLOT(getVirusOne(QString ,int )));
+    QObject::connect(&_filepathtransactions,SIGNAL(setVirusOne(QString ,int )),&_scanresultoperations, SLOT(getVirusOne(QString ,int )));
 
 
 
@@ -82,14 +81,14 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 
         QAction *minimizeAction = new QAction(QObject::tr("&Open"), root);
         root->connect(minimizeAction, SIGNAL(triggered()), root, SLOT(showNormal()));
-        QAction *restoreAction = new QAction(QObject::tr("&Close"), root);
-        root->connect(restoreAction, SIGNAL(triggered()), root, SLOT(hide()));
+        //QAction *restoreAction = new QAction(QObject::tr("&Close"), root);
+        //root->connect(restoreAction, SIGNAL(triggered()), root, SLOT(hide()));
         QAction *quitAction = new QAction(QObject::tr("&Quit"), root);
         root->connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 
         QMenu *trayIconMenu = new QMenu();
         trayIconMenu->addAction(minimizeAction);
-        trayIconMenu->addAction(restoreAction);
+        //trayIconMenu->addAction(restoreAction);
         trayIconMenu->addSeparator();
         trayIconMenu->addAction(quitAction);
 

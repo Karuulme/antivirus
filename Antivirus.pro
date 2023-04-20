@@ -4,12 +4,15 @@ QT += core
 QT += widgets
 QT += sql
 QT += quickcontrols2
-
+CONFIG += python
 CONFIG += c++17 console
 CONFIG -= app_bundle
 CONFIG += separate_debug_info
 CONFIG += link_separate
 CONFIG -= console
+
+INCLUDEPATH += "C:/Users/karuulme/AppData/Local/Programs/Python/Python311/include"
+LIBS += -L"C:/Users/karuulme/AppData/Local/Programs/Python/Python311/libs" -lpython311
 
 # Debug configuration
 CONFIG(debug, debug|release) {
@@ -66,6 +69,10 @@ RESOURCES += qml.qrc
 DISTFILES += \
     settings2.xml
 
+#INCLUDEPATH += "C:/Users/karuulme/AppData/Local/Programs/Python/Python311/include"
+#LIBS += -L"C:/Users/karuulme/AppData/Local/Programs/Python/Python311/libs" -lpython39
+
+
 RC_ICONS=
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
@@ -84,3 +91,5 @@ win32: LIBS += -lOleAut32
 win32: LIBS += -lwbemuuid
 win32: LIBS += -liphlpapi
 win32: LIBS += -lshell32
+
+

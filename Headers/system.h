@@ -2,7 +2,6 @@
 #define SYSTEM_H
 #include <QArrayData>
 #include <QObject>
-#include <QThreadPool>
 #include <QMap>
 #include <QFileDialog>
 #include <QtWidgets>
@@ -15,8 +14,12 @@
 #include <QThread>
 #include <QtXml>
 #include <QFile>
-
+#include "Headers/klibrary.h"
 #include <filesystem>
+#pragma push_macro("slots")
+#undef slots
+#include "Python.h"
+#pragma pop_macro("slots")
 class System : public QObject
 {
     Q_OBJECT
@@ -34,13 +37,13 @@ private:
    void scanDiskThread(std::string firstFilePath,long double total);
    void scanDiskThreadControl(std::string firstFilePath,long double total);
    void set_scanFile(QString scanFile);
+   int machineLearning(Kstring filePath);
 
    QString getscanedFileName();
    void setSescanedFileName(QString value);
 
    QString getscaningDisk();
    void setscaningDisk(QString value);
-
 
     //Değişkenler
     QString m_name;
@@ -59,6 +62,11 @@ private:
     int computerOptionIndex=0;
     QString m_scanedFileName;
     QString m_scaningDisk;
+
+    PyObject* pName;
+    PyObject* pModule;
+    PyObject* pFunc;
+    PyObject* pArgs;
 
 signals:
     void name_changed();

@@ -6,7 +6,7 @@ Rectangle {
     property string dName: "Null"
     property string dRadiusColor: "#c8c8c8"
     state: {
-        if(system.scaningDisk===dName){
+        if(filepathtransactions.scaningDisk===dName){
             busyIndicator1.running=true
             scan_button.visible=false
             scan_button_cancel.visible=true
@@ -104,7 +104,7 @@ Rectangle {
         MouseArea {
             id: mouseArea
             anchors.fill: parent
-            onClicked:system.set_scandisk(dName,dTotal,dFree)
+            onClicked:filepathtransactions.set_scandisk(dName,dTotal,dFree)
 
         }
         Label {
@@ -132,7 +132,7 @@ Rectangle {
         MouseArea {
             id: mouseArea2
             anchors.fill: parent
-            onClicked:system.set_scandiskClose()
+            onClicked:filepathtransactions.set_scandiskClose()
 
         }
         Label {

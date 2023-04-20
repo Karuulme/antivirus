@@ -83,7 +83,7 @@ Rectangle {
 
                     else
                         virusOptionIndex++
-                    system.set_VirusComputerOption(virusOptionIndex,computerOptionIndex)
+                    filepathtransactions.set_VirusComputerOption(virusOptionIndex,computerOptionIndex)
                 }
 
             }
@@ -108,7 +108,7 @@ Rectangle {
                         computerOptionIndex=0;
                     else
                         computerOptionIndex++
-                    system.set_VirusComputerOption(virusOptionIndex,computerOptionIndex)
+                    filepathtransactions.set_VirusComputerOption(virusOptionIndex,computerOptionIndex)
                 }
 
             }
@@ -140,7 +140,7 @@ Rectangle {
             anchors.leftMargin: 0
             anchors.topMargin: 1
             anchors.rightMargin: 0
-            onClicked:system.set_ScanResultApply()
+            onClicked:filepathtransactions.set_ScanResultApply()
         }
     }
 
@@ -154,7 +154,7 @@ Rectangle {
         autoRepeat: false
         autoExclusive: false
         checked: false
-        onCheckedChanged: system.set_ScanResultAutoApply(switch1.checked ? 1:0)
+        onCheckedChanged: filepathtransactions.set_ScanResultAutoApply(switch1.checked ? 1:0)
     }
     //auto apply
 

@@ -63,7 +63,7 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked:{vSelectIndex=0
-            system.set_singleVirusChanges(dindex,0)
+            filepathtransactions.set_singleVirusChanges(dindex,0)
             }
         }
     }
@@ -83,7 +83,7 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked:{vSelectIndex=1
-            system.set_singleVirusChanges(dindex,1)
+            filepathtransactions.set_singleVirusChanges(dindex,1)
             }
         }
     }
@@ -103,7 +103,7 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked:{vSelectIndex=2
-            system.set_singleVirusChanges(dindex,2)
+            filepathtransactions.set_singleVirusChanges(dindex,2)
             }
         }
     }
@@ -127,7 +127,7 @@ Rectangle {
             anchors.fill: parent
             onClicked: {
                 if(vSelectIndex!=0){
-                    system.getVirusOne(vFileAddress+"\\"+vFileName,vSelectIndex,dindex);
+                    filepathtransactions.getVirusOne(vFileAddress+"\\"+vFileName,vSelectIndex,dindex);
                     rectangle.destroy()
                 }
             }

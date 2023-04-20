@@ -1,26 +1,7 @@
 #include "../Headers/system.h"
 System::System(QObject *parent): QObject{parent}
 {
-   /* QFile inFile("settings2.xml");
-    if (inFile.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        qDebug()<<"Dosya acildi";
-        QXmlStreamReader xmlReader(&inFile);
-        while (xmlReader.readNextStartElement())
-        {
-            if (xmlReader.name().toString() == "language")
-            {
-                qDebug()<<xmlReader.readElementText();
-            }
-        }
-    }
-    else{
-        qDebug()<<"Dosya acilmadi";
-    }
-*/
 
-    //emit setscaningDisk("NULL");
-    //emit storage_changed();
 }
 //-----------------------------------------------------------------------------------------
 bool System::get_scandisk_status(){
@@ -71,13 +52,25 @@ void System::set_scandisk(QString value,double total,double free){
 }
 //-----------------------------------------------------------------------------------------
 void System::scanDiskThreadControl(std::string firstFilePath,long double total){
+    Py_Initialize();
+    pName = PyUnicode_FromString("MalwareAnalysis");
+    pModule = PyImport_Import(pName);
+    pFunc = PyObject_GetAttrString(pModule, "malwarePath");
+    pArgs = PyTuple_New(2);
     std::thread  scanThread(&System::scanDiskThread, this, firstFilePath,total);
     scanThread.join();
+    Py_DECREF(pArgs);
+    Py_XDECREF(pFunc);
+    Py_DECREF(pModule);
+    Py_DECREF(pName);
+    Py_Finalize();
     scanHDDName="";
     setscaningDisk(scanHDDName);
     breakScanThread=false;
     m_scandisk_status=false;
     emit scandisk_status_changed();
+    setscaningDisk("");
+
 }
 //-----------------------------------------------------------------------------------------
 void System::scanDiskThread(std::string firstFilePath,long double total){
@@ -96,11 +89,22 @@ void System::scanDiskThread(std::string firstFilePath,long double total){
                 QString fileName=QString::fromStdString(fileInformation.cFileName);
                 int netLength=fileName.size();
                 if(fileName[netLength-1]=='e' && fileName[netLength-2]=='x' && fileName[netLength-3]=='e'){
-                    setSescanedFileName(fileName+"q:*!"+QString::number(malwareListIndex)+"q:*!"+QString::fromStdString(firstFilePath));
+                    PyObject* pValue = PyLong_FromLong(9);
+                    PyTuple_SetItem(pArgs, 0, pValue);
+                    PyObject* pValue2 = PyLong_FromLong(5);
+                    PyTuple_SetItem(pArgs, 1, pValue2);
+                    PyObject* pResult = PyObject_CallObject(pFunc, pArgs);
+
+                    if (PyLong_Check(pResult)) {
+                        long result = PyLong_AsLong(pResult);
+                        qDebug() << "result: " << result;
+                        Sleep(1000);
+                    }
+                    /*setSescanedFileName(fileName+"q:*!"+QString::number(malwareListIndex)+"q:*!"+QString::fromStdString(firstFilePath));
                     malwareList[malwareListIndex]=QString::fromStdString(firstFilePath).replace("\\\\","\\")+"\\"+fileName;
-                    malwareListIndex++;
+                    malwareListIndex++;*/
                 }
-                Sleep(200);
+
             }
         }
     } while (FindNextFileA(firstFile, &fileInformation));
@@ -110,7 +114,6 @@ void System::scanDiskThread(std::string firstFilePath,long double total){
 //-----------------------------------------------------------------------------------------
 void System::set_scandiskClose(){
     breakScanThread=true;
-    setscaningDisk("");
     m_scandisk_status=false;
     if(autoScanResult)
        set_ScanResultApply();
@@ -162,6 +165,11 @@ void System::getVirusOne(QString filePath,int virusOptions,int index){
    emit setVirusOne(filePath,virusOptions);
 }
 //-----------------------------------------------------------------------------------------
+//file:///C:/Users/karuulme/Documents/anivirus/pythonCode
+int System::machineLearning(Kstring filePath){
 
+
+   return 1;
+}
 
 

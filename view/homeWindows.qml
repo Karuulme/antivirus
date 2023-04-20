@@ -3,7 +3,7 @@ import QtQuick.Window 2.0
 import QtQuick.Controls 2.0
 Rectangle {
     id: rectangle
-    property variant stringList: system.storageList.split("@")
+    property variant stringList: filepathtransactions.storageList.split("@")
     property bool kTextBackColor: false
     property bool scroolBarControl: false
     width: 930
@@ -67,7 +67,7 @@ Rectangle {
                         for(var i = listHDD.children.length; i > 0 ; i--) {
                           listHDD.children[i-1].destroy()
                         }
-                        system.set_get_storage()
+                        filepathtransactions.set_get_storage()
                     }
                 }
             }
@@ -100,8 +100,8 @@ Rectangle {
                 height: parent.height
                 spacing: 5
                 state:{
-                        if(system.scanedFileName){
-                            var scanedFileName=system.scanedFileName
+                        if(filepathtransactions.scanedFileName){
+                            var scanedFileName=filepathtransactions.scanedFileName
                             var KText = Qt.createComponent("KText.qml");
                             var objectKText = KText.createObject(this);
                             var values=scanedFileName.split("q:*!");
