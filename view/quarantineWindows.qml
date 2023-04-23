@@ -1,6 +1,5 @@
-import QtQuick 2.0
-import QtQuick.Window 2.0
-import QtQuick.Controls 2.0
+import QtQuick 2.12
+import QtQuick.Controls 2.3
 Rectangle {
     id: rectangle
     width: 930
@@ -9,77 +8,83 @@ Rectangle {
     state: {quarantine.setStart();
         return true
     }
-    property int quarantinelistIndex: 0
+    property bool deneme: false
     Rectangle{
-    width: 900
+    width: 860
     anchors.left: parent.left
     anchors.top: parent.top
     anchors.bottom: parent.bottom
     //clip: true
     anchors.bottomMargin: 15
     anchors.topMargin: 40
-    anchors.leftMargin: 15
+    anchors.leftMargin: 34
     color: "#00000000"
-
     ScrollView {
-            width: parent.width
+            width: parent.width+20
             height: parent.height
-            Column{
-                id:quarantineList_Column
-                width: parent.width
+            Column {
+                id: quarantineList_Column
+                width:860
                 height: parent.height
                 spacing: 10
-                state:  {
+                state: {
                     if(quarantine.quarantineFile){
                         var component = Qt.createComponent("quarantineListView.qml");
-                        quarantinelistIndex++;
                         var myArray = quarantine.quarantineFile.split("--");
-                        var ttt=component.createObject(this);
+                        var ttt=component.createObject(quarantineList_Column);
                         ttt.fileAddress=myArray[0];
                         ttt.fileDate=myArray[1].split(" ")[0];
                         ttt.indexNo=myArray[2];
-                        ttt.listIndex=quarantinelistIndex;
                     }
                     return true;
                 }
-
             }
         }
     }
     Rectangle {
-        x: 295
-        y: 5
-        width: 25
-        height: 25
+        x: 809
+        y: 8
+        width: 90
+        height: 28
         color: "#00000000"
-        radius: 5
+        radius: 4
         anchors.right: parent.right
+        anchors.rightMargin: 36
+        MouseArea {
+            anchors.fill: parent
+            onEntered: {
+                        parent.color="#e3e3e3"
+                    }
+            hoverEnabled: true
+            onClicked: {
+                    for(var i = quarantineList_Column.children.length; i > 0 ; i--) {
+                        quarantineList_Column.children[i-1].destroy()
+                    }
+                    quarantine.setStart();
+
+                    }
+            onExited:{
+                        parent.color="#00000000"
+                    }
+        }
+        Text {
+            x:5
+             height: parent.height
+             text: qsTr("Refresh")
+             verticalAlignment: Text.AlignVCenter
+             font.bold: true
+             font.pointSize: 11
+        }
         Image {
-            width: 25
-            height: 25
+            x:62
+            y:2
+            width: 24
+            height: 24
             source: "../Image/icons8-refresh-96.png"
-            MouseArea {
-                anchors.fill: parent
-                onEntered: {
-                            parent.parent.color="#e3e3e3"
-                        }
-                hoverEnabled: true
-                onClicked: {
-                            for(var i = quarantineList_Column.children.length; i > 0 ; i--) {
-                              quarantineList_Column.children[i-1].destroy()
-                            }
-                            quarantinelistIndex=0;
-                            //quarantine.setStart();
-                        }
-                onExited:{
-                            parent.parent.color="#00000000"
-                        }
-            }
+
             fillMode: Image.PreserveAspectFit
         }
-        anchors.rightMargin: 10
+
+
     }
-
-
-
 }

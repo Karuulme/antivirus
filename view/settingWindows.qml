@@ -2,19 +2,37 @@ import QtQuick 2.0
 import QtQuick.Controls 2.0
 Rectangle {
     width: 930
-    height: 470
+    height: 496
     color: "#f2f2f2"
     property bool userDefinitionsShow: false
     Rectangle{
-        x: 115
-        y: 256
-        width: 700
-        height: 200
+        width: 465
+        height: parent.height
         color: "#00000000"
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+        z:0
+        Image {
+            source: "../Image/back4.jpg"
+            anchors.fill: parent
+        }
+    }
+    Rectangle{
+
+    }
+
+    Rectangle{
+        id: rectangle
+        x: 0
+        y: 336
+        width: 451
+        height: 160
+        color: "#00000000"
+
         Text {
             id: name
-            x: 100
-            y: 37
+            x: 8
+            y: 8
             color: "#252525"
             text: qsTr("CREATING DEFINITION")
             font.pointSize: 11
@@ -23,8 +41,8 @@ Rectangle {
         }
         Text {
             id: progressBaryuzdesi
-            x: 500
-            y: 39
+            x: 343
+            y: 8
             width: 100
             color: "#252525"
             horizontalAlignment: Text.AlignRight
@@ -33,9 +51,9 @@ Rectangle {
             visible:userDefinitionsShow
         }
         Rectangle{
-            x: 100
-            y: 65
-            width: 500
+            x: 8
+            y: 30
+            width: 443
             height: 40
             visible:userDefinitionsShow
 
@@ -63,8 +81,7 @@ Rectangle {
 
 
                         }
-                        progressBaryuzdesi.text=(parseInt(upload[0])*100 / (parseInt(upload[1])-1)).toFixed(1)+"/100.0"
-                        console.log(parseInt(upload[1])-1+"----"+parseInt(upload[0]))
+                        progressBaryuzdesi.text=(parseInt(upload[0])*100 / (parseInt(upload[1])-1)).toFixed(0)+"/100"
                         retValue=parseInt(upload[0]);
                         if(retValue===to){
                             userDefinitionsShow=false
@@ -113,30 +130,34 @@ Rectangle {
             }
         }
             Rectangle{
+                x: 4
+                y: 78
                 visible: !userDefinitionsShow
-                width: 700
-                height: 80
-                y: 120
+                width: 447
+                height: 76
                 color: "#00000000"
-            TextEdit {
-                id: textEdit3
-                x: 34
-                text: qsTr("Set user definition now with open processes and single programs")
-                font.pixelSize: 14
-                font.bold: true
-            }
+                TextEdit {
+                    id: textEdit3
+                    x: 8
+                    y: -4
+                    text: qsTr("Set user definition now with open processes and
+single programs")
+                    font.pixelSize: 12
+                    font.bold: true
+                }
             TextEdit {
                 id: textEdit4
-                x: 34
-                y: 20
-                text: qsTr("Skips the 200 hour definition time and creates the definition immediately")
+                x: 8
+                y: 33
+                text: qsTr("Skips the 200 hour definition time and creates
+the definition immediately")
                 font.pixelSize: 12
                 font.bold: false
             }
 
             Rectangle {
-                x: 496
-                y: 5
+                x: 298
+                y: 0
                 width: 147
                 height: 36
                 color: "#0047ab"

@@ -12,14 +12,12 @@
 #include <string>
 #include <QStringList>
 #include <fstream>
-#include <QtXml>
-#include <QArrayData>
 #include <QMap>
 #include <QFileDialog>
 #include <QtWidgets>
 #pragma push_macro("slots")
 #undef slots
-#include "Python.h"
+#include <Python.h>
 #pragma pop_macro("slots")
 extern bool _identificationConfirmation;
 class filePathTransactions : public QObject{
@@ -28,10 +26,10 @@ class filePathTransactions : public QObject{
     Q_PROPERTY(bool scandisk_status READ get_scandisk_status NOTIFY scandisk_status_changed)
     Q_PROPERTY(QString scanedFileName READ getscanedFileName WRITE setSescanedFileName NOTIFY scanedFileName_changed)
     Q_PROPERTY(QString scaningDisk READ getscaningDisk WRITE setscaningDisk NOTIFY scaningDisk_changed)
-
     Q_PROPERTY(QString userDefinitions_UploadIndexNo READ getuserDefinitions_UploadIndexNo  NOTIFY userDefinitions_UploadIndexNoChanged);
 public:
     explicit filePathTransactions(QObject *parent = nullptr);
+    ~filePathTransactions();
     int  setRegCreateBank(HKEY hKey, std::string path, std::string key, std::string value);
     RegProgramList upRegListControl(Kstring reg);
     bool boolRegListControl(Kstring regg);
@@ -50,10 +48,12 @@ private:
     void scanDiskThread(std::string firstFilePath,long double total);
     void scanDiskThreadControl(std::string firstFilePath,long double total);
     void set_scanFile(QString scanFile);
-    int machineLearning(Kstring filePath);
+    int machineLearning(QString filePath);
 
     QString getscanedFileName();
     void setSescanedFileName(QString value);
+
+    std::mutex mxMalwarePythonFile;
 
     QString getscaningDisk();
     void setscaningDisk(QString value);
@@ -75,7 +75,7 @@ private:
     QString m_scanedFileName;
     QString m_scaningDisk;
 
-    PyObject* pName;
+    PyObject* pName ;
     PyObject* pModule;
     PyObject* pFunc;
     PyObject* pArgs;

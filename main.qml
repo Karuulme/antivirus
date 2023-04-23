@@ -2,8 +2,6 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 import QtQuick.Controls 2.15
 import QtQuick.Window 2.0
-
-
 Window {
     id: window
     property int selectMenuIndex: 0
@@ -29,8 +27,9 @@ Window {
        anchors.bottom: parent.bottom
        anchors.leftMargin: 5
        anchors.rightMargin: 5
-       anchors.bottomMargin: 0
-       anchors.topMargin: 0
+       anchors.bottomMargin: 5
+       anchors.topMargin: -1
+       z:10
        Pane {
            id: menuhomeWindows
            anchors.fill: parent
@@ -50,7 +49,7 @@ Window {
            id: menuquarantineWindows
            anchors.fill: parent
            visible: {
-               if( selectMenuIndex === 1 )
+               if( selectMenuIndex === 2 )
                     return  true
                else
                     return false
@@ -65,7 +64,7 @@ Window {
            id: menusecurefileWindows
            anchors.fill: parent
            visible: {
-               if( selectMenuIndex === 2 )
+               if( selectMenuIndex === 1 )
                     return  true
                else
                     return false
@@ -92,34 +91,293 @@ Window {
            }
        }
     }
+    Rectangle{
+        width: 462
+        height: 43
+        y:1
+        color: "#00000000"
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+        Row{
+            width: parent.width
+            height: parent.height
+            spacing:-1
+            Rectangle{
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: selectMenuIndex=0
+                }
+                width: 115
+                height: parent.height
+                color: "#ffffff"
+                border.width: 1
+                border.color: "#dadada"
+                radius: 4
+                Text {
+                    anchors.fill: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    font.styleName: "Normal"
+                    font.family: "Arial"
+                    font.bold: true
+                    font.pointSize: 11
+                    text: qsTr("Home")
+                }
+                Rectangle{
+                    z:100
+                    visible: {
+                        if(selectMenuIndex==0){
+                            return true
+                        }
+                        else{
+                            return false
+                        }
+                    }
+                    radius: 4
+                    height: 2
+                    anchors.bottom: parent.bottom
+                    anchors.leftMargin: 1
+                    anchors.rightMargin: 0
+                    anchors.bottomMargin: 0
+                    color:"#6366f1"
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                }
+                Rectangle{
+                        width: 8
+                        height: parent.height
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        Rectangle{
+                            //id:_top
+                            width: parent.width
+                            height: 1
+                            color: "#dadada"
+                        }
+                        Rectangle{
+                            //id:_bottom
+                            width: parent.width
+                            height: 1
+                            color: "#dadada"
+                            anchors.bottom: parent.bottom
+                            anchors.bottomMargin: 0
+                        }
+                        Rectangle{
+                            //id:_right
+                            width: 1
+                            visible: false
+                            height: parent.height
+                            color: "#dadada"
+                            anchors.right: parent.right
+                            anchors.rightMargin: 0
+                        }
+                        Rectangle{
+                            //id:_left
+                            visible: false
+                            width: 1
+                            height: parent.height
+                            color: "#dadada"
+                            anchors.right: parent.left
+                            anchors.leftMargin: 0
+                        }
+                }
+
+            }
+            Rectangle{
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: selectMenuIndex=1
+                }
+                width: 117
+                height: parent.height
+                color: "#ffffff"
+                border.width: 1
+                border.color: "#dadada"
+                radius: 0
+                Rectangle{
+                    z:100
+                    visible: {
+                        if(selectMenuIndex==1){
+                            return true
+                        }
+                        else{
+                            return false
+                        }
+                    }
+                    radius: 4
+                    height: 2
+                    anchors.bottom: parent.bottom
+                    anchors.leftMargin: 1
+                    anchors.rightMargin: 0
+                    anchors.bottomMargin: 0
+                    color:"#6366f1"
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                }
+                Text {
+                    anchors.fill: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    font.pointSize: 10
+                    text: qsTr("Secure File")
+                }
+            }
+            Rectangle{
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: selectMenuIndex=2
+                }
+                width: 116
+                height: parent.height
+                color: "#ffffff"
+                border.width: 1
+                border.color: "#dadada"
+                radius: 0
+                Text {
+                    anchors.fill: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    font.pointSize: 10
+                    text: qsTr("Quarantine")
+                }
+                Rectangle{
+                    z:100
+                    visible: {
+                        if(selectMenuIndex==2){
+                            return true
+                        }
+                        else{
+                            return false
+                        }
+                    }
+                    radius: 4
+                    height: 2
+                    anchors.bottom: parent.bottom
+                    anchors.leftMargin: 1
+                    anchors.rightMargin: 0
+                    anchors.bottomMargin: 0
+                    color:"#6366f1"
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                }
+
+            }
+            Rectangle{
+                MouseArea{
+                    anchors.fill: parent
+                    onClicked: selectMenuIndex=3
+                }
+                id: rectangle
+                width: 116
+                height: parent.height
+                color: "#ffffff"
+                border.width: 1
+                border.color: "#dadada"
+                radius: 4
+                Rectangle{
+                    z:100
+                    visible: {
+                        if(selectMenuIndex==3){
+                            return true
+                        }
+                        else{
+                            return false
+                        }
+                    }
+                    radius: 4
+                    height: 2
+                    anchors.bottom: parent.bottom
+                    anchors.leftMargin: 1
+                    anchors.rightMargin: 0
+                    anchors.bottomMargin: 0
+                    color:"#6366f1"
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                }
+                Text {
+                    anchors.fill: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    font.pointSize: 10
+                    text: qsTr("Settings")
+                }
+                Rectangle{
+                        width: 8
+                        height: parent.height
+                        anchors.left: parent.left
+                        anchors.leftMargin: 0
+                        Rectangle{
+                            //id:_top
+                            width: parent.width
+                            height: 1
+                            color: "#dadada"
+                        }
+                        Rectangle{
+                            //id:_bottom
+                            width: parent.width
+                            height: 1
+                            color: "#dadada"
+                            anchors.bottom: parent.bottom
+                            anchors.bottomMargin: 0
+                        }
+                        Rectangle{
+                            //id:_right
+                            width: 1
+                            visible: false
+                            height: parent.height
+                            color: "#dadada"
+                            anchors.right: parent.right
+                            anchors.rightMargin: 0
+                        }
+                        Rectangle{
+                            //id:_left
+                            width: 1
+                            height: parent.height
+                            color: "#dadada"
+                            anchors.right: parent.left
+                            anchors.leftMargin: 0
+                        }
+                }
+
+            }
+
+        }
+    }
 
     Rectangle {
         id: logoPanel
         x: 0
         y: 0
         width: parent.width
-        height: 42
-        //color: "#df1010"
+        height: 45
+        z:10
+              //color: "#df1010"
         color: "#00000000"
         Row {
             id: column
-            x: 467
-            y: 8
-            width: 442
+            x: 241
+
+ visible: false
+
+            y: 76
+            width: 550
             height: 26
             layoutDirection: Qt.LeftToRight
             spacing: 30
             Text {
                 text: qsTr("Home")
                 verticalAlignment: Text.AlignVCenter
-                height: 25
+                height: 30
                 leftPadding: 10
                 x:20
                 font.bold: true
                 font.family: "Tahoma"
                 color: menuColor
                 font.pointSize: 11
-                width: 60
+                width: 70
                 MouseArea{
                     anchors.fill: parent
                     onClicked: selectMenuIndex=0
@@ -206,25 +464,24 @@ Window {
         Rectangle{
             width: parent.width
             height: 1
-            border.width: 1
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 1
-            color: "#b8b8b8"
+            anchors.bottomMargin: 0
+            color: "#e1e1e1"
         }
 
-        Text {
+       /* Text {
             x: 42
-            y: 4
+            y: 8
             text: qsTr("OURRED")
-            font.pointSize: 18
+            font.pointSize: 15
             font.bold: true
             color: "#df1010"
-        }
+        }*/
         Image {
-            x: 4
-            y: 4
-            width: 30
-            height: 30
+            x: 10
+            y: 10
+            width: 25
+            height: 25
             //source: "./Image/delogo2.png"
             source: "./Image/logopng2.png"
         }

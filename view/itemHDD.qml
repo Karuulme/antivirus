@@ -27,7 +27,7 @@ Rectangle {
     border.width: 1
     border.color: dRadiusColor
    // border.color: "#0047ab"
-    radius: 5
+    radius: 4
     Image {
         id: image
         x: 10
@@ -55,9 +55,10 @@ Rectangle {
 
     Rectangle{
         id: rectangle1
-        width: 70
+        x: 300
+        width: 109
         y:1
-        radius: 5
+        radius: 4
         height: 58
         anchors.right: parent.right
         anchors.rightMargin: 1
@@ -92,14 +93,14 @@ Rectangle {
 
     Rectangle{
        id:scan_button
-        width: 80
-        height: 20
-        x:309
-        y:23
+        width: 50
+        height: 30
+        x:340
+        y:19
         visible: true
         border.width: 1
         color:"#00000000"
-        radius: 5
+        radius: 4
         border.color: "#b9b9b9"
         MouseArea {
             id: mouseArea
@@ -109,7 +110,7 @@ Rectangle {
         }
         Label {
             id: label2
-            text: qsTr("Scan This Disk")
+            text: qsTr("Scan")
             anchors.fill: parent
             font.letterSpacing: 0
             horizontalAlignment: Text.AlignHCenter
@@ -120,19 +121,22 @@ Rectangle {
     }
     Rectangle{
         id:scan_button_cancel
-        width: 40
+        width: 50
+        height: 30
+        x:340
+        y:19
         visible: false
-        height: 20
-        x:309
-        y:23
+        color: "#00000000"
         border.width: 1
-        color:"#00000000"
-        radius: 5
+        radius: 4
         border.color: "#b9b9b9"
         MouseArea {
             id: mouseArea2
             anchors.fill: parent
-            onClicked:filepathtransactions.set_scandiskClose()
+            onClicked:{
+                filepathtransactions.set_scandiskClose();
+                scan_button_cancel.visible=false;
+            }
 
         }
         Label {
@@ -146,7 +150,7 @@ Rectangle {
 
     }
     BusyIndicator {
-        x: 368
+        x: 300
         y:16
         width: 34
         height: 34

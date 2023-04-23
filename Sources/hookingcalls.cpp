@@ -31,13 +31,13 @@ void HookingCalls::getDllEnjection(unsigned long int pID){
     //thDllEnjection.detach();
 }
 //-----------------------------------------------------------------------------------------
-void HookingCalls::getSecureList(QList<QString>* secure){
+void HookingCalls::getSecureList(QList<RegSecureFile>* secure){
     qls_regeditSecureList=secure;
 }
 //-----------------------------------------------------------------------------------------
 int HookingCalls::regeditControl(QString  address){
     for(int i=0;i<qls_regeditSecureList->size();i++){
-        if(address.contains(qls_regeditSecureList->at(i))){
+        if(address.contains(QString::fromStdString(qls_regeditSecureList->at(i).fKey))){
             return -1;
         }
     }
@@ -97,7 +97,6 @@ void HookingCalls::listenToEvents(HANDLE hProcess,HANDLE hsetEvent,HANDLE hgetEv
                     CloseHandle(hProcess);
                     CloseHandle(hsetEvent);
                     CloseHandle(hgetEvent);
-                     memset(memory_pointer ,NULL, BUFFERSIZE - BUFFERREADSIZE);
                     break;
                 }
             }
@@ -110,5 +109,5 @@ void HookingCalls::listenToEvents(HANDLE hProcess,HANDLE hsetEvent,HANDLE hgetEv
         memset(memory_pointer ,NULL, BUFFERSIZE - BUFFERREADSIZE);
     } while (true);
     mtx.unlock();
-     memset(memory_pointer ,NULL, BUFFERSIZE - BUFFERREADSIZE);
+    memset(memory_pointer ,NULL, BUFFERSIZE - BUFFERREADSIZE);
 }

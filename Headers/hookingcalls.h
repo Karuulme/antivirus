@@ -7,6 +7,7 @@
 #include <iostream>
 #include <QDebug>
 #include <mutex>
+#include <Headers/klibrary.h>
 #define BUFFERSIZE 1024
 #define BUFFERREADSIZE 24
 class HookingCalls : public QObject
@@ -17,7 +18,7 @@ public:
     int dllEnjection(unsigned long int pID);
 private:
     QList<QString> qls_protectedRegistry;
-    QList<QString> *qls_regeditSecureList;
+    QList<RegSecureFile> *qls_regeditSecureList;
     int regeditControl(QString  address);
     int fileControl(QString  address);
     //--------------------------------------------------
@@ -35,7 +36,7 @@ private:
 
 public slots:
     void getDllEnjection(unsigned long int pID);
-    void getSecureList(QList<QString> * secure);
+    void getSecureList(QList<RegSecureFile> * secure);
 signals:
 
 };

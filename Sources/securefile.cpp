@@ -41,13 +41,8 @@ int secureFile::StringToWString(Kwstring& ws, Kstring& s)
     return 0;
 }
 //-----------------------------------------------------------------------------------------
-int secureFile::getRegSecureFiles()
-{
-    regListNum = 0;
-    PVOID   pvData = {};
-    LPDWORD pcbData = (LPDWORD)pvData;
+int secureFile::getRegSecureFiles(){
     HKEY  regKey;
-
     Kstring pathX=KSecure;
     std::wstring name;
     StringToWString(name, pathX);
@@ -77,16 +72,15 @@ int secureFile::getRegSecureFiles()
         return error;
     }
     DWORD   cbName;
-    for (int i= 0; i < cSubKeys; i++) {
+    for (int i= 0; i < (int)cSubKeys; i++) {
         cbName = _MAX_PATH;
         retCode = RegEnumKeyEx(regKey, (DWORD)i,achKey,&cbName,NULL,NULL,NULL,&ftLastWriteTime);
         if (retCode == ERROR_SUCCESS){
             RegSecureFile regSecureFile;
             std::string str;
             std::wstring wStr = achKey;
-
             str = std::string(wStr.begin(), wStr.end());
-            secureListFileName.append(QString::fromStdString(str));
+            //secureListFileName.append(QString::fromStdString(str));
             Kstring path2 = pathX + str;
             char value[BUFFER];
             BufferSize = BUFFER;
@@ -95,17 +89,16 @@ int secureFile::getRegSecureFiles()
             BufferSize = BUFFER;
             RegGetValueA(regMachine, path2.c_str(), "fPath", RRF_RT_ANY, NULL, (PVOID)&value, &BufferSize);
             regSecureFile.fPath = KcharToString(value);
-            regSecureFile.fFile = str;
-            secureFileRegList[secureFileIndex] = regSecureFile;
-            secureFileIndex++;
+            regSecureFile.fFile = path2;
+            regSecureFile.fRegFileName=str;
             KSpace(value);
-            secureList.append(QString::fromStdString(regSecureFile.fKey));
+            //secureList.append(QString::fromStdString(regSecureFile.fKey));
+            _secureList.append(regSecureFile);
+            //qDebug()<<QString::fromStdString(_secureList.at(i).fFile);
             setsecureFiles(QString::fromStdString("Null:?!?:"+regSecureFile.fPath+":?!?:"+regSecureFile.fKey));// kayıt defterinden gelen bir kayıf ise standart olarak gönderiyoruz
-
-
         }
     }
-    setSecureList(&secureList);
+    setSecureList(&_secureList);
     RegCloseKey(regKey);
     return 0;
 }
@@ -114,7 +107,7 @@ int  secureFile::setRegCreateRecure(HKEY hKey, Kstring path, Kstring key, Kstrin
     Kstring sPath;
     Kstring sKey= key;
     Kstring sValue= value;
-    for (int i = 0; i < path.length(); i++) {//path space clear; //boşluk olduğunda hatalı dosya işlemi yapıyor.
+    for (int i = 0; i < (int)path.length(); i++) {//path space clear; //boşluk olduğunda hatalı dosya işlemi yapıyor.
         if (path[i] != ' ') {
             sPath += path[i];
         }
@@ -134,8 +127,8 @@ int  secureFile::setRegCreateRecure(HKEY hKey, Kstring path, Kstring key, Kstrin
 //-----------------------------------------------------------------------------------------
 int secureFile::folderPathControl(QString path){
     if(path.contains(filePathDESKTOP)){
-        for(int i=0;i<secureFileIndex;i++){
-            if(QString::fromStdString(secureFileRegList[i].fPath).contains(path)){
+        for(int i=0;i<_secureList.size();i++){
+            if(QString::fromStdString(_secureList.at(i).fPath).contains(path)){
                 return -1;
             }
         }
@@ -147,19 +140,32 @@ int secureFile::folderPathControl(QString path){
 //-----------------------------------------------------------------------------------------
 void secureFile::set_folderPath(QString parentFileName){
     parentFileName=parentFileName.replace("file:///","");
+    QList<int> secureListFRegFileName;
+    for (int i = 0; i < _secureList.size(); ++i) {
+        secureListFRegFileName.append(KStringToInt(_secureList.at(i).fRegFileName));
+    }
+    int secureFileIndex;
+    if(_secureList.size()!=0){
+        std::sort(secureListFRegFileName.begin(), secureListFRegFileName.end(), std::greater<int>());
+         secureFileIndex=secureListFRegFileName.at(0)+1;
+    }
+    else{
+         secureFileIndex=1001;
+    }
     if(folderPathControl(parentFileName)>0){
-        secureFileIndex++;
         QString Filepassword = QString::fromUtf8(getRandomSha256().toHex());
-        setRegCreateRecure(regMachine,KSecure+KToString(1000+secureFileIndex),"fPath",parentFileName.toStdString());
-        setRegCreateRecure(regMachine,KSecure+KToString(1000+secureFileIndex),"fKey",Filepassword.toStdString());
-        secureFileRegList[secureFileIndex-1].fPath=parentFileName.toStdString();
-        secureFileRegList[secureFileIndex-1].fFile=KToString(1000+secureFileIndex);
-        secureFileRegList[secureFileIndex-1].fKey=Filepassword.toStdString();
+        setRegCreateRecure(KMachine,KSecure+KToString(secureFileIndex),"fPath",parentFileName.toStdString());
+        setRegCreateRecure(KMachine,KSecure+KToString(secureFileIndex),"fKey",Filepassword.toStdString());
         setsecureFiles("new:?!?:"+parentFileName+":?!?:"+Filepassword);// Yeni eklendiğini belirtmek için başına "new" ekliyoruz
         Kstring newFolderPath=parentFileName.toStdString()+"/"+Filepassword.toStdString();
         CreateDirectoryA(newFolderPath.c_str(),NULL);
-        secureList.append(Filepassword);
-        secureListFileName.append(QString::fromStdString(KSecure+KToString(1000+secureFileIndex)));
+        RegSecureFile regSecureFile;
+        regSecureFile.fKey=Filepassword.toStdString();
+        regSecureFile.fFile=KSecure+KToString(secureFileIndex);
+        regSecureFile.fPath=parentFileName.toStdString();
+        regSecureFile.fRegFileName=KToString(secureFileIndex);
+        _secureList.append(regSecureFile);
+        setSecureList(&_secureList);
     }
 }
 //-----------------------------------------------------------------------------------------
@@ -191,14 +197,27 @@ LPCTSTR qstringToLPCTSTR(const QString& str)
 #endif
 }
 //-----------------------------------------------------------------------------------------
-void secureFile::set_RecureDeleteFile(QString rKey,QString rPath){
-    int i=secureList.indexOf(rKey);
-    LPCTSTR deleteAddress=qstringToLPCTSTR(QString::fromStdString(KSecure)+secureListFileName.at(i));
+int secureFile::set_RecureDeleteFile(QString rKey,QString rPath){
+    QString returnValue=rKey+"!secure!"+"unsuccessful";
+    setSecureProcessed(returnValue);
+   /* int i=0;
+    for (; i < _secureList.size(); ++i) {
+        if(_secureList.at(i).fKey==rKey.toStdString()){
+            break;
+        }
+    }
+    LPCTSTR deleteAddress=qstringToLPCTSTR(QString::fromStdString(_secureList.at(i).fFile));
     BOOL bSuccess=RegDelnode(HKEY_CURRENT_USER, deleteAddress);
-    if(!bSuccess)
-        printf("Success!\n");
-    setsecureFiles("Null:?!?:"+rPath+":?!?:"+rKey);
-
+    if(bSuccess==FALSE){
+        QString returnValue=rKey+"!secure!"+"unsuccessful";
+        setSecureProcessed(returnValue);
+    }
+    else{
+        _secureList.removeAt(i);
+        QString returnValue=rKey+"!secure!"+"successful";
+        setSecureProcessed(returnValue);
+    }*/
+    return 0;
 }
 //-----------------------------------------------------------------------------------------
 BOOL secureFile::RegDelnodeRecurse (HKEY hKeyRoot, LPTSTR lpSubKey)
@@ -286,18 +305,25 @@ BOOL secureFile::RegDelnodeRecurse (HKEY hKeyRoot, LPTSTR lpSubKey)
 BOOL secureFile::RegDelnode (HKEY hKeyRoot, LPCTSTR lpSubKey)
 {
     TCHAR szDelKey[MAX_PATH*2];
-
     StringCchCopy (szDelKey, MAX_PATH*2, lpSubKey);
     return RegDelnodeRecurse(hKeyRoot, szDelKey);
-
 }
 //-----------------------------------------------------------------------------------------
 void secureFile::getUserDefinitions_Delete_Signal(){
     RegDelnode(KMachine, qstringToLPCTSTR(KBank));
 }
+//----------------------------------------------------------------------------------------
+QString secureFile::getSecureProcessed(){
+    //qDebug()<<m_secureProcessed;
+    return m_secureProcessed;
+}
+//----------------------------------------------------------------------------------------
+void secureFile::setSecureProcessed(QString secureValue){
 
-
-
+    m_secureProcessed=secureValue;
+    emit secureProcessedChanged();
+}
+//----------------------------------------------------------------------------------------
 
 
 

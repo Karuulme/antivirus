@@ -123,7 +123,7 @@ Rectangle {
         color:"#0047ab"
         border.width: 1
         border.color: "#f9f9f9"
-        radius: 5
+        radius: 4
         Text {
             id: name
             x: 77

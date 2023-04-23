@@ -16,6 +16,7 @@ class scanResultOperations : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString quarantineFile READ getQuarantineFile WRITE setQuarantineFile NOTIFY quarantineFileChanged)
+    Q_PROPERTY(QString quarantineProcessed READ getQuarantineProcessed  WRITE setQuarantineProcessed NOTIFY quarantineProcessedChanged)
 public:
     explicit scanResultOperations(QObject *parent = nullptr);
 private:
@@ -33,9 +34,13 @@ private:
     void getAppDataAddress();
     QString mac_Address;
     QString quarantineAddress;
+    QString m_quarantineProcessed;
+    void setQuarantineProcessed(const QString quarantineFile);
+    QString getQuarantineProcessed();
 signals:
     void quarantineFileChanged();
     void quarantineFileAdded(QString file);
+    void quarantineProcessedChanged();
 public slots:
     void setStart();
     void getQuarantineOptions(int indexNo,int OptionsNo);

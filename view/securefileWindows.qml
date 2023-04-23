@@ -13,8 +13,9 @@ Rectangle {
         width: parent.width
         height: 65
         color:"#00000000"
+        y:5
         Text {
-            x: 53
+            x: 40
             y: 32
             color: "#424242"
             font.bold: true
@@ -22,22 +23,22 @@ Rectangle {
             text: qsTr("Create File Protection, Only For Desktop Files")
         }
         Text {
-            x: 8
+            x: 5
             y: 5
-            text: qsTr("File")
+            text: qsTr("File:")
             font.bold: true
             font.pointSize: 11
         }
         Rectangle{
             id: rectangle2
-            x: 51
+            x: 38
             y: 4
-            width: 865
+            width: 857
             height: 25
             color:"#00000000"
             border.width: 1
             border.color: "black"
-            radius:5
+            radius:4
             Text{
                 id:selectFilePath
                 anchors.left: parent.left
@@ -56,13 +57,13 @@ Rectangle {
              }
         }
         Rectangle{
-            x: 702
+            x: 680
             y: 35
             width: 100
             height: 25
             color:"#00000000"
             border.width: 1
-            radius:5
+            radius:4
             Text {
                 text: qsTr("Select")
                 anchors.fill: parent
@@ -77,13 +78,13 @@ Rectangle {
             }
         }
         Rectangle{
-            x: 816
+            x: 795
             y: 35
             width: 100
             height: 25
             color:"#00000000"
             border.width: 1
-            radius:5
+            radius:4
             Text {
                 text: qsTr("Added")
                 anchors.fill: parent
@@ -100,12 +101,12 @@ Rectangle {
         }
     }
     Rectangle{
-        width: 860
+        width: 880
         height: 390
         color: "#00000000"
         anchors.left: parent.left
         anchors.top: rectangle1.bottom
-        anchors.leftMargin: 50
+        anchors.leftMargin: 35
         anchors.topMargin: 0
         ScrollView {
             width: parent.width
@@ -136,15 +137,15 @@ Rectangle {
 
     Rectangle {
         id: secureNewFolderNotification
-        y: 357
+        y: 365
         width: 659
         height: 97
         color: "#04AA6D"
-        radius: 7
+        radius: 4
         border.color: "#006619"
         border.width: 2
         anchors.left: parent.left
-        anchors.leftMargin: 20
+        anchors.leftMargin: 146
         visible: false
         Image {
 
@@ -167,7 +168,7 @@ Rectangle {
             font.pointSize: 10
             font.bold: true
             color: "#ffffff"
-            text: "C:\Users\karuulme\Desktop\web-projesi"
+            text: "C:\Users\XXXX\Desktop\XXXXX"
         }
 
         Text {
@@ -175,7 +176,7 @@ Rectangle {
             x: 7
             y: 30
             color: "#ffffff"
-            text: "Ouşturduğunuz güvenli dosya adresi altında"
+            text: "Under the secure file address you provided"
             font.bold: false
             font.pointSize: 10
         }
@@ -193,7 +194,7 @@ Rectangle {
             id: name4
             y: 54
             color: "#ffffff"
-            text: "adında klasör oluşturuldu."
+            text: "folder created."
             anchors.left: secureKey.right
             anchors.leftMargin: 5
             font.bold: false
@@ -205,7 +206,7 @@ Rectangle {
             x: 7
             y: 74
             color: "#ffffff"
-            text: "Oluşturulan klasöre dosyalarınızı taşıyınız."
+            text: "Move your files to the created folder."
             font.bold: false
             font.pointSize: 10
         }

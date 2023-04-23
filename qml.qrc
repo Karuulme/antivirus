@@ -36,6 +36,18 @@
         <file>Image/icons8-quarantine-64.png</file>
         <file>Image/logopng2.png</file>
         <file>Image/delogo2.png</file>
+        <file>Image/icons8-return-64.png</file>
+        <file>Image/icons8-protect-50.png</file>
+        <file>Image/icons8-menu-78.png</file>
+        <file>Image/icons8-quarantine.png</file>
+        <file>Image/back3.jpg</file>
+        <file>Image/close (1).png</file>
+        <file>Image/computer.png</file>
+        <file>Image/customize.png</file>
+        <file>Image/protection.png</file>
+        <file>Image/time-left.png</file>
+        <file>Image/trash.png</file>
+        <file>Image/back4.jpg</file>
     </qresource>
     <qresource prefix="/files"/>
 </RCC>

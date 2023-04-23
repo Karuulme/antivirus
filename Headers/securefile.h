@@ -17,6 +17,7 @@ class secureFile : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString secureFiles READ getsecureFiles WRITE setsecureFiles NOTIFY secureFilesChanged);
+    Q_PROPERTY(QString secureProcessed READ getSecureProcessed  WRITE setSecureProcessed NOTIFY secureProcessedChanged)
 public:
     explicit secureFile(QObject *parent = nullptr);
 
@@ -31,22 +32,24 @@ private:
    QByteArray getRandomSha256();
    BOOL RegDelnodeRecurse (HKEY hKeyRoot, LPTSTR lpSubKey);
    BOOL RegDelnode (HKEY hKeyRoot, LPCTSTR lpSubKey);
-   Kmap<int, RegSecureFile> secureFileRegList;
-   int secureFileIndex=0;
    QString m_secureFiles;
    QString filePathDESKTOP;
-   int regListNum = 0;
    HKEY regMachine = HKEY_CURRENT_USER;
-   QList<QString> secureList;
-   QList<QString> secureListFileName;
+   //QList<QString> secureList;
+   //QList<QString> secureListFileName;
+   QList<RegSecureFile> _secureList;
+   QString m_secureProcessed;
+   QString getSecureProcessed();
+   void setSecureProcessed(QString secureValue);
 
 signals:
    void secureFilesChanged();
-   void setSecureList(QList<QString> *secureList);
+   void setSecureList(QList<RegSecureFile> *secureList);
    void setUserDefinitions(QVector<QString> * regInstallProgram);
+   void secureProcessedChanged();
 public slots:
    void getUserDefinitions_Delete_Signal();
-   void set_RecureDeleteFile(QString rKey,QString rPath);
+   int set_RecureDeleteFile(QString rKey,QString rPath);
    void set_folderPath(QString parentFileName);
    void setStart();
    void set_RecureOpenFile(QString parentFileName);

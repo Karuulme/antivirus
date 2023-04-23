@@ -1,14 +1,13 @@
 #include <QApplication>
 #include <QQmlApplicationEngine>
-#include <QMessageBox>
 #include <QAction>
 #include <QMenu>
 #include <QSystemTrayIcon>
 #include <QQmlContext>
-#include <windows.h>
 //------------------------------------------------------------------
 bool _identificationConfirmation=false;
 //------------------------------------------------------------------
+#include <Headers/klibrary.h>
 #include <Headers/windowtaskbar.h>
 //#include <Headers/system.h>
 #include <Headers/userdefinition.h>
@@ -61,7 +60,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
     QObject::connect(&_userdefinition,SIGNAL(setRegList(Kmap<int, RegProgramList>)),&_filepathtransactions, SLOT(getRegList(Kmap<int, RegProgramList>)));
     QObject::connect(&_filechanges,SIGNAL(setfileChangesNotification(QString)),&_filepathtransactions, SLOT(getfileChangesNotification(QString)));
     QObject::connect(&_filepathtransactions,SIGNAL(setApplyResults(QMap<int,QString>,QMap<int,int>,int,int)),&_scanresultoperations, SLOT(getApplyResults(QMap<int,QString>,QMap<int,int>,int,int)));
-    QObject::connect(&_secureFile,SIGNAL(setSecureList(QList<QString>*)),&_hookingCalls, SLOT(getSecureList(QList<QString>*)));
+    QObject::connect(&_secureFile,SIGNAL(setSecureList(QList<RegSecureFile>*)),&_hookingCalls, SLOT(getSecureList(QList<RegSecureFile>*)));
     QObject::connect(&_filepathtransactions,SIGNAL(setDllEnjection(unsigned long int)),&_hookingCalls, SLOT(getDllEnjection(unsigned long int)));
     QObject::connect(&_userdefinition,SIGNAL(setUserDefinitions_Delete_Signal()),&_secureFile, SLOT(getUserDefinitions_Delete_Signal()));
     QObject::connect(&_userdefinition,SIGNAL(setUserDefinitions_FileOperations(QVector<QString>*)),&_filepathtransactions, SLOT(getUserDefinitions_FileOperations(QVector<QString>*)));

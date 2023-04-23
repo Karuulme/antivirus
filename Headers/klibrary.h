@@ -35,6 +35,7 @@ struct RegSecureFile {
     Kstring fPath;
     Kstring fKey;
     Kstring fFile;
+    Kstring fRegFileName;
 };
 class KLibrary : public QObject
 {

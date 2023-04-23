@@ -61,7 +61,6 @@ void scanResultOperations::findQuarantineFile(){
                     array[1].remove("X_2*HTZ*");
                     quarentineFileNameList.append(QString::fromStdString(fileName));
                     quarentineOrjinalFileNameList.append(array[0]);
-                    qDebug()<<"AASDSADSADSADSADSADSAD";
                     setQuarantineFile(array[0]+"--"+array[1]+"--"+QString::fromStdString(KToString(indexNo)));
                     indexNo++;
                     readFile.close();
@@ -80,10 +79,25 @@ void scanResultOperations::findQuarantineFile(){
 void scanResultOperations::getQuarantineOptions(int indexNo,int OptionsNo){
     switch(OptionsNo){
         case 0: // delete
-            remove(quarentineFileNameList.at(indexNo).toStdString().c_str());
+            if(false){//remove(quarentineFileNameList.at(indexNo).toStdString().c_str());
+                QString returnValue=QString::number(indexNo)+"!quartine!"+"successful";
+                setQuarantineProcessed(returnValue);
+            }
+            else{
+                QString returnValue=QString::number(indexNo)+"!quartine!"+"unsuccessful";
+                setQuarantineProcessed(returnValue);
+            }
         break;
         case 1: // return
-            Decrypt(indexNo);
+            //Decrypt(indexNo);
+            if(false){
+                QString returnValue=QString::number(indexNo)+"!quartine!"+"successful";
+                setQuarantineProcessed(returnValue);
+            }
+            else{
+                QString returnValue=QString::number(indexNo)+"!quartine!"+"unsuccessful";
+                setQuarantineProcessed(returnValue);
+            }
         break;
         default:
         break;
@@ -112,22 +126,23 @@ void scanResultOperations::getMac() {
 }
 //-----------------------------------------------------------------------------------------
 int scanResultOperations::Decrypt(int fileindex){
+
+    QString filePath=quarantineAddress+quarentineFileNameList.at(fileindex);
+    std::string in= filePath.toStdString();
+    std::ifstream readFile;
+    readFile.open(in.c_str(), std::ios::binary);
+    if(!readFile.is_open()){
+        setQuarantineFile(quarentineOrjinalFileNameList.at(fileindex));
+        return -1;
+    }
     std::string aaa = mac_Address.toStdString();
     long  key = 0;
     for (int i = 0,j=10; i< aaa.length();i++,j*=10) {
         int t = aaa[i];
         key+= t*j;
     }
-    QString filePath=quarantineAddress+quarentineFileNameList.at(fileindex);
-    std::string in= filePath.toStdString();
     char c;
-    std::ifstream readFile;
     std::ofstream writeFile;
-    readFile.open(in.c_str(), std::ios::binary);
-    if(!readFile.is_open()){
-        setQuarantineFile(quarentineOrjinalFileNameList.at(fileindex));
-        return -1;
-    }
     QString str_verification;
     char aa;
     BOOL b_verification=FALSE;
@@ -147,6 +162,7 @@ int scanResultOperations::Decrypt(int fileindex){
     readFile.close();
     writeFile.close();
     remove(filePath.toStdString().c_str());
+    return 0;
 }
 //-----------------------------------------------------------------------------------------
 void scanResultOperations::encrypt(QString filePath){
@@ -239,24 +255,39 @@ void scanResultOperations::computerOperations(int Options){
     }
 }
 //-----------------------------------------------------------------------------------------
-void scanResultOperations::getApplyResults(QMap<int,QString> malwaress,QMap<int,int> malwareListOptions,int virusOptions,int computerOptions){
-    for(int i=0;i<malwaress.size();i++){
+void scanResultOperations::getApplyResults(QMap<int,QString> malwares,QMap<int,int> malwareListOptions,int virusOptions,int computerOptions){
+    for(int i=0;i<malwares.size();i++){
+        qDebug()<<"malwareList:"<<malwares[i];
+        qDebug()<<"malwareListOptions:"<<malwareListOptions[i];
         if(virusOptions==0){
-            virusProcesses(malwaress[i],malwareListOptions[i]);
+            if(malwareListOptions[i]!=0){
+                virusProcesses(malwares[i],malwareListOptions[i]);
+            }
         }
         else{
-            virusProcesses(malwaress[i],virusOptions-1);
+            virusProcesses(malwares[i],virusOptions-1);
         }
     }
     computerOperations(computerOptions);
+    //findQuarantineFile();
 }
 //-----------------------------------------------------------------------------------------
 void scanResultOperations::getVirusOne(QString filePath,int virusOptions){
     //virusProcesses(filePath,virusOptions);
+    if(virusOptions==1){
+        //findQuarantineFile();
+    }
 }
 //-----------------------------------------------------------------------------------------
-
-
+void scanResultOperations::setQuarantineProcessed(const QString quarantineFile){
+    m_quarantineProcessed=quarantineFile;
+    emit quarantineProcessedChanged();
+}
+//-----------------------------------------------------------------------------------------
+QString scanResultOperations::getQuarantineProcessed(){
+    return m_quarantineProcessed;
+}
+//-----------------------------------------------------------------------------------------
 
 
 

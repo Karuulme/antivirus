@@ -2,6 +2,10 @@
 
 filePathTransactions::filePathTransactions(QObject *parent): QObject{parent}
 {
+
+}
+filePathTransactions::~filePathTransactions(){
+
 }
 //-----------------------------------------------------------------------------------------
 int  filePathTransactions::setRegCreateBank(HKEY hKey, Kstring path, Kstring key, Kstring value) { // KAYIT DEFTERİNE VERİ EKLEME VE GÜNCELLEME
@@ -56,11 +60,8 @@ int filePathTransactions::setRegQuestion(QString filePath,unsigned long int pID)
             emit setDllEnjection(pID);
             regeditNewRecord(reg);
         }
-
-
         //----------------------------------------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         //DLL injection YAPILACAK
-
         //----------------------------------------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     }
     return 0;
@@ -127,7 +128,24 @@ void filePathTransactions::getfileChangesNotification(QString filePath){ // BİR
     if(fileChangesProgram.pHash!="000"){
         if(!boolRegListControl(fileChangesProgram.pHash)){
             regeditNewRecord(fileChangesProgram);
-            //Bundan sonra taramaya gidecek
+            mxMalwarePythonFile.lock();
+            if(!m_scandisk_status){
+                Py_Initialize();
+                pName = PyUnicode_FromString("MalwareAnalysis");
+                pModule = PyImport_Import(pName);
+                pFunc = PyObject_GetAttrString(pModule, "malwarePath");
+                pArgs = PyTuple_New(2);
+            }
+            qDebug()<<"filePath:"<<filePath;
+            //machineLearning(filePath.toStdString());
+            if(!m_scandisk_status){
+                Py_DECREF(pArgs);
+                Py_XDECREF(pFunc);
+                Py_DECREF(pModule);
+                Py_DECREF(pName);
+                Py_Finalize();
+            }
+            mxMalwarePythonFile.unlock();
         }
     }
 }
@@ -141,12 +159,48 @@ void filePathTransactions::getUserDefinitions_FileOperations(QVector<QString>* r
 }
 //-----------------------------------------------------------------------------------------
 void filePathTransactions::getUserDefinitions_FileOperations_Thread(QVector<QString> regInstallProgram){
+    mxMalwarePythonFile.lock();
+    if(!m_scandisk_status){
+        Py_Initialize();
+        pName = PyUnicode_FromString("MalwareAnalysis");
+        pModule = PyImport_Import(pName);
+        pFunc = PyObject_GetAttrString(pModule, "malwarePath");
+        pArgs = PyTuple_New(2);
+    }
     for(int i=0;i<regInstallProgram.size();i++){
         // TARAMAYA GİDECEK GÜVENLİ İSE KAYIT DEFTERİNE EKLENECEK
+       //qDebug()<<"Py_IsInitialized():"<<Py_IsInitialized();
+       /* mxMalwarePythonFile.lock();
+        machineLearning(fileInformation.cFileName);
+        mxMalwarePythonFile.unlock();*/
+
+        if(machineLearning(regInstallProgram.at(i))==-1){
+            QStringList file=regInstallProgram.at(i).split("\\");
+            QString file_Name=file[file.size()-1];
+            file.removeLast();
+            QString file_Path=file.join("\\");
+            setSescanedFileName(file_Name+"q:*!"+QString::number(malwareListIndex)+"q:*!"+file_Path);
+            malwareList[malwareListIndex]=file_Path+"\\"+file_Name;
+            malwareListIndex++;
+            Sleep(150);
+        }
+        else{
+
+            setRegQuestion(regInstallProgram.at(i),-1);
+
+        }
         m_userDefinitions_UploadIndexNo=QString::number(i)+"*&*"+QString::number(regInstallProgram.size());
-        setRegQuestion(regInstallProgram.at(i),-1);
         emit userDefinitions_UploadIndexNoChanged();
+
     }
+    if(!m_scandisk_status){
+        Py_DECREF(pArgs);
+        Py_XDECREF(pFunc);
+        Py_DECREF(pModule);
+        Py_DECREF(pName);
+        Py_Finalize();
+    }
+        mxMalwarePythonFile.unlock();
 
 }
 QString filePathTransactions::getuserDefinitions_UploadIndexNo(){
@@ -201,18 +255,20 @@ void filePathTransactions::set_scandisk(QString value,double total,double free){
 }
 //-----------------------------------------------------------------------------------------
 void filePathTransactions::scanDiskThreadControl(std::string firstFilePath,long double total){
-    Py_Initialize();
+  /*  Py_Initialize();
+
     pName = PyUnicode_FromString("MalwareAnalysis");
     pModule = PyImport_Import(pName);
     pFunc = PyObject_GetAttrString(pModule, "malwarePath");
     pArgs = PyTuple_New(2);
+*/
     std::thread  scanThread(&filePathTransactions::scanDiskThread, this, firstFilePath,total);
     scanThread.join();
-    Py_DECREF(pArgs);
+    /*Py_DECREF(pArgs);
     Py_XDECREF(pFunc);
     Py_DECREF(pModule);
     Py_DECREF(pName);
-    Py_Finalize();
+    Py_Finalize();*/
     scanHDDName="";
     setscaningDisk(scanHDDName);
     breakScanThread=false;
@@ -238,22 +294,15 @@ void filePathTransactions::scanDiskThread(std::string firstFilePath,long double 
                 QString fileName=QString::fromStdString(fileInformation.cFileName);
                 int netLength=fileName.size();
                 if(fileName[netLength-1]=='e' && fileName[netLength-2]=='x' && fileName[netLength-3]=='e'){
-                    PyObject* pValue = PyLong_FromLong(9);
-                    PyTuple_SetItem(pArgs, 0, pValue);
-                    PyObject* pValue2 = PyLong_FromLong(5);
-                    PyTuple_SetItem(pArgs, 1, pValue2);
-                    PyObject* pResult = PyObject_CallObject(pFunc, pArgs);
-
-                    if (PyLong_Check(pResult)) {
-                        long result = PyLong_AsLong(pResult);
-                        qDebug() << "result: " << result;
-                        Sleep(1000);
+                    mxMalwarePythonFile.lock();
+                    if(machineLearning(QString::fromStdString(firstFilePath)+"\\"+fileName)==-1){
+                        setSescanedFileName(fileName+"q:*!"+QString::number(malwareListIndex)+"q:*!"+QString::fromStdString(firstFilePath));
+                        malwareList[malwareListIndex]=QString::fromStdString(firstFilePath).replace("\\\\","\\")+"\\"+fileName;
+                        malwareListIndex++;
+                        Sleep(200);
                     }
-                    /*setSescanedFileName(fileName+"q:*!"+QString::number(malwareListIndex)+"q:*!"+QString::fromStdString(firstFilePath));
-                    malwareList[malwareListIndex]=QString::fromStdString(firstFilePath).replace("\\\\","\\")+"\\"+fileName;
-                    malwareListIndex++;*/
+                    mxMalwarePythonFile.unlock();
                 }
-
             }
         }
     } while (FindNextFileA(firstFile, &fileInformation));
@@ -275,6 +324,8 @@ void filePathTransactions::set_get_storage(){
 //-----------------------------------------------------------------------------------------
 void filePathTransactions::set_ScanResultApply(){
     emit setApplyResults(malwareList,malwareListOptions,virusOptionIndex,computerOptionIndex);
+    malwareList.clear();
+    malwareListIndex=0;
 }
 //-----------------------------------------------------------------------------------------
 void filePathTransactions::set_singleVirusChanges(int index,int setvalue){
@@ -291,10 +342,12 @@ void filePathTransactions::set_VirusComputerOption(int virus,int computer){
 }
 //-----------------------------------------------------------------------------------------
 QString filePathTransactions::getscanedFileName(){
+
     return m_scanedFileName;
 }
 //-----------------------------------------------------------------------------------------
 void filePathTransactions::setSescanedFileName(QString value){
+    //qDebug()<<value;
     m_scanedFileName=value;
     emit scanedFileName_changed();
 }
@@ -315,8 +368,14 @@ void filePathTransactions::getVirusOne(QString filePath,int virusOptions,int ind
 }
 //-----------------------------------------------------------------------------------------
 //file:///C:/Users/karuulme/Documents/anivirus/pythonCode
-int filePathTransactions::machineLearning(Kstring filePath){
-
-
-    return 1;
+int filePathTransactions::machineLearning(QString filePath){
+   /* PyObject* pValue = PyLong_FromLong(9);
+    PyTuple_SetItem(pArgs, 0, pValue);
+    PyObject* pValue2 = PyLong_FromLong(5);
+    PyTuple_SetItem(pArgs, 1, pValue2);
+    PyObject* pResult = PyObject_CallObject(pFunc, pArgs);
+    if (PyLong_Check(pResult)) {
+        return PyLong_AsLong(pResult);
+    }*/
+    return -1;
 }

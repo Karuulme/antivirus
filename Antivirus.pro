@@ -47,7 +47,6 @@ SOURCES += \
     Sources/listenprocess.cpp \
     Sources/scanresultoperations.cpp \
     Sources/securefile.cpp \
-    Sources/system.cpp \
     Sources/userdefinition.cpp \
     Sources/windowtaskbar.cpp \
     main.cpp
@@ -59,7 +58,6 @@ HEADERS += \
     Headers/klibrary.h \
     Headers/listenprocess.h \
     Headers/securefile.h \
-    Headers/system.h \
     Headers/userdefinition.h \
     Headers/scanresultoperations.h \
     Headers/windowtaskbar.h
