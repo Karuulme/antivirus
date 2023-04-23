@@ -72,7 +72,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
     _listenProcess.setStart();
    // _secureFile.setStart();
     //_scanresultoperations.setStart();
-    engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
+    engine.load(QUrl(QStringLiteral("qrc:///view/main.qml")));
     QObject *root = 0;
     if (engine.rootObjects().size() > 0)
     {

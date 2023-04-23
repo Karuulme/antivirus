@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
         <file>Image/icons8-close-64.png</file>
         <file>Image/icons8-hdd-80.png</file>
         <file>Image/icons8-spinner.gif</file>
@@ -20,16 +19,15 @@
         <file>Image/logoico.ico</file>
         <file>Image/logopng.png</file>
         <file>Image/logo2ico.ico</file>
-        <file>view/formWindows.qml</file>
-        <file>view/homeWindows.qml</file>
-        <file>view/itemHDD.qml</file>
-        <file>view/KText.qml</file>
-        <file>view/quarantineListView.qml</file>
-        <file>view/quarantineWindows.qml</file>
-        <file>view/scanresultsOptions.qml</file>
-        <file>view/secureFileView.qml</file>
-        <file>view/securefileWindows.qml</file>
-        <file>view/settingWindows.qml</file>
+        <file>view/MainWindowsView.qml</file>
+        <file>view/HomeWindowsView.qml</file>
+        <file>view/DriversView.qml</file>
+        <file>view/ScanedFileView.qml</file>
+        <file>view/QuarantineListView.qml</file>
+        <file>view/QuarantineWindowsView.qml</file>
+        <file>view/SecureFileView.qml</file>
+        <file>view/SecurefileWindowsView.qml</file>
+        <file>view/SettingsWindowsView.qml</file>
         <file>Image/icons8-home-96.png</file>
         <file>Image/icons8-security-lock-100.png</file>
         <file>Image/icons8-settings-96.png</file>
@@ -48,6 +46,7 @@
         <file>Image/time-left.png</file>
         <file>Image/trash.png</file>
         <file>Image/back4.jpg</file>
+        <file>view/main.qml</file>
     </qresource>
     <qresource prefix="/files"/>
 </RCC>

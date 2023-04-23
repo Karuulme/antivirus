@@ -10,8 +10,8 @@ Rectangle {
     property int virusOptionIndex: 0
     property int computerOptionIndex: 0
     property int automatically_Index: 0
-    width: 930
-    height: 496
+    width: 925
+    height: 490
     visible: true
     color: "#f2f2f2"
     Rectangle{
@@ -27,15 +27,15 @@ Rectangle {
             height: parent.height
             anchors.left: parent.left
             anchors.leftMargin: 0
-            Column{
-                id:listHDD
+            Column {
+                id: listHDD
                 x: 0
                 y: 40
                 width: parent.width
                 height: parent.height-40
                 spacing: 5
                 state: {
-                    var component = Qt.createComponent("itemHDD.qml");
+                    var component = Qt.createComponent("DriversView.qml");
                     for(var i=0;i<stringList.length-1;i++){
                         var disk = stringList[i].split("/")
                         var object = component.createObject(this);
@@ -90,9 +90,11 @@ Rectangle {
     }
     Rectangle{
         x: 465
-        width: 465
+        width: 460
         height: parent.height
         color: "#00000000"
+        anchors.right: parent.right
+        anchors.rightMargin: 0
         z:0
         Image {
             source: "../Image/back3.jpg"
@@ -116,7 +118,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.topMargin: 5
-        anchors.rightMargin: 5
+        anchors.rightMargin: 0
         clip:true
         visible: {
             if(0<malwareList.children.length){
@@ -129,15 +131,19 @@ Rectangle {
         ScrollView {
             width: parent.width
             height: parent.height
+            anchors.right: parent.right
+            anchors.rightMargin: 0
             Column{
                 id:malwareList
+                x: 0
+                y: 0
                 width: parent.width
                 height: parent.height
                 spacing: 5
                 state:{
                     if(filepathtransactions.scanedFileName){
                         var scanedFileName=filepathtransactions.scanedFileName;
-                        var KText = Qt.createComponent("KText.qml");
+                        var KText = Qt.createComponent("ScanedFileView.qml");
                         var objectKText = KText.createObject(this);
                         var values=scanedFileName.split("q:*!");
                         objectKText.vFileName=values[0];
@@ -157,7 +163,7 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.topMargin: 0
         anchors.bottomMargin: 0
-        anchors.rightMargin: 5
+        anchors.rightMargin: 0
         color: "#00000000"
         visible: {
             if(0<malwareList.children.length){
@@ -172,8 +178,10 @@ Rectangle {
             width: 455
             radius: 4
             border.width: 1
+            anchors.right: parent.right
             anchors.top: parent.top
             anchors.bottom: parent.bottom
+            anchors.rightMargin: 5
             anchors.bottomMargin: 5
             anchors.topMargin: 5
             border.color: "#d5d5d5"
@@ -611,7 +619,12 @@ Rectangle {
                 }
                 MouseArea{
                     anchors.fill: parent
-                    onClicked:filepathtransactions.set_ScanResultApply()
+                    onClicked:{
+                            //filepathtransactions.set_ScanResultApply()
+                            for(var i = malwareList.children.length; i > 0 ; i--) {
+                            malwareList.children[i-1].destroy()
+                        }
+                    }
                 }
 
                 Rectangle{

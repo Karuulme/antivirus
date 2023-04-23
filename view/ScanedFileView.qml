@@ -7,7 +7,7 @@ Item{
     antialiasing: false
     smooth: true
     enabled: true
-    width: 440
+    width: 435
     property string vFileName: "null.exe"
     property string vFileAddress: "null"
     property int dindex: 0

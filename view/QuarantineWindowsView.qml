@@ -29,7 +29,7 @@ Rectangle {
                 spacing: 10
                 state: {
                     if(quarantine.quarantineFile){
-                        var component = Qt.createComponent("quarantineListView.qml");
+                        var component = Qt.createComponent("QuarantineListView.qml");
                         var myArray = quarantine.quarantineFile.split("--");
                         var ttt=component.createObject(quarantineList_Column);
                         ttt.fileAddress=myArray[0];

@@ -117,7 +117,7 @@ Rectangle {
                 height: parent.height
                 spacing: 10
                 state: {
-                    var componentSecureFileView = Qt.createComponent("secureFileView.qml");
+                    var componentSecureFileView = Qt.createComponent("SecureFileView.qml");
                     if(securefile.secureFiles){
                         var fileValue=securefile.secureFiles.split(":?!?:");
                         if(fileValue[0]==="new"){

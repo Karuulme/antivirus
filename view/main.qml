@@ -2,13 +2,14 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 import QtQuick.Controls 2.15
 import QtQuick.Window 2.0
+import QtQuick.Layouts 1.3
 Window {
     id: window
     property int selectMenuIndex: 0
     property int windowstastbar_close_icon: 0
     property string menuColor: "#333333"
     width: 930
-    height: 600
+    height: 540
     flags: Qt.Window
     visibility: Window.Windowed
     visible: true
@@ -20,76 +21,36 @@ Window {
     minimumWidth: 930
     Rectangle{
         id:icerik
-       color:"#00000000"
-       anchors.left: parent.left
-       anchors.right: parent.right
-       anchors.top: logoPanel.bottom
-       anchors.bottom: parent.bottom
-       anchors.leftMargin: 5
-       anchors.rightMargin: 5
-       anchors.bottomMargin: 5
-       anchors.topMargin: -1
-       z:10
-       Pane {
-           id: menuhomeWindows
-           anchors.fill: parent
-           visible: {
-               if( selectMenuIndex === 0 )
-                    return  true
-               else
-                    return false
-           }
-           state: {
-               var component = Qt.createComponent("view/homeWindows.qml");
-               component.createObject(this);
-               return true
-           }
-       }
-       Pane {
-           id: menuquarantineWindows
-           anchors.fill: parent
-           visible: {
-               if( selectMenuIndex === 2 )
-                    return  true
-               else
-                    return false
-           }
-           state: {
-               var component = Qt.createComponent("view/quarantineWindows.qml");
-               component.createObject(this);
-               return true
-           }
-       }
-       Pane {
-           id: menusecurefileWindows
-           anchors.fill: parent
-           visible: {
-               if( selectMenuIndex === 1 )
-                    return  true
-               else
-                    return false
-           }
-           state: {
-               var component = Qt.createComponent("view/securefileWindows.qml");
-               component.createObject(this);
-               return true
-           }
-       }
-       Pane {
-           id: menusettingWindows
-           anchors.fill: parent
-           visible: {
-               if( selectMenuIndex === 3 )
-                    return  true
-               else
-                    return false
-           }
-           state: {
-               var component = Qt.createComponent("view/settingWindows.qml");
-               component.createObject(this);
-               return true;
-           }
-       }
+        color:"#00000000"
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: logoPanel.bottom
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: 0
+        anchors.rightMargin: 0
+        anchors.bottomMargin: 0
+        anchors.topMargin: -1
+        z:10
+        StackLayout {
+            id: homeMain3
+            anchors.fill: parent
+            anchors.rightMargin: 0
+            anchors.bottomMargin: 0
+            z:100
+            currentIndex:selectMenuIndex
+            HomeWindowsView{
+                id:pages_Home
+            }
+            SecurefileWindowsView {
+                id:pages_Secure
+            }
+            QuarantineWindowsView {
+                id:pages_Quarantine
+            }
+            SettingsWindowsView {
+                id:pages_Settings
+            }
+        }
     }
     Rectangle{
         width: 462
@@ -483,7 +444,7 @@ Window {
             width: 25
             height: 25
             //source: "./Image/delogo2.png"
-            source: "./Image/logopng2.png"
+            source: "qrc:/Image/logopng2.png"
         }
 
 

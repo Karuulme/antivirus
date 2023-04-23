@@ -62,8 +62,11 @@ HEADERS += \
     Headers/scanresultoperations.h \
     Headers/windowtaskbar.h
 
+
 RESOURCES += qml.qrc
 
+OTHER_FILES +=
+    qml.qrc
 DISTFILES += \
     settings2.xml
 
