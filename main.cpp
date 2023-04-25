@@ -4,11 +4,12 @@
 #include <QMenu>
 #include <QSystemTrayIcon>
 #include <QQmlContext>
+#include <QCursor>
+#include <QTimer>
 //------------------------------------------------------------------
 bool _identificationConfirmation=false;
 //------------------------------------------------------------------
 #include <Headers/klibrary.h>
-#include <Headers/windowtaskbar.h>
 //#include <Headers/system.h>
 #include <Headers/userdefinition.h>
 #include <Headers/listenprocess.h>
@@ -33,7 +34,6 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 
     QQmlApplicationEngine engine;
     userDefinition  _userdefinition;
-    WindowTaskBar _windowstaskbar;
     //System _system;
     listenProcess _listenProcess;
     filePathTransactions  _filepathtransactions;
@@ -44,12 +44,18 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
         QMessageBox::critical(0, QObject::tr("Systray"),
-                                 QObject::tr("I couldn't detect any system tray "
-                                             "on this system."));
+                              QObject::tr("I couldn't detect any system tray "
+                                          "on this system."));
         return 1;
     }
+    QTimer timer;
+    QObject::connect(&timer, &QTimer::timeout, [&]() {
+        QVariant cursorPos = QVariant::fromValue(QCursor::pos());
+        engine.rootContext()->setContextProperty("cursorPos", cursorPos);
+    });
+    timer.start(10);
+
     QQmlContext *ctx=engine.rootContext();
-    ctx->setContextProperty("windowstaskbar",&_windowstaskbar);
     ctx->setContextProperty("securefile",&_secureFile);
     ctx->setContextProperty("quarantine",&_scanresultoperations);
     ctx->setContextProperty("userdefinition",&_userdefinition);
@@ -66,13 +72,15 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
     QObject::connect(&_userdefinition,SIGNAL(setUserDefinitions_FileOperations(QVector<QString>*)),&_filepathtransactions, SLOT(getUserDefinitions_FileOperations(QVector<QString>*)));
     QObject::connect(&_filepathtransactions,SIGNAL(setVirusOne(QString ,int )),&_scanresultoperations, SLOT(getVirusOne(QString ,int )));
 
-
-
     _userdefinition.setStart();
     _listenProcess.setStart();
-   // _secureFile.setStart();
+    // _secureFile.setStart();
     //_scanresultoperations.setStart();
     engine.load(QUrl(QStringLiteral("qrc:///view/main.qml")));
+    QObject *rootObject = engine.rootObjects().first();
+    QObject::connect(rootObject, SIGNAL(startTimer()), &timer, SLOT(start()));
+    QObject::connect(rootObject, SIGNAL(stopTimer()), &timer, SLOT(stop()));
+    timer.stop();
     QObject *root = 0;
     if (engine.rootObjects().size() > 0)
     {

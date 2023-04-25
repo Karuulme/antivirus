@@ -48,7 +48,6 @@ SOURCES += \
     Sources/scanresultoperations.cpp \
     Sources/securefile.cpp \
     Sources/userdefinition.cpp \
-    Sources/windowtaskbar.cpp \
     main.cpp
 
 HEADERS += \
@@ -59,8 +58,7 @@ HEADERS += \
     Headers/listenprocess.h \
     Headers/securefile.h \
     Headers/userdefinition.h \
-    Headers/scanresultoperations.h \
-    Headers/windowtaskbar.h
+    Headers/scanresultoperations.h
 
 
 RESOURCES += qml.qrc

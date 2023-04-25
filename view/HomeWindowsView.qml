@@ -26,7 +26,7 @@ Rectangle {
             width: parent.width
             height: parent.height
             anchors.left: parent.left
-            anchors.leftMargin: 0
+            anchors.leftMargin: 10
             Column {
                 id: listHDD
                 x: 0
@@ -82,7 +82,7 @@ Rectangle {
         }
         Text {
             id: name
-            x: 3
+            x: 10
             y: 6
             text: qsTr("Active Drivers")
             font.pointSize: 15

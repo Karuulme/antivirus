@@ -1,24 +1,29 @@
-import QtQuick 2.12
-import QtQuick.Window 2.12
+import QtQuick 2.15
+import QtQuick.Window 2.2
 import QtQuick.Controls 2.15
 import QtQuick.Window 2.0
 import QtQuick.Layouts 1.3
+
 Window {
     id: window
     property int selectMenuIndex: 0
     property int windowstastbar_close_icon: 0
     property string menuColor: "#333333"
+    property int mouseLocalX: 0
+    property int mouseLocalY: 0
+    property point mouseGlobal: cursorPos
     width: 930
     height: 540
-    flags: Qt.Window
-    visibility: Window.Windowed
-    visible: true
-    title: qsTr("Ourred")
+    title: qsTr(" ")
     color: "#f2f2f2"
+    flags: Qt.Sheet
     maximumHeight: 540
     minimumHeight: 540
     maximumWidth: 930
     minimumWidth: 930
+    signal startTimer()
+    signal stopTimer()
+    visible:true
     Rectangle{
         id:icerik
         color:"#00000000"
@@ -59,16 +64,78 @@ Window {
         color: "#00000000"
         anchors.right: parent.right
         anchors.rightMargin: 0
-        Row{
+
+    }
+
+    Rectangle {
+        id: logoPanel
+        x: 0
+        y: 0
+        width: parent.width
+        height: 45
+        z:10
+        color: "#00000000"
+        Rectangle{
             width: parent.width
+            height: 1
+            visible: false
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 0
+            color: "#e1e1e1"
+        }
+        Image {
+            x: 30
+            y: 10
+            width: 25
+            height: 25
+            source: "qrc:/Image/logopng2.png"
+        }
+
+        MouseArea{
+            id:windowScrollBar
+            width: 470
             height: parent.height
+            onPressed: {
+                mouseLocalX=mouseX
+                mouseLocalY=mouseY
+                window.startTimer()
+                time_id.start()
+            }
+            onReleased: {
+                time_id.stop()
+                window.stopTimer()
+            }
+        }
+        Timer {
+            id:time_id
+            interval: 10
+            repeat: true
+            running: false
+            onTriggered: {
+                window.setX(parseInt(mouseGlobal.x)-mouseLocalX)
+                window.setY(parseInt(mouseGlobal.y)-mouseLocalY)
+            }
+        }
+        Row{
+            width: 464
+            height: parent.height
+            anchors.right: parent.right
+            layoutDirection: Qt.LeftToRight
+            anchors.rightMargin: -3
             spacing:-1
             Rectangle{
                 MouseArea{
                     anchors.fill: parent
                     onClicked: selectMenuIndex=0
+                    hoverEnabled: true
+                    onEntered: {
+                        parent.color="#f9f9f9"
+                    }
+                    onExited:{
+                        parent.color="#ffffff"
+                    }
                 }
-                width: 115
+                width: 100
                 height: parent.height
                 color: "#ffffff"
                 border.width: 1
@@ -105,6 +172,7 @@ Window {
                     anchors.right: parent.right
                 }
                 Rectangle{
+                        color:parent.color
                         width: 8
                         height: parent.height
                         anchors.right: parent.right
@@ -148,8 +216,15 @@ Window {
                 MouseArea{
                     anchors.fill: parent
                     onClicked: selectMenuIndex=1
+                    hoverEnabled: true
+                    onEntered: {
+                        parent.color="#f9f9f9"
+                    }
+                    onExited:{
+                        parent.color="#ffffff"
+                    }
                 }
-                width: 117
+                width: 110
                 height: parent.height
                 color: "#ffffff"
                 border.width: 1
@@ -188,8 +263,16 @@ Window {
                 MouseArea{
                     anchors.fill: parent
                     onClicked: selectMenuIndex=2
+                    hoverEnabled: true
+                    onEntered: {
+
+                        parent.color="#f9f9f9"
+                    }
+                    onExited:{
+                        parent.color="#ffffff"
+                    }
                 }
-                width: 116
+                width: 110
                 height: parent.height
                 color: "#ffffff"
                 border.width: 1
@@ -229,9 +312,17 @@ Window {
                 MouseArea{
                     anchors.fill: parent
                     onClicked: selectMenuIndex=3
+                    hoverEnabled: true
+                    onEntered: {
+
+                        parent.color="#f9f9f9"
+                    }
+                    onExited:{
+                        parent.color="#ffffff"
+                    }
                 }
                 id: rectangle
-                width: 116
+                width: 108
                 height: parent.height
                 color: "#ffffff"
                 border.width: 1
@@ -267,6 +358,7 @@ Window {
                 }
                 Rectangle{
                         width: 8
+                        color:parent.color
                         height: parent.height
                         anchors.left: parent.left
                         anchors.leftMargin: 0
@@ -304,193 +396,75 @@ Window {
                 }
 
             }
-
-        }
-    }
-
-    Rectangle {
-        id: logoPanel
-        x: 0
-        y: 0
-        width: parent.width
-        height: 45
-        z:10
-              //color: "#df1010"
-        color: "#00000000"
-        Row {
-            id: column
-            x: 241
-
- visible: false
-
-            y: 76
-            width: 550
-            height: 26
-            layoutDirection: Qt.LeftToRight
-            spacing: 30
-            Text {
-                text: qsTr("Home")
-                verticalAlignment: Text.AlignVCenter
-                height: 30
-                leftPadding: 10
-                x:20
-                font.bold: true
-                font.family: "Tahoma"
-                color: menuColor
-                font.pointSize: 11
-                width: 70
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: selectMenuIndex=0
-                }
-              /*  Image {
-                    width: 24
-                    height: 24
-                    y:-1
-                    x:-20// icons8-quarantine-64.png--icons8-security-lock-100.png---icons8-settings-96.png
-                    source: "./Image/icons8-home-96.png"
-                }*/
-            }
-            Text {
-                text: qsTr("Secure File")
-                font.bold: true
-                font.family: "Tahoma"
-                color: menuColor
-                font.pointSize: 11
-                leftPadding: 10
-                x:20
-                verticalAlignment: Text.AlignVCenter
-                height: 25
-                width: 110
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: selectMenuIndex=2
-                }
-               /* Image {
-                    width: 22
-                    height: 22
-                    x:-20
-                    y:2
-                    source: "./Image/icons8-security-lock-100.png"
-                }*/
-            }
-            Text {
-                x: 20
-                text: qsTr("Quarantine")
-                font.bold: true
-                font.family: "Tahoma"
-                color: menuColor
-                font.pointSize: 11
-                leftPadding: 10
-                verticalAlignment: Text.AlignVCenter
-                height: 25
-                width: 110
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: selectMenuIndex=1
-                }
-               /* Image {
+            Rectangle{
+                width: 40
+                height: parent.height
+                border.width: 1
+                border.color: "#dadada"
+                //radius: 4
+                Image {
+                    id:closeImage_id
                     width: 25
                     height: 25
-                    x:-21
-                    y:0
-                    source: "./Image/icons8-quarantine-64.png"
-                }*/
-            }
-
-            Text {
-                text: qsTr("Setting")
-                font.bold: true
-                font.family: "Tahoma"
-                color: menuColor
-                font.pointSize: 11
-                leftPadding: 10
-                x:20
-                verticalAlignment: Text.AlignVCenter
-                height: 25
-                width: 80
+                    x:6
+                    y:11
+                    z:100
+                    source:"qrc:/Image/icons8-close-64.png"
+                }
                 MouseArea{
                     anchors.fill: parent
-                    onClicked: selectMenuIndex=3
-                }
-              /*  Image {
-                    width: 22
-                    height: 22
-                    x:-20
-                    y:2
-                    source: "./Image/icons8-settings-96.png"
-                }*/
-            }
-        }
-        Rectangle{
-            width: parent.width
-            height: 1
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
-            color: "#e1e1e1"
-        }
-
-       /* Text {
-            x: 42
-            y: 8
-            text: qsTr("OURRED")
-            font.pointSize: 15
-            font.bold: true
-            color: "#df1010"
-        }*/
-        Image {
-            x: 10
-            y: 10
-            width: 25
-            height: 25
-            //source: "./Image/delogo2.png"
-            source: "qrc:/Image/logopng2.png"
-        }
-
-
-      /*  Rectangle{
-            x: 820
-            width: 25
-            height: 25
-            id:windowsTaskBar_close
-            color:"#00000000"
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.topMargin: 5
-            anchors.rightMargin: 5
-
-            Image {
-                id: image
-                width: 25
-                height: 25
-                source:{
-                    if(windowstastbar_close_icon==0){
-                       windowsTaskBar_close.color= "#00000000"
-                        "../Image/icons8-close-64.png"
-                        }
-                    else{
-                        windowsTaskBar_close.color= "#EDEDED"
-                        "../Image/icons8-close-red-64.png"
-                    }
-                }
-                fillMode: Image.PreserveAspectFit
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: windowstaskbar.windowsClose()
                     hoverEnabled: true
                     onEntered: {
-                        windowstastbar_close_icon=1
+                        closeImage_id.source="qrc:/Image/icons8-close-red-64.png"
+                        parent.color="#f9f9f9"
                     }
-                    onExited: {
-                        windowstastbar_close_icon=0
+                    onExited:{ closeImage_id.source= "qrc:/Image/icons8-close-64.png"
+                        parent.color="#ffffff"
                     }
+                    onClicked:window.visible=false
+                }
+                Rectangle{
+                        width: 8
+                        height: parent.height
+                        color: parent.color
+                        anchors.left: parent.left
+                        anchors.leftMargin: 0
+                        Rectangle{
+                            //id:_top
+                            width: parent.width
+                            height: 1
+                            color: "#dadada"
+                        }
+                        Rectangle{
+                            //id:_bottom
+                            width: parent.width
+                            height: 1
+                            color: "#dadada"
+                            anchors.bottom: parent.bottom
+                            anchors.bottomMargin: 0
+                        }
+                        Rectangle{
+                            //id:_right
+                            width: 1
+                            visible: false
+                            height: parent.height
+                            color: "#dadada"
+                            anchors.right: parent.right
+                            anchors.rightMargin: 0
+                        }
+                        Rectangle{
+                            //id:_left
+                            width: 1
+                            height: parent.height
+                            color: "#dadada"
+                            anchors.right: parent.left
+                            anchors.leftMargin: 0
+                        }
                 }
             }
-        }*/
+        }
     }
-
 }
-
 
 
 

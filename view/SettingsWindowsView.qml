@@ -2,13 +2,13 @@ import QtQuick 2.0
 import QtQuick.Controls 2.0
 Rectangle {
     id: rectangle1
-    width: 930
-    height: 496
+    width: 925
+    height: 490
     color: "#f2f2f2"
     property bool userDefinitionsShow: false
     Rectangle{
         id:wallpaper
-        width: 465
+        width: 460
         color: "#00000000"
         anchors.right: parent.right
         anchors.top: parent.top

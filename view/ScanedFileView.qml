@@ -14,7 +14,6 @@ Item{
     property int vSelectIndex: 0
     Rectangle {
         clip: true
-
         color:"#ffffff"
         height: 85
         width: 440
