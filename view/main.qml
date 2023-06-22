@@ -86,8 +86,8 @@ Window {
         Image {
             x: 30
             y: 10
-            width: 25
-            height: 25
+            width: 30
+            height: 30
             source: "qrc:/Image/logopng2.png"
         }
 

@@ -10,9 +10,11 @@ Rectangle {
     state:{securefile.setStart(); return true}
     Rectangle{
         id: rectangle1
-        width: parent.width
+        width: parent.width-72
         height: 65
         color:"#00000000"
+        anchors.left: parent.left
+        anchors.leftMargin: 35
         y:5
         Text {
             x: 40
@@ -31,12 +33,14 @@ Rectangle {
         }
         Rectangle{
             id: rectangle2
-            x: 38
             y: 4
-            width: 857
             height: 25
             color:"#00000000"
             border.width: 1
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.leftMargin: 35
+            anchors.rightMargin: 0
             border.color: "black"
             radius:4
             Text{
@@ -57,12 +61,15 @@ Rectangle {
              }
         }
         Rectangle{
+            id:select_id
             x: 680
             y: 35
             width: 100
             height: 25
             color:"#00000000"
             border.width: 1
+            anchors.right: added_id.left
+            anchors.rightMargin: 5
             radius:4
             Text {
                 text: qsTr("Select")
@@ -78,12 +85,15 @@ Rectangle {
             }
         }
         Rectangle{
+            id:added_id
             x: 795
             y: 35
             width: 100
             height: 25
             color:"#00000000"
             border.width: 1
+            anchors.right: parent.right
+            anchors.rightMargin: 0
             radius:4
             Text {
                 text: qsTr("Added")

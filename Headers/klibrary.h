@@ -21,10 +21,10 @@
 #define KBank   "SOFTWARE\\AntiVirus\\Bank\\"
 #define KSecure "SOFTWARE\\AntiVirus\\Secure\\"
 #define KLocal  "SOFTWARE\\AntiVirus"
-#define KDllSource 10
-#define KIdentification_Time 20
+#define KDllSource 20
+#define KIdentification_Time 199
 #define KMachine HKEY_CURRENT_USER
-
+#define MALWARE_SOCKET_PORT 8103
 
 struct RegProgramList {
     Kstring pHash;

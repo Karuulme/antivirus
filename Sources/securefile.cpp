@@ -80,7 +80,6 @@ int secureFile::getRegSecureFiles(){
             std::string str;
             std::wstring wStr = achKey;
             str = std::string(wStr.begin(), wStr.end());
-            //secureListFileName.append(QString::fromStdString(str));
             Kstring path2 = pathX + str;
             char value[BUFFER];
             BufferSize = BUFFER;
@@ -92,9 +91,7 @@ int secureFile::getRegSecureFiles(){
             regSecureFile.fFile = path2;
             regSecureFile.fRegFileName=str;
             KSpace(value);
-            //secureList.append(QString::fromStdString(regSecureFile.fKey));
             _secureList.append(regSecureFile);
-            //qDebug()<<QString::fromStdString(_secureList.at(i).fFile);
             setsecureFiles(QString::fromStdString("Null:?!?:"+regSecureFile.fPath+":?!?:"+regSecureFile.fKey));// kayıt defterinden gelen bir kayıf ise standart olarak gönderiyoruz
         }
     }
@@ -198,9 +195,7 @@ LPCTSTR qstringToLPCTSTR(const QString& str)
 }
 //-----------------------------------------------------------------------------------------
 int secureFile::set_RecureDeleteFile(QString rKey,QString rPath){
-    QString returnValue=rKey+"!secure!"+"unsuccessful";
-    setSecureProcessed(returnValue);
-   /* int i=0;
+    int i=0;
     for (; i < _secureList.size(); ++i) {
         if(_secureList.at(i).fKey==rKey.toStdString()){
             break;
@@ -216,7 +211,7 @@ int secureFile::set_RecureDeleteFile(QString rKey,QString rPath){
         _secureList.removeAt(i);
         QString returnValue=rKey+"!secure!"+"successful";
         setSecureProcessed(returnValue);
-    }*/
+    }
     return 0;
 }
 //-----------------------------------------------------------------------------------------

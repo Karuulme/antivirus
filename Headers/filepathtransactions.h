@@ -12,14 +12,46 @@
 #include <string>
 #include <QStringList>
 #include <fstream>
+#include <QtNetwork>
 #include <QMap>
 #include <QFileDialog>
 #include <QtWidgets>
-#pragma push_macro("slots")
-#undef slots
-#include <Python.h>
-#pragma pop_macro("slots")
+#include <QThread>
+#include <QMutex>
 extern bool _identificationConfirmation;
+
+class Pythonconnection : public QObject
+{
+    Q_OBJECT
+public:
+    explicit Pythonconnection(QObject *parent = nullptr);
+   // ~connection();
+    HANDLE hEventReturnValue{};
+    PROCESS_INFORMATION processInfoVirusProcessDetection;
+    DWORD dwhVirusProcessId;
+    QString filePathExe="mele/mele.exe";
+
+    void startConnection();
+    QMutex mxGlobalScan;
+    bool scanResult=false;
+    void acceptConnection();
+    int startVirusDetectionProcess();
+    int virusDetectionProcessStatus();
+    LPCWSTR QStringToLPCWSTR(const QString& qstr);
+
+signals:
+    void finished();
+
+public slots:
+    void readDataFromPython();
+    void getdataWillSendToScan(const QString message);
+
+private:
+    QTcpServer server;
+    QTcpSocket *clientConnection = nullptr;
+    QByteArray buffer;
+};
+//-------------------------------------------------------
 class filePathTransactions : public QObject{
     Q_OBJECT
     Q_PROPERTY(QString  storageList READ get_storage NOTIFY storage_changed)
@@ -41,6 +73,22 @@ public:
     QString getuserDefinitions_UploadIndexNo();
     QString m_userDefinitions_UploadIndexNo;
 
+
+
+
+    Pythonconnection *_connection;
+    QThread *threadConnection = new QThread(this);
+
+
+    //Soket ->
+   /* QTcpServer server;
+    QTcpSocket *clientConnection = nullptr;
+    void readDataFromPython();
+    void sendDataToPython(QString message);
+    void acceptConnection();*/
+    //Soket <-
+
+
 private:
     double byteToGb(long double byte);
     QString get_storage();
@@ -53,7 +101,7 @@ private:
     QString getscanedFileName();
     void setSescanedFileName(QString value);
 
-    std::mutex mxMalwarePythonFile;
+
 
     QString getscaningDisk();
     void setscaningDisk(QString value);
@@ -75,10 +123,6 @@ private:
     QString m_scanedFileName;
     QString m_scaningDisk;
 
-    PyObject* pName ;
-    PyObject* pModule;
-    PyObject* pFunc;
-    PyObject* pArgs;
 
     Kmap<int, RegProgramList>  regList;
     int regListIndex=0;
@@ -96,7 +140,10 @@ signals:
     void setDllEnjection(unsigned long int pID);
     void userDefinitions_UploadChanged();
     void userDefinitions_UploadIndexNoChanged();
+    void setdataWillSendToScan(const QString filePath);
+
 public slots:
+    void setTest(QString adddress);
     void set_scandisk(QString value,double total,double free);
     void set_scandiskClose();
     void set_get_storage();
@@ -111,6 +158,10 @@ public slots:
     void getfileChangesNotification(QString filePath);
     void getProgramTime(unsigned __int8 value);
     void getUserDefinitions_FileOperations(QVector<QString>* regInstallProgram);
+
+
+    void send(const QString message);
+
 
 };
 #endif // FILEPATHTRANSACTIONS_H

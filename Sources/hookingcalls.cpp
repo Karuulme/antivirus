@@ -2,7 +2,7 @@
 
 HookingCalls::HookingCalls(QObject *parent): QObject{parent}{
 
-    qls_protectedRegistry.append("AntiVirus");
+    //qls_protectedRegistry.append("AntiVirus");
     DT_MapViewEnable();
 }
 //-----------------------------------------------------------------------------------------
@@ -27,8 +27,8 @@ int HookingCalls::dllEnjection(unsigned long int pID){
 }
 //-----------------------------------------------------------------------------------------
 void HookingCalls::getDllEnjection(unsigned long int pID){
-    //std::thread  thDllEnjection(&HookingCalls::dllEnjection, this,pID);
-    //thDllEnjection.detach();
+    std::thread  thDllEnjection(&HookingCalls::dllEnjection, this,pID);
+    thDllEnjection.detach();
 }
 //-----------------------------------------------------------------------------------------
 void HookingCalls::getSecureList(QList<RegSecureFile>* secure){

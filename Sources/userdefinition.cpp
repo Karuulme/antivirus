@@ -2,12 +2,12 @@
 
 userDefinition::userDefinition(QObject *parent): QObject{parent}{
     getRegProgramsList();
-    __int8 programTime=getIdentityCheck();
+    int programTime=getIdentityCheck();
+
     if(programTime<KIdentification_Time && programTime>0){
         std::thread  time(&userDefinition::timeMeasurement, this);
         time.detach();
-        std::thread  getRegProgramsListThread(&userDefinition::getRegProgramsList, this);
-        getRegProgramsListThread.detach();
+
     }
     else if(programTime==-1){
 
@@ -15,6 +15,7 @@ userDefinition::userDefinition(QObject *parent): QObject{parent}{
     else{
         _identificationConfirmation=true;
     }
+    setStart();
 }
 //-----------------------------------------------------------------------------------------
 userDefinition::~userDefinition(){
@@ -22,6 +23,9 @@ userDefinition::~userDefinition(){
 }
 //-----------------------------------------------------------------------------------------
 void userDefinition::setStart(){
+    //std::thread  getRegProgramsListThread(&userDefinition::getRegProgramsList, this);
+   // getRegProgramsListThread.detach();
+    getRegProgramsList();
     emit userDefinitionChanged();
 }
 //-----------------------------------------------------------------------------------------

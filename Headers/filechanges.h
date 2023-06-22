@@ -21,7 +21,6 @@ private:
 
     HANDLE hFile_DESKTOP;
     HANDLE hFile_DOWNLOADS;
-    QString filePath;
 public:
 signals:
     void setfileChangesNotification(QString filePath);

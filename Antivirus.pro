@@ -4,15 +4,12 @@ QT += core
 QT += widgets
 QT += sql
 QT += quickcontrols2
-CONFIG += python
 CONFIG += c++17 console
 CONFIG -= app_bundle
 CONFIG += separate_debug_info
 CONFIG += link_separate
 CONFIG -= console
 
-INCLUDEPATH += "C:/Users/karuulme/AppData/Local/Programs/Python/Python311/include"
-LIBS += -L"C:/Users/karuulme/AppData/Local/Programs/Python/Python311/libs" -lpython311
 
 # Debug configuration
 CONFIG(debug, debug|release) {

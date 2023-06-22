@@ -45,6 +45,7 @@ Rectangle {
         text: qsTr(dName)
     }
 
+
     Label {
         id: label1
         x: 56

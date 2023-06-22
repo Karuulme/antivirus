@@ -3,9 +3,7 @@ scanResultOperations::scanResultOperations(QObject *parent): QObject{parent}
 {
     getMac();
     getAppDataAddress();
-    //encrypt("C:\\Users\\karuulme\\Desktop\\systemInformation.exe");
-    //Decrypt("C:\\Users\\karuulme\\AppData\\Local\\Vkarul\\98e8827c7f23cacb33986ad22ed42eca2801fb095b292a2b8825f316348146ef");
-
+    //setStart();
 }
 //-----------------------------------------------------------------------------------------
 void scanResultOperations::setStart(){
@@ -79,7 +77,7 @@ void scanResultOperations::findQuarantineFile(){
 void scanResultOperations::getQuarantineOptions(int indexNo,int OptionsNo){
     switch(OptionsNo){
         case 0: // delete
-            if(false){//remove(quarentineFileNameList.at(indexNo).toStdString().c_str());
+        if(remove(quarentineFileNameList.at(indexNo).toStdString().c_str())){
                 QString returnValue=QString::number(indexNo)+"!quartine!"+"successful";
                 setQuarantineProcessed(returnValue);
             }
@@ -90,7 +88,7 @@ void scanResultOperations::getQuarantineOptions(int indexNo,int OptionsNo){
         break;
         case 1: // return
             //Decrypt(indexNo);
-            if(false){
+            if(Decrypt(indexNo)){
                 QString returnValue=QString::number(indexNo)+"!quartine!"+"successful";
                 setQuarantineProcessed(returnValue);
             }
@@ -216,13 +214,13 @@ void scanResultOperations::virusProcesses(QString path,int Options){
     case 1: // Quarantine
         qDebug()<<"DOSYAYI KARANTINAYA AL";
         ///////////////////////////////////////////////////////////////////////
-        /////////////////////////////encrypt(path);////////////////////////////
+        encrypt(path);////////////////////////////
         ///////////////////////////////////////////////////////////////////////
     break;
     case 2: // Delete
         qDebug()<<"DOSYAYI SIL";
         ///////////////////////////////////////////////////////////////////////
-        /////////////////////////////remove(path);/////////////////////////////
+        remove(path.toUtf8().constData());/////////////////////////////
         ///////////////////////////////////////////////////////////////////////
     break;
     default:
@@ -239,14 +237,14 @@ void scanResultOperations::computerOperations(int Options){
     case 1: //Shut Down
         qDebug()<<"BILGISAYARI KAPAT";
         ///////////////////////////////////////////////////////////////////////
-        //////ExitWindowsEx(EWX_SHUTDOWN,SHTDN_REASON_MINOR_MAINTENANCE);//////
+        ExitWindowsEx(EWX_SHUTDOWN,SHTDN_REASON_MINOR_MAINTENANCE);//////
         ///////////////////////////////////////////////////////////////////////
 
     break;
     case 2: //Restart
          qDebug()<<"BILGISAYARI YENIDEN BASLAT";
          ///////////////////////////////////////////////////////////////////////
-         ////ExitWindowsEx(EWX_RESTARTAPPS,SHTDN_REASON_MINOR_MAINTENANCE);/////
+         ExitWindowsEx(EWX_RESTARTAPPS,SHTDN_REASON_MINOR_MAINTENANCE);/////
          ///////////////////////////////////////////////////////////////////////
     break;
     default:
@@ -257,8 +255,6 @@ void scanResultOperations::computerOperations(int Options){
 //-----------------------------------------------------------------------------------------
 void scanResultOperations::getApplyResults(QMap<int,QString> malwares,QMap<int,int> malwareListOptions,int virusOptions,int computerOptions){
     for(int i=0;i<malwares.size();i++){
-        qDebug()<<"malwareList:"<<malwares[i];
-        qDebug()<<"malwareListOptions:"<<malwareListOptions[i];
         if(virusOptions==0){
             if(malwareListOptions[i]!=0){
                 virusProcesses(malwares[i],malwareListOptions[i]);
@@ -269,13 +265,13 @@ void scanResultOperations::getApplyResults(QMap<int,QString> malwares,QMap<int,i
         }
     }
     computerOperations(computerOptions);
-    //findQuarantineFile();
+    findQuarantineFile();
 }
 //-----------------------------------------------------------------------------------------
 void scanResultOperations::getVirusOne(QString filePath,int virusOptions){
-    //virusProcesses(filePath,virusOptions);
+    virusProcesses(filePath,virusOptions);
     if(virusOptions==1){
-        //findQuarantineFile();
+        findQuarantineFile();
     }
 }
 //-----------------------------------------------------------------------------------------

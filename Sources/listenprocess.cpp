@@ -3,6 +3,7 @@ listenProcess::listenProcess(QObject *parent): QObject{parent}
 {
     m_lRef = 0;
     //listenProcessNamesClear
+    setStart();
 }
 //-----------------------------------------------------------------------------------------
 listenProcess::~listenProcess() {

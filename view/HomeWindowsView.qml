@@ -14,6 +14,24 @@ Rectangle {
     height: 490
     visible: true
     color: "#f2f2f2"
+    /*TextInput {
+    id: textInput
+    x: 213
+    y: 462
+    width: 246
+    height: 20
+    color: "#000000"
+    text: qsTr("Text Input")
+    font.pixelSize: 12
+    Button {
+    x: -111
+    y: 1
+    width: 81
+    height: 20
+    text: qsTr("Scan")
+    onClicked: filepathtransactions.setTest(textInput.text)
+    }
+    }*/
     Rectangle{
         id: rectangle1
         y: 0
@@ -46,6 +64,8 @@ Rectangle {
                     return true
                 }
             }
+
+
         }
         Rectangle{
             x: 295
@@ -135,10 +155,8 @@ Rectangle {
             anchors.rightMargin: 0
             Column{
                 id:malwareList
-                x: 0
-                y: 0
                 width: parent.width
-                height: parent.height
+                height: parent.height-10
                 spacing: 5
                 state:{
                     if(filepathtransactions.scanedFileName){
@@ -153,15 +171,18 @@ Rectangle {
                     return true;
                 }
             }
+
+
         }
     }
+
     Rectangle{
         id: rectangle2
         width: suspiciousFile_id.width
         anchors.right: parent.right
         anchors.top: suspiciousFile_id.bottom
         anchors.bottom: parent.bottom
-        anchors.topMargin: 0
+        anchors.topMargin: 5
         anchors.bottomMargin: 0
         anchors.rightMargin: 0
         color: "#00000000"
@@ -183,7 +204,7 @@ Rectangle {
             anchors.bottom: parent.bottom
             anchors.rightMargin: 5
             anchors.bottomMargin: 5
-            anchors.topMargin: 5
+            anchors.topMargin:0
             border.color: "#d5d5d5"
             Column{
                 width: 160

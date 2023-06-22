@@ -6,11 +6,11 @@
 #include <QQmlContext>
 #include <QCursor>
 #include <QTimer>
+#include <QThread>
 //------------------------------------------------------------------
 bool _identificationConfirmation=false;
 //------------------------------------------------------------------
 #include <Headers/klibrary.h>
-//#include <Headers/system.h>
 #include <Headers/userdefinition.h>
 #include <Headers/listenprocess.h>
 #include <Headers/filepathtransactions.h>
@@ -25,22 +25,21 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
     QApplication::setQuitOnLastWindowClosed(false);
     QIcon icon(":Image/logo2ico.ico");
     app.setWindowIcon(icon);
-
     if (!IsUserAnAdmin()) //Admin Control
     {
-        //MessageBoxA(NULL,"Please Start As Admin","Error",MB_OK);
-        //return app.exec();
-    }
+        MessageBoxA(NULL,"Please Start As Admin","Error",MB_OK);
+        exit(EXIT_FAILURE);
+        return app.exec();
 
+    }
     QQmlApplicationEngine engine;
-    userDefinition  _userdefinition;
-    //System _system;
     listenProcess _listenProcess;
     filePathTransactions  _filepathtransactions;
     fileChanges  _filechanges;
     scanResultOperations _scanresultoperations;
     secureFile _secureFile;
     HookingCalls _hookingCalls;
+    userDefinition _userdefinition;
 
     if (!QSystemTrayIcon::isSystemTrayAvailable()) {
         QMessageBox::critical(0, QObject::tr("Systray"),
@@ -72,10 +71,16 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
     QObject::connect(&_userdefinition,SIGNAL(setUserDefinitions_FileOperations(QVector<QString>*)),&_filepathtransactions, SLOT(getUserDefinitions_FileOperations(QVector<QString>*)));
     QObject::connect(&_filepathtransactions,SIGNAL(setVirusOne(QString ,int )),&_scanresultoperations, SLOT(getVirusOne(QString ,int )));
 
+
+    /*QThread threadFilepathtransactions;
+    _filepathtransactions.moveToThread(&threadFilepathtransactions);
+    threadFilepathtransactions.start();*/
+
+   /* QThread threadListenProcess;
+    _listenProcess.moveToThread(&threadListenProcess);
+    threadListenProcess.start();*/
     _userdefinition.setStart();
-    _listenProcess.setStart();
-    // _secureFile.setStart();
-    //_scanresultoperations.setStart();
+
     engine.load(QUrl(QStringLiteral("qrc:///view/main.qml")));
     QObject *rootObject = engine.rootObjects().first();
     QObject::connect(rootObject, SIGNAL(startTimer()), &timer, SLOT(start()));
@@ -85,7 +90,6 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
     if (engine.rootObjects().size() > 0)
     {
         root = engine.rootObjects().at(0);
-
         QAction *minimizeAction = new QAction(QObject::tr("&Open"), root);
         root->connect(minimizeAction, SIGNAL(triggered()), root, SLOT(showNormal()));
         //QAction *restoreAction = new QAction(QObject::tr("&Close"), root);
@@ -104,7 +108,6 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
         trayIcon->setIcon(QIcon(":/Image/logo2ico"));
         trayIcon->show();
     }
-
     return app.exec();
 }
 /*
