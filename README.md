@@ -25,8 +25,13 @@ https://doi.org/10.3390/electronics12020342
 
 
 # **GÖRSELLER**
-<img src="1689536717968.jpeg"  width="505"  /><img src="1689536718308.jpeg"  width="505"  />
+<img src="1689536717968.jpeg"  width="505"  />
 
-<img src="1689536718325.jpeg"  width="505"  /><img src="1689536718425.jpeg"  width="505"  />
+<img src="1689536718308.jpeg"  width="505"  />
+
+<img src="1689536718325.jpeg"  width="505"  />
+
+<img src="1689536718425.jpeg"  width="505"  />
+
 <img src="1689536718917.jpeg"  width="505"  />
 
