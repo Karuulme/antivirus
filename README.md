@@ -17,7 +17,7 @@ Tarama yada ayarlardan kullanıcı tanımını çalıştırmak için `mele/main.
 - Kayıt defterinde, açık işlemlerden kullanıcı tanımı oluşturması. Oluşturulan bu tanım programın davranışını değiştiriyor.
 
 # **İNDİRMEK İÇİN**
-[Buraya Tıklayınız](https://github.com/Karuulme/finalProject/releases/)
+[Buraya Tıklayınız](https://github.com/Karuulme/antivirus/releases/tag/2023.1.0) 
 
 Makine öğreniminde kullanılan modül:
 
